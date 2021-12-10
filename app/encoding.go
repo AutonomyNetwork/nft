@@ -1,7 +1,7 @@
-package simapp
+package app
 
 import (
-	"github.com/cosmos/cosmos-sdk/simapp/params"
+	"github.com/AutonomyNetwork/nft/app/params"
 	"github.com/cosmos/cosmos-sdk/std"
 )
 

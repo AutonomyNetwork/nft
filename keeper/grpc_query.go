@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/irismod/nft/types"
+	"github.com/AutonomyNetwork/nft/types"
 )
 
 var _ types.QueryServer = Keeper{}
@@ -81,12 +81,12 @@ func (k Keeper) NFT(c context.Context, request *types.QueryNFTRequest) (*types.Q
 		return nil, sdkerrors.Wrapf(types.ErrUnknownNFT, "invalid NFT %s from collection %s", request.Id, request.Denom)
 	}
 
-	baseNFT, ok := nft.(types.BaseNFT)
+	NFT, ok := nft.(types.BaseNFT)
 	if !ok {
 		return nil, sdkerrors.Wrapf(types.ErrUnknownNFT, "invalid type NFT %s from collection %s", request.Id, request.Denom)
 	}
 
 	return &types.QueryNFTResponse{
-		NFT: &baseNFT,
+		NFT: &NFT,
 	}, nil
 }

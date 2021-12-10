@@ -9,17 +9,17 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/irismod/nft/types"
+	"github.com/AutonomyNetwork/nft/types"
 )
 
 // Keeper maintains the link to data storage and exposes getter/setter methods for the various parts of the state machine
 type Keeper struct {
 	storeKey sdk.StoreKey // Unexposed key to access store from sdk.Context
-	cdc      codec.Marshaler
+	cdc      codec.BinaryCodec
 }
 
 // NewKeeper creates new instances of the nft Keeper
-func NewKeeper(cdc codec.Marshaler, storeKey sdk.StoreKey) Keeper {
+func NewKeeper(cdc codec.BinaryCodec, storeKey sdk.StoreKey) Keeper {
 	return Keeper{
 		storeKey: storeKey,
 		cdc:      cdc,
@@ -28,7 +28,7 @@ func NewKeeper(cdc codec.Marshaler, storeKey sdk.StoreKey) Keeper {
 
 // Logger returns a module-specific logger.
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
-	return ctx.Logger().With("module", fmt.Sprintf("irismod/%s", types.ModuleName))
+	return ctx.Logger().With("module", fmt.Sprintf("AutonomyNetwork/%s", types.ModuleName))
 }
 
 func (k Keeper) IssueDenom(ctx sdk.Context,

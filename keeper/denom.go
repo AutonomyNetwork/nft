@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/irismod/nft/types"
+	"github.com/AutonomyNetwork/nft/types"
 )
 
 // HasDenomID returns whether the specified denomID exists
@@ -33,7 +33,7 @@ func (k Keeper) SetDenom(ctx sdk.Context, denom types.Denom) error {
 	}
 
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshalBinaryBare(&denom)
+	bz := k.cdc.MustMarshal(&denom)
 	store.Set(types.KeyDenomID(denom.Id), bz)
 	if len(denom.Name) > 0 {
 		store.Set(types.KeyDenomName(denom.Name), []byte(denom.Id))
@@ -50,7 +50,7 @@ func (k Keeper) GetDenom(ctx sdk.Context, id string) (denom types.Denom, err err
 		return denom, sdkerrors.Wrapf(types.ErrInvalidDenom, "not found denomID: %s", id)
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(bz, &denom)
+	k.cdc.MustUnmarshal(bz, &denom)
 	return denom, nil
 }
 
@@ -62,7 +62,7 @@ func (k Keeper) GetDenoms(ctx sdk.Context) (denoms []types.Denom) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var denom types.Denom
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &denom)
+		k.cdc.MustUnmarshal(iterator.Value(), &denom)
 		denoms = append(denoms, denom)
 	}
 	return denoms

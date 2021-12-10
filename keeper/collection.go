@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/irismod/nft/types"
+	"github.com/AutonomyNetwork/nft/types"
 )
 
 // SetCollection save all NFT and return error if existed

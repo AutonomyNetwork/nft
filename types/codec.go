@@ -9,19 +9,19 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	gogotypes "github.com/gogo/protobuf/types"
 
-	"github.com/irismod/nft/exported"
+	"github.com/AutonomyNetwork/nft/exported"
 )
 
 // RegisterLegacyAminoCodec concrete types on codec
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgIssueDenom{}, "irismod/nft/MsgIssueDenom", nil)
-	cdc.RegisterConcrete(&MsgTransferNFT{}, "irismod/nft/MsgTransferNFT", nil)
-	cdc.RegisterConcrete(&MsgEditNFT{}, "irismod/nft/MsgEditNFT", nil)
-	cdc.RegisterConcrete(&MsgMintNFT{}, "irismod/nft/MsgMintNFT", nil)
-	cdc.RegisterConcrete(&MsgBurnNFT{}, "irismod/nft/MsgBurnNFT", nil)
+	cdc.RegisterConcrete(&MsgIssueDenom{}, "AutonomyNetwork/nft/MsgIssueDenom", nil)
+	cdc.RegisterConcrete(&MsgTransferNFT{}, "AutonomyNetwork/nft/MsgTransferNFT", nil)
+	cdc.RegisterConcrete(&MsgEditNFT{}, "AutonomyNetwork/nft/MsgEditNFT", nil)
+	cdc.RegisterConcrete(&MsgMintNFT{}, "AutonomyNetwork/nft/MsgMintNFT", nil)
+	cdc.RegisterConcrete(&MsgBurnNFT{}, "AutonomyNetwork/nft/MsgBurnNFT", nil)
 
 	cdc.RegisterInterface((*exported.NFT)(nil), nil)
-	cdc.RegisterConcrete(&BaseNFT{}, "irismod/nft/BaseNFT", nil)
+	cdc.RegisterConcrete(&BaseNFT{}, "AutonomyNetwork/nft/BaseNFT", nil)
 }
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {
@@ -51,27 +51,27 @@ func init() {
 }
 
 // return supply protobuf code
-func MustMarshalSupply(cdc codec.Marshaler, supply uint64) []byte {
+func MustMarshalSupply(cdc codec.BinaryCodec, supply uint64) []byte {
 	supplyWrap := gogotypes.UInt64Value{Value: supply}
-	return cdc.MustMarshalBinaryBare(&supplyWrap)
+	return cdc.MustMarshal(&supplyWrap)
 }
 
 // return th supply
-func MustUnMarshalSupply(cdc codec.Marshaler, value []byte) uint64 {
+func MustUnMarshalSupply(cdc codec.BinaryCodec, value []byte) uint64 {
 	var supplyWrap gogotypes.UInt64Value
-	cdc.MustUnmarshalBinaryBare(value, &supplyWrap)
+	cdc.MustUnmarshal(value, &supplyWrap)
 	return supplyWrap.Value
 }
 
 // return the tokenID protobuf code
-func MustMarshalTokenID(cdc codec.Marshaler, tokenID string) []byte {
+func MustMarshalTokenID(cdc codec.BinaryCodec, tokenID string) []byte {
 	tokenIDWrap := gogotypes.StringValue{Value: tokenID}
-	return cdc.MustMarshalBinaryBare(&tokenIDWrap)
+	return cdc.MustMarshal(&tokenIDWrap)
 }
 
 // return th tokenID
-func MustUnMarshalTokenID(cdc codec.Marshaler, value []byte) string {
+func MustUnMarshalTokenID(cdc codec.BinaryCodec, value []byte) string {
 	var tokenIDWrap gogotypes.StringValue
-	cdc.MustUnmarshalBinaryBare(value, &tokenIDWrap)
+	cdc.MustUnmarshal(value, &tokenIDWrap)
 	return tokenIDWrap.Value
 }

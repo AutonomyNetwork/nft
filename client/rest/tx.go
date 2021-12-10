@@ -11,7 +11,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 
-	"github.com/irismod/nft/types"
+	"github.com/AutonomyNetwork/nft/types"
 )
 
 func registerTxRoutes(cliCtx client.Context, r *mux.Router, queryRoute string) {

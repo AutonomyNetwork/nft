@@ -1,6 +1,8 @@
-package simapp
+package app
+
 
 import (
+	"github.com/cosmos/cosmos-sdk/x/crisis"
 	"io"
 	"net/http"
 	"os"
@@ -9,6 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/spf13/cast"
+	"github.com/tendermint/spm/openapiconsole"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
@@ -37,10 +40,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/capability"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	"github.com/cosmos/cosmos-sdk/x/authz"
-	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
-	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
-	"github.com/cosmos/cosmos-sdk/x/crisis"
 	crisiskeeper "github.com/cosmos/cosmos-sdk/x/crisis/keeper"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	distr "github.com/cosmos/cosmos-sdk/x/distribution"
@@ -94,7 +93,7 @@ import (
 	nfttypes "github.com/AutonomyNetwork/nft/types"
 )
 
-const appName = "nft"
+const Name = "nft"
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
 
@@ -139,7 +138,7 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
-		onft.AppModuleBasic{},
+		nft.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -166,7 +165,7 @@ func init() {
 		panic(err)
 	}
 
-	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+	DefaultNodeHome = filepath.Join(userHomeDir, "."+ Name)
 }
 
 // App extends an ABCI application, but with most of its parameters exported.
@@ -209,7 +208,7 @@ type App struct {
 
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
-	ONFTKeeper onftkeeper.Keeper
+	NFTKeeper nftkeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -239,7 +238,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, feegrant.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
-		onfttypes.StoreKey,
+		nfttypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -331,11 +330,11 @@ func New(
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
 
-	app.ONFTKeeper = onftkeeper.NewKeeper(
+	app.NFTKeeper = nftkeeper.NewKeeper(
 		appCodec,
-		keys[onfttypes.StoreKey],
+		keys[nfttypes.StoreKey],
 	)
-	onftModule := onft.NewAppModule(appCodec, app.ONFTKeeper)
+	nftModule := nft.NewAppModule(appCodec, app.NFTKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -382,7 +381,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
-		onftModule,
+		nftModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -417,7 +416,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		feegrant.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
-		onfttypes.ModuleName,
+		nfttypes.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(&app.CrisisKeeper)
@@ -603,7 +602,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
-	paramsKeeper.Subspace(onfttypes.ModuleName)
+	paramsKeeper.Subspace(nfttypes.ModuleName)
 
 	return paramsKeeper
 }

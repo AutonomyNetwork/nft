@@ -587,18 +587,18 @@ func (m *QueryNFTResponse) GetNFT() *BaseNFT {
 }
 
 func init() {
-	proto.RegisterType((*QuerySupplyRequest)(nil), "irismod.nft.QuerySupplyRequest")
-	proto.RegisterType((*QuerySupplyResponse)(nil), "irismod.nft.QuerySupplyResponse")
-	proto.RegisterType((*QueryOwnerRequest)(nil), "irismod.nft.QueryOwnerRequest")
-	proto.RegisterType((*QueryOwnerResponse)(nil), "irismod.nft.QueryOwnerResponse")
-	proto.RegisterType((*QueryCollectionRequest)(nil), "irismod.nft.QueryCollectionRequest")
-	proto.RegisterType((*QueryCollectionResponse)(nil), "irismod.nft.QueryCollectionResponse")
-	proto.RegisterType((*QueryDenomRequest)(nil), "irismod.nft.QueryDenomRequest")
-	proto.RegisterType((*QueryDenomResponse)(nil), "irismod.nft.QueryDenomResponse")
-	proto.RegisterType((*QueryDenomsRequest)(nil), "irismod.nft.QueryDenomsRequest")
-	proto.RegisterType((*QueryDenomsResponse)(nil), "irismod.nft.QueryDenomsResponse")
-	proto.RegisterType((*QueryNFTRequest)(nil), "irismod.nft.QueryNFTRequest")
-	proto.RegisterType((*QueryNFTResponse)(nil), "irismod.nft.QueryNFTResponse")
+	proto.RegisterType((*QuerySupplyRequest)(nil), "AutonomyNetwork.nft.QuerySupplyRequest")
+	proto.RegisterType((*QuerySupplyResponse)(nil), "AutonomyNetwork.nft.QuerySupplyResponse")
+	proto.RegisterType((*QueryOwnerRequest)(nil), "AutonomyNetwork.nft.QueryOwnerRequest")
+	proto.RegisterType((*QueryOwnerResponse)(nil), "AutonomyNetwork.nft.QueryOwnerResponse")
+	proto.RegisterType((*QueryCollectionRequest)(nil), "AutonomyNetwork.nft.QueryCollectionRequest")
+	proto.RegisterType((*QueryCollectionResponse)(nil), "AutonomyNetwork.nft.QueryCollectionResponse")
+	proto.RegisterType((*QueryDenomRequest)(nil), "AutonomyNetwork.nft.QueryDenomRequest")
+	proto.RegisterType((*QueryDenomResponse)(nil), "AutonomyNetwork.nft.QueryDenomResponse")
+	proto.RegisterType((*QueryDenomsRequest)(nil), "AutonomyNetwork.nft.QueryDenomsRequest")
+	proto.RegisterType((*QueryDenomsResponse)(nil), "AutonomyNetwork.nft.QueryDenomsResponse")
+	proto.RegisterType((*QueryNFTRequest)(nil), "AutonomyNetwork.nft.QueryNFTRequest")
+	proto.RegisterType((*QueryNFTResponse)(nil), "AutonomyNetwork.nft.QueryNFTResponse")
 }
 
 func init() { proto.RegisterFile("query.proto", fileDescriptor_5c6ac9b241082464) }
@@ -683,7 +683,7 @@ func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 
 func (c *queryClient) Supply(ctx context.Context, in *QuerySupplyRequest, opts ...grpc.CallOption) (*QuerySupplyResponse, error) {
 	out := new(QuerySupplyResponse)
-	err := c.cc.Invoke(ctx, "/irismod.nft.Query/Supply", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/AutonomyNetwork.nft.Query/Supply", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -692,7 +692,7 @@ func (c *queryClient) Supply(ctx context.Context, in *QuerySupplyRequest, opts .
 
 func (c *queryClient) Owner(ctx context.Context, in *QueryOwnerRequest, opts ...grpc.CallOption) (*QueryOwnerResponse, error) {
 	out := new(QueryOwnerResponse)
-	err := c.cc.Invoke(ctx, "/irismod.nft.Query/Owner", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/AutonomyNetwork.nft.Query/Owner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -701,7 +701,7 @@ func (c *queryClient) Owner(ctx context.Context, in *QueryOwnerRequest, opts ...
 
 func (c *queryClient) Collection(ctx context.Context, in *QueryCollectionRequest, opts ...grpc.CallOption) (*QueryCollectionResponse, error) {
 	out := new(QueryCollectionResponse)
-	err := c.cc.Invoke(ctx, "/irismod.nft.Query/Collection", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/AutonomyNetwork.nft.Query/Collection", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -710,7 +710,7 @@ func (c *queryClient) Collection(ctx context.Context, in *QueryCollectionRequest
 
 func (c *queryClient) Denom(ctx context.Context, in *QueryDenomRequest, opts ...grpc.CallOption) (*QueryDenomResponse, error) {
 	out := new(QueryDenomResponse)
-	err := c.cc.Invoke(ctx, "/irismod.nft.Query/Denom", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/AutonomyNetwork.nft.Query/Denom", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -719,7 +719,7 @@ func (c *queryClient) Denom(ctx context.Context, in *QueryDenomRequest, opts ...
 
 func (c *queryClient) Denoms(ctx context.Context, in *QueryDenomsRequest, opts ...grpc.CallOption) (*QueryDenomsResponse, error) {
 	out := new(QueryDenomsResponse)
-	err := c.cc.Invoke(ctx, "/irismod.nft.Query/Denoms", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/AutonomyNetwork.nft.Query/Denoms", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -728,7 +728,7 @@ func (c *queryClient) Denoms(ctx context.Context, in *QueryDenomsRequest, opts .
 
 func (c *queryClient) NFT(ctx context.Context, in *QueryNFTRequest, opts ...grpc.CallOption) (*QueryNFTResponse, error) {
 	out := new(QueryNFTResponse)
-	err := c.cc.Invoke(ctx, "/irismod.nft.Query/NFT", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/AutonomyNetwork.nft.Query/NFT", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -788,7 +788,7 @@ func _Query_Supply_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/irismod.nft.Query/Supply",
+		FullMethod: "/AutonomyNetwork.nft.Query/Supply",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Supply(ctx, req.(*QuerySupplyRequest))
@@ -806,7 +806,7 @@ func _Query_Owner_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/irismod.nft.Query/Owner",
+		FullMethod: "/AutonomyNetwork.nft.Query/Owner",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Owner(ctx, req.(*QueryOwnerRequest))
@@ -824,7 +824,7 @@ func _Query_Collection_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/irismod.nft.Query/Collection",
+		FullMethod: "/AutonomyNetwork.nft.Query/Collection",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Collection(ctx, req.(*QueryCollectionRequest))
@@ -842,7 +842,7 @@ func _Query_Denom_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/irismod.nft.Query/Denom",
+		FullMethod: "/AutonomyNetwork.nft.Query/Denom",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Denom(ctx, req.(*QueryDenomRequest))
@@ -860,7 +860,7 @@ func _Query_Denoms_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/irismod.nft.Query/Denoms",
+		FullMethod: "/AutonomyNetwork.nft.Query/Denoms",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Denoms(ctx, req.(*QueryDenomsRequest))
@@ -878,7 +878,7 @@ func _Query_NFT_Handler(srv interface{}, ctx context.Context, dec func(interface
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/irismod.nft.Query/NFT",
+		FullMethod: "/AutonomyNetwork.nft.Query/NFT",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).NFT(ctx, req.(*QueryNFTRequest))
@@ -887,7 +887,7 @@ func _Query_NFT_Handler(srv interface{}, ctx context.Context, dec func(interface
 }
 
 var _Query_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "irismod.nft.Query",
+	ServiceName: "AutonomyNetwork.nft.Query",
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

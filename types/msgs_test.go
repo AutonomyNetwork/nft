@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/irismod/nft/types"
+	"github.com/AutonomyNetwork/nft/types"
 )
 
 // ---------------------------------------- Msgs ---------------------------------------------------
@@ -43,7 +43,7 @@ func TestMsgTransferNFTValidateBasicMethod(t *testing.T) {
 func TestMsgTransferNFTGetSignBytesMethod(t *testing.T) {
 	newMsgTransferNFT := types.NewMsgTransferNFT(denomID, denom, id, tokenURI, tokenData, address, address2)
 	sortedBytes := newMsgTransferNFT.GetSignBytes()
-	require.Equal(t, string(sortedBytes), `{"type":"irismod/nft/MsgTransferNFT","value":{"data":"https://google.com/token-1.json","denom":"denom","id":"denom","name":"id1","recipient":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgp0ctjdj","sender":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgqjwl8sq","uri":"https://google.com/token-1.json"}}`)
+	require.Equal(t, string(sortedBytes), `{"type":"AutonomyNetwork/nft/MsgTransferNFT","value":{"data":"https://google.com/token-1.json","denom":"denom","id":"denom","name":"id1","recipient":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgp0ctjdj","sender":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgqjwl8sq","uri":"https://google.com/token-1.json"}}`)
 }
 
 func TestMsgTransferNFTGetSignersMethod(t *testing.T) {
@@ -88,7 +88,7 @@ func TestMsgEditNFTValidateBasicMethod(t *testing.T) {
 func TestMsgEditNFTGetSignBytesMethod(t *testing.T) {
 	newMsgEditNFT := types.NewMsgEditNFT(id, denom, nftName, tokenURI, tokenData, address)
 	sortedBytes := newMsgEditNFT.GetSignBytes()
-	require.Equal(t, string(sortedBytes), `{"type":"irismod/nft/MsgEditNFT","value":{"data":"https://google.com/token-1.json","denom":"denom","id":"id1","name":"report","sender":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgqjwl8sq","uri":"https://google.com/token-1.json"}}`)
+	require.Equal(t, string(sortedBytes), `{"type":"AutonomyNetwork/nft/MsgEditNFT","value":{"data":"https://google.com/token-1.json","denom":"denom","id":"id1","name":"report","sender":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgqjwl8sq","uri":"https://google.com/token-1.json"}}`)
 }
 
 func TestMsgEditNFTGetSignersMethod(t *testing.T) {
@@ -133,7 +133,7 @@ func TestMsgMsgMintNFTValidateBasicMethod(t *testing.T) {
 func TestMsgMintNFTGetSignBytesMethod(t *testing.T) {
 	newMsgMintNFT := types.NewMsgMintNFT(id, denom, nftName, tokenURI, tokenData, address, address2)
 	sortedBytes := newMsgMintNFT.GetSignBytes()
-	require.Equal(t, string(sortedBytes), `{"type":"irismod/nft/MsgMintNFT","value":{"data":"https://google.com/token-1.json","denom":"denom","id":"id1","name":"report","recipient":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgp0ctjdj","sender":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgqjwl8sq","uri":"https://google.com/token-1.json"}}`)
+	require.Equal(t, string(sortedBytes), `{"type":"AutonomyNetwork/nft/MsgMintNFT","value":{"data":"https://google.com/token-1.json","denom":"denom","id":"id1","name":"report","recipient":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgp0ctjdj","sender":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgqjwl8sq","uri":"https://google.com/token-1.json"}}`)
 }
 
 func TestNewMsgBurnNFT(t *testing.T) {
@@ -167,7 +167,7 @@ func TestMsgMsgBurnNFTValidateBasicMethod(t *testing.T) {
 func TestMsgBurnNFTGetSignBytesMethod(t *testing.T) {
 	newMsgBurnNFT := types.NewMsgBurnNFT(address, id, denom)
 	sortedBytes := newMsgBurnNFT.GetSignBytes()
-	require.Equal(t, string(sortedBytes), `{"type":"irismod/nft/MsgBurnNFT","value":{"denom":"denom","id":"id1","sender":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgqjwl8sq"}}`)
+	require.Equal(t, string(sortedBytes), `{"type":"AutonomyNetwork/nft/MsgBurnNFT","value":{"denom":"denom","id":"id1","sender":"cosmos15ky9du8a2wlstz6fpx3p4mqpjyrm5cgqjwl8sq"}}`)
 }
 
 func TestMsgBurnNFTGetSignersMethod(t *testing.T) {

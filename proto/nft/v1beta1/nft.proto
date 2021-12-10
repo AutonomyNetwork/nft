@@ -1,0 +1,43 @@
+syntax = "proto3";
+package AutonomyNetwork.nft.v1beta1;
+
+import "google/protobuf/timestamp.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/AutonomyNetwork/nft/types";
+option (gogoproto.goproto_getters_all) = false;
+
+message Denom {
+  string id = 1;
+  string name = 2;
+  string symbol = 3;
+  string creator = 4;
+  string description = 5;
+  string preview_uri = 6 [
+    (gogoproto.moretags) = "yaml:\"preview_uri\"",
+    (gogoproto.customname) = "PreviewURI"
+  ];
+}
+
+message Metadata {
+  string name = 1;
+  string description = 2;
+  string media_uri = 3 [
+    (gogoproto.moretags) = "yaml:\"media_uri\"",
+    (gogoproto.customname) = "MediaURI"
+  ];
+}
+
+message NFT {
+  string id = 1;
+  Metadata metadata = 2;
+  string owner = 3;
+  bool transferable = 4;
+  string royalties = 5;
+  google.protobuf.Timestamp created_at = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true,
+    (gogoproto.moretags) = "yaml:\"created_at\""
+  ];
+}
+

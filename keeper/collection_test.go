@@ -1,8 +1,8 @@
 package keeper_test
 
 import (
-	"github.com/irismod/nft/keeper"
-	"github.com/irismod/nft/types"
+	"github.com/AutonomyNetwork/nft/keeper"
+	"github.com/AutonomyNetwork/nft/types"
 )
 
 func (suite *KeeperSuite) TestSetCollection() {

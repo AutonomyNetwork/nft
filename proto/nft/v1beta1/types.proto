@@ -1,9 +1,9 @@
 syntax = "proto3";
-package irismod.nft;
+package AutonomyNetwork.nft.v1beta1;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/irismod/nft/types";
+option go_package = "github.com/AutonomyNetwork/nft/types";
 option (gogoproto.goproto_getters_all) = false;
 
 // MsgIssueDenom defines an SDK message for creating a new denom.
@@ -12,8 +12,14 @@ message MsgIssueDenom {
 
     string id = 1;
     string name = 2;
-    string schema = 3;
-    bytes sender = 4 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+    string symbol = 3;
+    string schema = 4;
+    string description = 5;
+    string creator = 7;
+    string preview_uri = 6 [
+        (gogoproto.moretags)   = "yaml:\"preview_uri\"",
+        (gogoproto.customname) = "PreviewURI"
+    ];
 }
 
 // MsgTransferNFT defines an SDK message for transferring an NFT to recipient.

@@ -13,7 +13,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
 
-	"github.com/irismod/nft/types"
+	"github.com/AutonomyNetwork/nft/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -47,7 +47,7 @@ $ %s query nft supply [denom]`, version.AppName)),
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
@@ -75,7 +75,7 @@ $ %s query nft supply [denom]`, version.AppName)),
 			if err != nil {
 				return err
 			}
-			return clientCtx.PrintOutput(resp)
+			return clientCtx.PrintProto(resp)
 		},
 	}
 	cmd.Flags().AddFlagSet(FsQuerySupply)
@@ -95,7 +95,7 @@ $ %s query nft owner <address> --denom=<denom>`, version.AppName)),
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
@@ -115,7 +115,7 @@ $ %s query nft owner <address> --denom=<denom>`, version.AppName)),
 				return err
 			}
 
-			return clientCtx.PrintOutput(resp.Owner)
+			return clientCtx.PrintProto(resp.Owner)
 		},
 	}
 	cmd.Flags().AddFlagSet(FsQueryOwner)
@@ -135,7 +135,7 @@ $ %s query nft collection <denom>`, version.AppName)),
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
@@ -152,7 +152,7 @@ $ %s query nft collection <denom>`, version.AppName)),
 			if err != nil {
 				return err
 			}
-			return clientCtx.PrintOutput(resp.Collection)
+			return clientCtx.PrintProto(resp.Collection)
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
@@ -170,7 +170,7 @@ Example:
 $ %s query nft denoms`, version.AppName)),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
@@ -180,7 +180,7 @@ $ %s query nft denoms`, version.AppName)),
 			if err != nil {
 				return err
 			}
-			return clientCtx.PrintOutput(resp)
+			return clientCtx.PrintProto(resp)
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
@@ -199,7 +199,7 @@ $ %s query nft denom <denom>`, version.AppName)),
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
@@ -216,7 +216,7 @@ $ %s query nft denom <denom>`, version.AppName)),
 			if err != nil {
 				return err
 			}
-			return clientCtx.PrintOutput(resp.Denom)
+			return clientCtx.PrintProto(resp.Denom)
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
@@ -235,7 +235,7 @@ $ %s query nft token <denom> <tokenID>`, version.AppName)),
 		Args: cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
@@ -258,7 +258,7 @@ $ %s query nft token <denom> <tokenID>`, version.AppName)),
 			if err != nil {
 				return err
 			}
-			return clientCtx.PrintOutput(resp.NFT)
+			return clientCtx.PrintProto(resp.NFT)
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)

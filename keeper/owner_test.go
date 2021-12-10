@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	"github.com/irismod/nft/keeper"
+	"github.com/AutonomyNetwork/nft/keeper"
 )
 
 func (suite *KeeperSuite) TestGetOwners() {
