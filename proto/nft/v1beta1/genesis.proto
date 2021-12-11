@@ -1,5 +1,5 @@
 syntax = "proto3";
-package AutonomyNetwork.nft.v1beta1;
+package nft.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "nft/v1beta1/nft.proto";

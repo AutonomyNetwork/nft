@@ -1,0 +1,38 @@
+syntax = "proto3";
+package nft.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/AutonomyNetwork/nft/types";
+option (gogoproto.goproto_getters_all) = false;
+
+service Msg {
+  rpc CreateDenom(MsgCreateDenom) returns (MsgCreateDenomResponse);
+  rpc MintNFT(MsgMintNFT) returns (MsgMintNFTResponse);
+  rpc UpdateNFT(MsgUpdateNFT) returns (MsgUpdateNFTResponse);
+  rpc TransferNFT(MsgTransferNFT) returns (MsgTransferNFTResponse);
+}
+
+message MsgCreateDenom {
+
+}
+
+message MsgCreateDenomResponse {}
+
+message MsgMintNFT {
+
+}
+
+message MsgMintNFTResponse {}
+
+message MsgUpdateNFT{
+
+}
+
+message MsgUpdateNFTResponse{}
+
+message MsgTransferNFT {
+
+}
+
+message MsgTransferNFTResponse{}
