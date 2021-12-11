@@ -7,6 +7,11 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/AutonomyNetwork/nft/types";
 option (gogoproto.goproto_getters_all) = false;
 
+message Collection {
+  Denom denom = 1 [(gogoproto.nullable) = false];
+  repeated  NFT nfts = 2 [(gogoproto.customname) = "NFTs", (gogoproto.nullable) = false];
+}
+
 message Denom {
   string id = 1;
   string name = 2;
@@ -32,9 +37,10 @@ message NFT {
   string id = 1;
   Metadata metadata = 2;
   string owner = 3;
-  bool transferable = 4;
-  string royalties = 5;
-  google.protobuf.Timestamp created_at = 6 [
+  string data = 4;
+  bool transferable = 5;
+  string royalties = 6;
+  google.protobuf.Timestamp created_at = 7 [
     (gogoproto.nullable) = false,
     (gogoproto.stdtime) = true,
     (gogoproto.moretags) = "yaml:\"created_at\""

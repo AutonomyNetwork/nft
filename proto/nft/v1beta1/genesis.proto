@@ -1,12 +1,13 @@
 syntax = "proto3";
-package AutonomyNetwork.nft;
+package AutonomyNetwork.nft.v1beta1;
 
 import "gogoproto/gogo.proto";
+import "nft/v1beta1/nft.proto";
 
 option go_package = "github.com/AutonomyNetwork/nft/types";
 
 // GenesisState defines the nft module's genesis state.
-//message GenesisState {
-//    repeated Collection collections = 1 [(gogoproto.nullable) = false];
-//}
+message GenesisState {
+    repeated Collection collections = 1 [(gogoproto.nullable) = false];
+}
 
