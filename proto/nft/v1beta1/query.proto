@@ -1,0 +1,34 @@
+syntax = "proto3";
+package nft.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "nft/v1beta1/nft.proto";
+import "google/api/annotations.proto";
+option go_package = "github.com/AutonomyNetwork/nft/types";
+
+service Query {
+  rpc Denom(QueryDenomRequest) returns (QueryDenomResponse) {
+    option (google.api.http).get = "/autonomyNetwork/nft/v1beta1/denoms/{denom_id}";
+  }
+
+  rpc NFT(QueryNFTRequest) returns (QueryNFTResponse) {
+    option (google.api.http).get = "/autonomyNetwork/nft/v1beta1/denoms/{denom_id}/nfts/{id}";
+  }
+}
+
+message QueryDenomRequest {
+  string denom_id = 1 [(gogoproto.moretags) = "yaml:\"denom_id\""];
+}
+
+message QueryDenomResponse {
+  Denom denom = 1;
+}
+
+message QueryNFTRequest {
+  string denom_id = 1 [(gogoproto.moretags) = "yaml:\"denom_id\""];
+  string id = 2;
+}
+
+message QueryNFTResponse {
+  NFT nft = 1 [(gogoproto.moretags) = "yaml:\"NFT\"", (gogoproto.customname) = "NFT"];
+}

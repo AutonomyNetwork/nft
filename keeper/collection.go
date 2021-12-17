@@ -13,10 +13,12 @@ func (k Keeper) SetCollection(ctx sdk.Context, collection types.Collection) erro
 		if err := k.MintNFT(ctx,
 			collection.Denom.Id,
 			nft.GetID(),
-			nft.GetName(),
-			nft.GetURI(),
 			nft.GetData(),
+			nft.GetRoyalties(),
+			nft.IsTransferable(),
 			nft.GetOwner(),
+			nft.GetCreator(),
+			nft.GetMetadata(),
 		); err != nil {
 			return err
 		}

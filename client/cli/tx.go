@@ -2,8 +2,6 @@ package cli
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -11,10 +9,25 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
-	"github.com/AutonomyNetwork/nft/types"
+	"strings"
 )
 
+//
+import (
+//	"fmt"
+//	"strings"
+//
+//	"github.com/cosmos/cosmos-sdk/client"
+//	"github.com/cosmos/cosmos-sdk/client/flags"
+//	"github.com/cosmos/cosmos-sdk/client/tx"
+//	sdk "github.com/cosmos/cosmos-sdk/types"
+//	"github.com/cosmos/cosmos-sdk/version"
+//	"github.com/spf13/cobra"
+//	"github.com/spf13/viper"
+//
+	"github.com/AutonomyNetwork/nft/types"
+)
+//
 // NewTxCmd returns the transaction commands for this module
 func NewTxCmd() *cobra.Command {
 	txCmd := &cobra.Command{
@@ -26,24 +39,24 @@ func NewTxCmd() *cobra.Command {
 	}
 
 	txCmd.AddCommand(
-		GetCmdIssueDenom(),
-		GetCmdMintNFT(),
-		GetCmdEditNFT(),
-		GetCmdTransferNFT(),
-		GetCmdBurnNFT(),
+		GetCmdCreateDenom(),
+		//GetCmdMintNFT(),
+		//GetCmdEditNFT(),
+		//GetCmdTransferNFT(),
+		//GetCmdBurnNFT(),
 	)
 
 	return txCmd
 }
-
+//
 // GetCmdMintNFT is the CLI command for a MintNFT transaction
-func GetCmdIssueDenom() *cobra.Command {
+func GetCmdCreateDenom() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "issue [denom]",
+		Use: "Create",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Issue a new denom.
+			fmt.Sprintf(`Create a new denom.
 Example:
-$ %s tx nft issue [denomID] --from=<key-name> --name=<name> --schema=<schema> --name=<name> --chain-id=<chain-id> --fees=<fee>`,
+$ %s tx nft create --from=<key-name> --name=<name> --data=<data> --symbol=<symbol> --description=<description> --preview_uri=<preview_uri> --chain-id=<chain-id> --fees=<fee>`,
 				version.AppName,
 			),
 		),
@@ -55,10 +68,12 @@ $ %s tx nft issue [denomID] --from=<key-name> --name=<name> --schema=<schema> --
 				return err
 			}
 
-			msg := types.NewMsgIssueDenom(args[0],
+			msg := types.NewMsgCreateDenom(
 				viper.GetString(FlagDenomName),
-				viper.GetString(FlagSchema),
-				clientCtx.GetFromAddress(),
+				viper.GetString(FlagSymbol),
+				viper.GetString(FlagDenomDescription),
+				viper.GetString(FlagPreviewURI),
+				clientCtx.GetFromAddress().String(),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -66,20 +81,20 @@ $ %s tx nft issue [denomID] --from=<key-name> --name=<name> --schema=<schema> --
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
-	cmd.Flags().AddFlagSet(FsIssueDenom)
+	cmd.Flags().AddFlagSet(FsCreateDenom)
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
 }
-
+//
 // GetCmdMintNFT is the CLI command for a MintNFT transaction
 func GetCmdMintNFT() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "mint [denomID] [tokenID]",
+		Use: "mint [denomID]",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Mint an NFT and set the owner to the recipient.
 Example:
-$ %s tx nft mint [denomID] [tokenID] --uri=<uri> --recipient=<recipient> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+$ %s tx nft mint [denomID] --media_uri=<media_uri> --preview_uri=<preview_uri> --name=<name> --description=<description> --data=<data> --transferable=<transferable> --creator=<creator> --royalties=<royalties> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
 				version.AppName,
 			),
 		),
@@ -101,7 +116,7 @@ $ %s tx nft mint [denomID] [tokenID] --uri=<uri> --recipient=<recipient> --from=
 				}
 			}
 
-			msg := types.NewMsgMintNFT(
+			msg := types.NewMsgCreateDenom(
 				args[1],
 				args[0],
 				viper.GetString(FlagTokenName),
@@ -121,118 +136,118 @@ $ %s tx nft mint [denomID] [tokenID] --uri=<uri> --recipient=<recipient> --from=
 
 	return cmd
 }
-
-// GetCmdEditNFT is the CLI command for sending an MsgEditNFT transaction
-func GetCmdEditNFT() *cobra.Command {
-	cmd := &cobra.Command{
-		Use: "edit [denomID] [tokenID]",
-		Long: strings.TrimSpace(
-			fmt.Sprintf(`Edit the tokenData of an NFT.
-Example:
-$ %s tx nft edit [denomID] [tokenID] --uri=<uri> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
-				version.AppName,
-			),
-		),
-		Args: cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgEditNFT(
-				args[1],
-				args[0],
-				viper.GetString(FlagTokenName),
-				viper.GetString(FlagTokenURI),
-				viper.GetString(FlagTokenData),
-				clientCtx.GetFromAddress(),
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-	cmd.Flags().AddFlagSet(FsEditNFT)
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}
-
-// GetCmdTransferNFT is the CLI command for sending a TransferNFT transaction
-func GetCmdTransferNFT() *cobra.Command {
-	cmd := &cobra.Command{
-		Use: "transfer [recipient] [denomID] [tokenID]",
-		Long: strings.TrimSpace(
-			fmt.Sprintf(`Transfer a NFT to a recipient.
-Example:
-$ %s tx nft transfer [recipient] [denomID] [tokenID] --uri=<uri> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
-				version.AppName,
-			),
-		),
-		Args: cobra.ExactArgs(3),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			recipient, err := sdk.AccAddressFromBech32(args[0])
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgTransferNFT(
-				args[2],
-				args[1],
-				viper.GetString(FlagTokenName),
-				viper.GetString(FlagTokenURI),
-				viper.GetString(FlagTokenData),
-				clientCtx.GetFromAddress(),
-				recipient,
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-	cmd.Flags().AddFlagSet(FsTransferNFT)
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}
-
-// GetCmdBurnNFT is the CLI command for sending a BurnNFT transaction
-func GetCmdBurnNFT() *cobra.Command {
-	cmd := &cobra.Command{
-		Use: "burn [denomID] [tokenID]",
-		Long: strings.TrimSpace(
-			fmt.Sprintf(`Burn an NFT.
-Example:
-$ %s tx nft burn [denomID] [tokenID] --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
-				version.AppName,
-			),
-		),
-		Args: cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgBurnNFT(clientCtx.GetFromAddress(), args[1], args[0])
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}
+//
+//// GetCmdEditNFT is the CLI command for sending an MsgEditNFT transaction
+//func GetCmdEditNFT() *cobra.Command {
+//	cmd := &cobra.Command{
+//		Use: "edit [denomID] [tokenID]",
+//		Long: strings.TrimSpace(
+//			fmt.Sprintf(`Edit the tokenData of an NFT.
+//Example:
+//$ %s tx nft edit [denomID] [tokenID] --uri=<uri> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+//				version.AppName,
+//			),
+//		),
+//		Args: cobra.ExactArgs(2),
+//		RunE: func(cmd *cobra.Command, args []string) error {
+//			clientCtx := client.GetClientContextFromCmd(cmd)
+//			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
+//			if err != nil {
+//				return err
+//			}
+//
+//			msg := types.NewMsgEditNFT(
+//				args[1],
+//				args[0],
+//				viper.GetString(FlagTokenName),
+//				viper.GetString(FlagTokenURI),
+//				viper.GetString(FlagTokenData),
+//				clientCtx.GetFromAddress(),
+//			)
+//			if err := msg.ValidateBasic(); err != nil {
+//				return err
+//			}
+//			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+//		},
+//	}
+//	cmd.Flags().AddFlagSet(FsEditNFT)
+//	flags.AddTxFlagsToCmd(cmd)
+//
+//	return cmd
+//}
+//
+//// GetCmdTransferNFT is the CLI command for sending a TransferNFT transaction
+//func GetCmdTransferNFT() *cobra.Command {
+//	cmd := &cobra.Command{
+//		Use: "transfer [recipient] [denomID] [tokenID]",
+//		Long: strings.TrimSpace(
+//			fmt.Sprintf(`Transfer a NFT to a recipient.
+//Example:
+//$ %s tx nft transfer [recipient] [denomID] [tokenID] --uri=<uri> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+//				version.AppName,
+//			),
+//		),
+//		Args: cobra.ExactArgs(3),
+//		RunE: func(cmd *cobra.Command, args []string) error {
+//			clientCtx := client.GetClientContextFromCmd(cmd)
+//			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
+//			if err != nil {
+//				return err
+//			}
+//
+//			recipient, err := sdk.AccAddressFromBech32(args[0])
+//			if err != nil {
+//				return err
+//			}
+//
+//			msg := types.NewMsgTransferNFT(
+//				args[2],
+//				args[1],
+//				viper.GetString(FlagTokenName),
+//				viper.GetString(FlagTokenURI),
+//				viper.GetString(FlagTokenData),
+//				clientCtx.GetFromAddress(),
+//				recipient,
+//			)
+//			if err := msg.ValidateBasic(); err != nil {
+//				return err
+//			}
+//			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+//		},
+//	}
+//	cmd.Flags().AddFlagSet(FsTransferNFT)
+//	flags.AddTxFlagsToCmd(cmd)
+//
+//	return cmd
+//}
+//
+//// GetCmdBurnNFT is the CLI command for sending a BurnNFT transaction
+//func GetCmdBurnNFT() *cobra.Command {
+//	cmd := &cobra.Command{
+//		Use: "burn [denomID] [tokenID]",
+//		Long: strings.TrimSpace(
+//			fmt.Sprintf(`Burn an NFT.
+//Example:
+//$ %s tx nft burn [denomID] [tokenID] --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+//				version.AppName,
+//			),
+//		),
+//		Args: cobra.ExactArgs(2),
+//		RunE: func(cmd *cobra.Command, args []string) error {
+//			clientCtx := client.GetClientContextFromCmd(cmd)
+//			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
+//			if err != nil {
+//				return err
+//			}
+//
+//			msg := types.NewMsgBurnNFT(clientCtx.GetFromAddress(), args[1], args[0])
+//			if err := msg.ValidateBasic(); err != nil {
+//				return err
+//			}
+//			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+//		},
+//	}
+//	flags.AddTxFlagsToCmd(cmd)
+//
+//	return cmd
+//}

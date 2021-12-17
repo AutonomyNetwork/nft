@@ -1,0 +1,19 @@
+syntax = "proto3";
+package nft.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/AutonomyNetwork/nft/types";
+
+message EventCreateDenom {
+  string id = 1;
+  string symbol = 2;
+  string name = 3;
+  string creator = 4;
+}
+
+message EventMintNFT {
+  string id = 1;
+  string denomId = 2;
+  string creator = 3;
+}

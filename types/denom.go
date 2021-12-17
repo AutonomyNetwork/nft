@@ -1,19 +1,21 @@
 package types
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"strings"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // NewDenom return a new denom
-func NewDenom(id, name, schema string, creator sdk.AccAddress) Denom {
+func NewDenom(id, name, symbol, description, preview_uri string, creator sdk.AccAddress ) Denom {
 	return Denom{
 		Id:      id,
 		Name:    name,
-		Schema:  schema,
-		Creator: creator,
+		Symbol: symbol,
+		Creator: creator.String(),
+		Description: description,
+		PreviewURI: preview_uri,
 	}
 }
 
@@ -27,3 +29,15 @@ func ValidateDenomID(denomID string) error {
 	}
 	return nil
 }
+
+func ValidateDenomSymbol(denomSymbol string) error {
+	denomSymbol = strings.TrimSpace(denomSymbol)
+	if len(denomSymbol) < MinSymbolLen || len(denomSymbol) > MaxSymbolLen {
+		return sdkerrors.Wrapf(ErrInvalidDenomSymbol, "invalid denom symbol %s, only accepts value [%d, %d]", MinSymbolLen, MaxSymbolLen)
+	}
+
+	if !IsBeginWithAlpha(denomSymbol) || !IsAlpha(denomSymbol) {
+		return sdkerrors.Wrapf(ErrInvalidDenomSymbol, "invalid denom symbol %s, only accepts alphabetic characters", denomSymbol)
+	}
+	return nil
+ }

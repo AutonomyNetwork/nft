@@ -17,7 +17,7 @@ func (k Keeper) GetNFT(ctx sdk.Context, denomID, tokenID string) (nft exported.N
 		return nil, sdkerrors.Wrapf(types.ErrUnknownCollection, "not found NFT: %s", denomID)
 	}
 
-	var baseNFT types.BaseNFT
+	var baseNFT types.NFT
 	k.cdc.MustUnmarshal(bz, &baseNFT)
 	return baseNFT, nil
 }
@@ -29,7 +29,7 @@ func (k Keeper) GetNFTs(ctx sdk.Context, denom string) (nfts []exported.NFT) {
 	iterator := sdk.KVStorePrefixIterator(store, types.KeyNFT(denom, ""))
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
-		var baseNFT types.BaseNFT
+		var baseNFT types.NFT
 		k.cdc.MustUnmarshal(iterator.Value(), &baseNFT)
 		nfts = append(nfts, baseNFT)
 	}
@@ -39,16 +39,16 @@ func (k Keeper) GetNFTs(ctx sdk.Context, denom string) (nfts []exported.NFT) {
 //Authorize check if the sender is the issuer of nft, if it returns nft, if not, return an error
 func (k Keeper) Authorize(ctx sdk.Context,
 	denomID, tokenID string,
-	owner sdk.AccAddress) (types.BaseNFT, error) {
+	owner sdk.AccAddress) (types.NFT, error) {
 	nft, err := k.GetNFT(ctx, denomID, tokenID)
 	if err != nil {
-		return types.BaseNFT{}, err
+		return types.NFT{}, err
 	}
 
 	if !owner.Equals(nft.GetOwner()) {
-		return types.BaseNFT{}, sdkerrors.Wrap(types.ErrUnauthorized, owner.String())
+		return types.NFT{}, sdkerrors.Wrap(types.ErrUnauthorized, owner.String())
 	}
-	return nft.(types.BaseNFT), nil
+	return nft.(types.NFT), nil
 }
 
 //HasNFT determine if nft exists
@@ -57,7 +57,7 @@ func (k Keeper) HasNFT(ctx sdk.Context, denomID, tokenID string) bool {
 	return store.Has(types.KeyNFT(denomID, tokenID))
 }
 
-func (k Keeper) setNFT(ctx sdk.Context, denomID string, nft types.BaseNFT) {
+func (k Keeper) SetNFT(ctx sdk.Context, denomID string, nft types.NFT) {
 	store := ctx.KVStore(k.storeKey)
 
 	bz := k.cdc.MustMarshal(&nft)

@@ -2,27 +2,25 @@ package types
 
 import (
 	"bytes"
-	"strings"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // NewIDCollection creates a new IDCollection instance
-func NewIDCollection(denom string, ids []string) IDCollection {
+func NewIDCollection(denomId string, ids []string) IDCollection {
 	return IDCollection{
-		Denom: strings.TrimSpace(denom),
-		Ids:   ids,
+		DenomId: denomId,
+		NftIds:   ids,
 	}
 }
 
 // Supply return the amount of the denom
 func (idc IDCollection) Supply() int {
-	return len(idc.Ids)
+	return len(idc.NftIds)
 }
 
 // AddID adds an ID to the idCollection
 func (idc IDCollection) AddID(id string) IDCollection {
-	idc.Ids = append(idc.Ids, id)
+	idc.NftIds = append(idc.NftIds, id)
 	return idc
 }
 
@@ -33,14 +31,14 @@ type IDCollections []IDCollection
 // Add adds an ID to the idCollection
 func (idcs IDCollections) Add(denom, id string) IDCollections {
 	for i, idc := range idcs {
-		if idc.Denom == denom {
+		if idc.DenomId == denom {
 			idcs[i] = idc.AddID(id)
 			return idcs
 		}
 	}
 	return append(idcs, IDCollection{
-		Denom: denom,
-		Ids:   []string{id},
+		DenomId: denom,
+		NftIds:   []string{id},
 	})
 }
 
@@ -69,7 +67,7 @@ func (idcs IDCollections) String() string {
 // NewOwner creates a new Owner
 func NewOwner(owner sdk.AccAddress, idCollections ...IDCollection) Owner {
 	return Owner{
-		Address:       owner,
+		Address:       owner.String(),
 		IDCollections: idCollections,
 	}
 }

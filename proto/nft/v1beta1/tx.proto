@@ -2,6 +2,7 @@ syntax = "proto3";
 package nft.v1beta1;
 
 import "gogoproto/gogo.proto";
+import "nft/v1beta1/nft.proto";
 
 option go_package = "github.com/AutonomyNetwork/nft/types";
 option (gogoproto.goproto_getters_all) = false;
@@ -14,25 +15,49 @@ service Msg {
 }
 
 message MsgCreateDenom {
+  option (gogoproto.equal) = true;
 
+  string id = 1;
+  string name = 2;
+  string symbol = 3;
+  string description = 4;
+  string preview_uri = 5 [
+    (gogoproto.moretags) = "yaml:\"preview_uri\"",
+    (gogoproto.customname) = "PreviewURI"
+  ];
+  string creator = 6;
 }
 
 message MsgCreateDenomResponse {}
 
 message MsgMintNFT {
-
+  string id = 1;
+  string denom_id = 2 [(gogoproto.moretags) = "yaml:\"denom_id\""];
+  Metadata metadata = 3 [(gogoproto.nullable) = false];
+  string data = 4;
+  bool transferable = 5;
+  string creator = 6;
+  string royalties = 7;
 }
 
 message MsgMintNFTResponse {}
 
 message MsgUpdateNFT{
-
+  string royalties = 1;
+  bool transferable = 2;
+  string data = 3;
+  string owner = 4;
 }
 
 message MsgUpdateNFTResponse{}
 
 message MsgTransferNFT {
-
+  string id = 1;
+  string denom_id = 2 [(gogoproto.moretags) = "yaml\"denom_id\""];
+  string sender = 3;
+  string recipient = 4;
 }
 
-message MsgTransferNFTResponse{}
+message MsgTransferNFTResponse{
+
+}

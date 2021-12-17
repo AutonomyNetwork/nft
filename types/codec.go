@@ -14,27 +14,26 @@ import (
 
 // RegisterLegacyAminoCodec concrete types on codec
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgIssueDenom{}, "AutonomyNetwork/nft/MsgIssueDenom", nil)
-	cdc.RegisterConcrete(&MsgTransferNFT{}, "AutonomyNetwork/nft/MsgTransferNFT", nil)
-	cdc.RegisterConcrete(&MsgEditNFT{}, "AutonomyNetwork/nft/MsgEditNFT", nil)
+	cdc.RegisterConcrete(&MsgCreateDenom{}, "AutonomyNetwork/nft/MsgCreateDenom", nil)
 	cdc.RegisterConcrete(&MsgMintNFT{}, "AutonomyNetwork/nft/MsgMintNFT", nil)
-	cdc.RegisterConcrete(&MsgBurnNFT{}, "AutonomyNetwork/nft/MsgBurnNFT", nil)
+	cdc.RegisterConcrete(&MsgUpdateNFT{}, "AutonomyNetwork/nft/MsgUpdateNFT", nil)
+	cdc.RegisterConcrete(&MsgTransferNFT{}, "AutonomyNetwork/nft/MsgTransferNFT", nil)
+
 
 	cdc.RegisterInterface((*exported.NFT)(nil), nil)
-	cdc.RegisterConcrete(&BaseNFT{}, "AutonomyNetwork/nft/BaseNFT", nil)
+	cdc.RegisterConcrete(&NFT{}, "AutonomyNetwork/nft/NFT", nil)
 }
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgIssueDenom{},
-		&MsgTransferNFT{},
-		&MsgEditNFT{},
+		&MsgCreateDenom{},
 		&MsgMintNFT{},
-		&MsgBurnNFT{},
+		&MsgUpdateNFT{},
+		&MsgTransferNFT{},
 	)
 
 	registry.RegisterImplementations((*exported.NFT)(nil),
-		&BaseNFT{},
+		&NFT{},
 	)
 }
 

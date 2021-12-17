@@ -21,6 +21,10 @@ const (
 	RouterKey = ModuleName
 )
 
+const (
+	DenomPrifix = "nftDenom"
+)
+
 var (
 	PrefixNFT        = []byte{0x01}
 	PrefixOwners     = []byte{0x02} // key for a owner

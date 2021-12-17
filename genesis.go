@@ -52,11 +52,11 @@ func ValidateGenesis(data types.GenesisState) error {
 				return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "missing owner")
 			}
 
-			if err := types.ValidateTokenID(nft.GetID()); err != nil {
+			if err := types.ValidateNFTID(nft.GetID()); err != nil {
 				return err
 			}
 
-			if err := types.ValidateTokenURI(nft.GetURI()); err != nil {
+			if err := types.ValidateMediaURI(nft.GetMediaURI()); err != nil {
 				return err
 			}
 		}
