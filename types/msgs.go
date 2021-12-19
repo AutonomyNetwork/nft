@@ -10,9 +10,9 @@ import (
 
 // constant used to indicate that some field should not be updated
 const (
-	DoNotModify = "[do-not-modify]"
-	MinDenomLen = 3
-	MaxDenomLen = 64
+	DoNotModify  = "[do-not-modify]"
+	MinDenomLen  = 3
+	MaxDenomLen  = 64
 	MinSymbolLen = 3
 	MaxSymbolLen = 12
 
@@ -21,8 +21,8 @@ const (
 
 const (
 	TypeCreateDenom = "create_denom"
-	TypeMintNFT = "mint_nft"
-	TypeUpdateNFT = "update_nft"
+	TypeMintNFT     = "mint_nft"
+	TypeUpdateNFT   = "update_nft"
 	TypeTransferNFT = "transfer_nft"
 )
 
@@ -30,7 +30,7 @@ var (
 	// IsAlphaNumeric only accepts alphanumeric characters
 	IsAlphaNumeric   = regexp.MustCompile(`^[a-zA-Z0-9]+$`).MatchString
 	IsBeginWithAlpha = regexp.MustCompile(`^[a-zA-Z].*`).MatchString
-	IsAlpha = regexp.MustCompile(`^[a-zA-Z].*`).MatchString
+	IsAlpha          = regexp.MustCompile(`^[a-zA-Z].*`).MatchString
 )
 
 var (
@@ -42,21 +42,21 @@ var (
 
 func NewMsgCreateDenom(name, symbol, description, preview_uri, creator string) *MsgCreateDenom {
 	return &MsgCreateDenom{
-		Id: GenUniqueID(DenomPrifix),
-		Name: name,
-		Symbol: symbol,
+		Id:          GenUniqueID(DenomPrifix),
+		Name:        name,
+		Symbol:      symbol,
 		Description: description,
-		PreviewURI: preview_uri,
-		Creator: creator,
+		PreviewURI:  preview_uri,
+		Creator:     creator,
 	}
 }
 
-func (msg MsgCreateDenom) Route() string { return RouterKey}
+func (msg MsgCreateDenom) Route() string { return RouterKey }
 
-func (msg MsgCreateDenom) Type() string { return TypeCreateDenom}
+func (msg MsgCreateDenom) Type() string { return TypeCreateDenom }
 
 func (msg MsgCreateDenom) ValidateBasic() error {
-	if err := ValidateDenomID(msg.Id); err != nil{
+	if err := ValidateDenomID(msg.Id); err != nil {
 		return err
 	}
 
@@ -89,12 +89,20 @@ func (msg MsgCreateDenom) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{from}
 }
 
-func NewMsgMintNFT() *MsgMintNFT {
-	return NewMsgMintNFT()
+func NewMsgMintNFT(denomId, data, creator, royalties string, metadata Metadata, transferable bool) *MsgMintNFT {
+	return &MsgMintNFT{
+		Id:           GenUniqueID(NFTPrefix),
+		DenomId:      denomId,
+		Data:         data,
+		Creator:      creator,
+		Royalties:    royalties,
+		Metadata:     metadata,
+		Transferable: transferable,
+	}
 }
 func (msg MsgMintNFT) Route() string { return RouterKey }
 
-func (msg MsgMintNFT) Type() string {return TypeMintNFT}
+func (msg MsgMintNFT) Type() string { return TypeMintNFT }
 
 func (msg MsgMintNFT) ValidateBasic() error {
 	if err := ValidateNFTID(msg.Id); err != nil {
@@ -123,18 +131,18 @@ func (msg MsgMintNFT) ValidateBasic() error {
 		return err
 	}
 
-	if _, err := sdk.AccAddressFromBech32(msg.Creator); err != nil{
+	if _, err := sdk.AccAddressFromBech32(msg.Creator); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 	return nil
 }
 
-func (msg MsgMintNFT) GetSignBytes() []byte  {
+func (msg MsgMintNFT) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(&msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg MsgMintNFT) GetSigners() []sdk.AccAddress  {
+func (msg MsgMintNFT) GetSigners() []sdk.AccAddress {
 	from, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -145,9 +153,9 @@ func (msg MsgMintNFT) GetSigners() []sdk.AccAddress  {
 
 func NewMsgUpdateNFT(royalties, data string, transferable bool) *MsgUpdateNFT {
 	return &MsgUpdateNFT{
-		Royalties: royalties,
+		Royalties:    royalties,
 		Transferable: transferable,
-		Data: data,
+		Data:         data,
 	}
 }
 
@@ -162,7 +170,7 @@ func (msg MsgUpdateNFT) ValidateBasic() error {
 	return nil
 }
 
-func (msg MsgUpdateNFT) GetSignBytes() []byte{
+func (msg MsgUpdateNFT) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(&msg)
 	return sdk.MustSortJSON(bz)
 }
@@ -172,18 +180,18 @@ func (msg MsgUpdateNFT) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{from}
 }
 
-func NewTransferNFT(id, denom, sender, recipient string) *MsgTransferNFT  {
+func NewTransferNFT(id, denom, sender, recipient string) *MsgTransferNFT {
 	return &MsgTransferNFT{
-		Id: id,
-		DenomId: denom,
-		Sender: sender,
+		Id:        id,
+		DenomId:   denom,
+		Sender:    sender,
 		Recipient: recipient,
 	}
 }
 
-func (msg MsgTransferNFT) Route() string {return RouterKey}
+func (msg MsgTransferNFT) Route() string { return RouterKey }
 
-func (msg MsgTransferNFT) Type() string {return TypeTransferNFT}
+func (msg MsgTransferNFT) Type() string { return TypeTransferNFT }
 
 func (msg MsgTransferNFT) ValidateBasic() error {
 	if err := ValidateNFTID(msg.Id); err != nil {

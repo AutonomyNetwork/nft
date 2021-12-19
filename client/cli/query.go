@@ -1,23 +1,31 @@
 package cli
 
-import "github.com/spf13/cobra"
+import (
+	"context"
+	"fmt"
+	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/version"
+	"github.com/spf13/cobra"
+	"strings"
+)
 
 //
 import (
-//	"context"
-//	"fmt"
-//	"strings"
-//
-//	"github.com/spf13/cobra"
-//	"github.com/spf13/viper"
-//
-//	"github.com/cosmos/cosmos-sdk/client"
-//	"github.com/cosmos/cosmos-sdk/client/flags"
-//	sdk "github.com/cosmos/cosmos-sdk/types"
-//	"github.com/cosmos/cosmos-sdk/version"
-//
+	//	"fmt"
+	//	"strings"
+	//
+	//	"github.com/spf13/cobra"
+	//	"github.com/spf13/viper"
+	//
+	//	"github.com/cosmos/cosmos-sdk/client"
+	//	"github.com/cosmos/cosmos-sdk/client/flags"
+	//	sdk "github.com/cosmos/cosmos-sdk/types"
+	//	"github.com/cosmos/cosmos-sdk/version"
+	//
 	"github.com/AutonomyNetwork/nft/types"
 )
+
 //
 // GetQueryCmd returns the cli query commands for this module
 func GetQueryCmd() *cobra.Command {
@@ -28,7 +36,7 @@ func GetQueryCmd() *cobra.Command {
 	}
 
 	queryCmd.AddCommand(
-		//GetCmdQueryDenom(),
+		GetCmdQueryDenom(),
 		//GetCmdQueryDenoms(),
 		//GetCmdQueryCollection(),
 		//GetCmdQuerySupply(),
@@ -38,6 +46,7 @@ func GetQueryCmd() *cobra.Command {
 
 	return queryCmd
 }
+
 //
 //// GetCmdQuerySupply queries the supply of a nft collection
 //func GetCmdQuerySupply() *cobra.Command {
@@ -191,41 +200,45 @@ func GetQueryCmd() *cobra.Command {
 //	return cmd
 //}
 //
-//// GetCmdQueryDenoms queries the specified denoms
-//func GetCmdQueryDenom() *cobra.Command {
-//	cmd := &cobra.Command{
-//		Use: "denom [denomID]",
-//		Long: strings.TrimSpace(
-//			fmt.Sprintf(`Query the denominations by the specified denmo name
-//Example:
-//$ %s query nft denom <denom>`, version.AppName)),
-//		Args: cobra.ExactArgs(1),
-//		RunE: func(cmd *cobra.Command, args []string) error {
-//			clientCtx := client.GetClientContextFromCmd(cmd)
-//			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
-//			if err != nil {
-//				return err
-//			}
-//
-//			denom := strings.TrimSpace(args[0])
-//			if err := types.ValidateDenomID(denom); err != nil {
-//				return err
-//			}
-//
-//			queryClient := types.NewQueryClient(clientCtx)
-//			resp, err := queryClient.Denom(context.Background(), &types.QueryDenomRequest{
-//				Denom: denom,
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			return clientCtx.PrintProto(resp.Denom)
-//		},
-//	}
-//	flags.AddQueryFlagsToCmd(cmd)
-//
-//	return cmd
-//}
+// GetCmdQueryDenoms queries the specified denoms
+func GetCmdQueryDenom() *cobra.Command {
+	cmd := &cobra.Command{
+		Use: "denom [denomID]",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Query the denominations by the specified denmo name
+Example:
+$ %s query nft denom <denom>`, version.AppName)),
+		Args: cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			clientCtx, err = client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			denom := strings.TrimSpace(args[0])
+			if err := types.ValidateDenomID(denom); err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+			resp, err := queryClient.Denom(context.Background(), &types.QueryDenomRequest{
+				DenomId: denom,
+			})
+			if err != nil {
+				return err
+			}
+			return clientCtx.PrintProto(resp.Denom)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
 //
 //// GetCmdQueryNFT queries a single NFTs from a collection
 //func GetCmdQueryNFT() *cobra.Command {

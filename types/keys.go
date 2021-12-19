@@ -23,6 +23,7 @@ const (
 
 const (
 	DenomPrifix = "nftDenom"
+	NFTPrefix   = "nft"
 )
 
 var (

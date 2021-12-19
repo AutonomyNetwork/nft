@@ -5,7 +5,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -14,19 +13,20 @@ import (
 
 //
 import (
-//	"fmt"
-//	"strings"
-//
-//	"github.com/cosmos/cosmos-sdk/client"
-//	"github.com/cosmos/cosmos-sdk/client/flags"
-//	"github.com/cosmos/cosmos-sdk/client/tx"
-//	sdk "github.com/cosmos/cosmos-sdk/types"
-//	"github.com/cosmos/cosmos-sdk/version"
-//	"github.com/spf13/cobra"
-//	"github.com/spf13/viper"
-//
+	//	"fmt"
+	//	"strings"
+	//
+	//	"github.com/cosmos/cosmos-sdk/client"
+	//	"github.com/cosmos/cosmos-sdk/client/flags"
+	//	"github.com/cosmos/cosmos-sdk/client/tx"
+	//	sdk "github.com/cosmos/cosmos-sdk/types"
+	//	"github.com/cosmos/cosmos-sdk/version"
+	//	"github.com/spf13/cobra"
+	//	"github.com/spf13/viper"
+	//
 	"github.com/AutonomyNetwork/nft/types"
 )
+
 //
 // NewTxCmd returns the transaction commands for this module
 func NewTxCmd() *cobra.Command {
@@ -40,7 +40,7 @@ func NewTxCmd() *cobra.Command {
 
 	txCmd.AddCommand(
 		GetCmdCreateDenom(),
-		//GetCmdMintNFT(),
+		GetCmdMintNFT(),
 		//GetCmdEditNFT(),
 		//GetCmdTransferNFT(),
 		//GetCmdBurnNFT(),
@@ -48,11 +48,12 @@ func NewTxCmd() *cobra.Command {
 
 	return txCmd
 }
+
 //
 // GetCmdMintNFT is the CLI command for a MintNFT transaction
 func GetCmdCreateDenom() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "Create",
+		Use: "create [denom]",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Create a new denom.
 Example:
@@ -62,14 +63,16 @@ $ %s tx nft create --from=<key-name> --name=<name> --data=<data> --symbol=<symbo
 		),
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, _ := client.GetClientTxContext(cmd)
 			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
 
+			fmt.Println("Creator address: ", clientCtx.FromAddress)
+
 			msg := types.NewMsgCreateDenom(
-				viper.GetString(FlagDenomName),
+				args[0],
 				viper.GetString(FlagSymbol),
 				viper.GetString(FlagDenomDescription),
 				viper.GetString(FlagPreviewURI),
@@ -86,6 +89,7 @@ $ %s tx nft create --from=<key-name> --name=<name> --data=<data> --symbol=<symbo
 
 	return cmd
 }
+
 //
 // GetCmdMintNFT is the CLI command for a MintNFT transaction
 func GetCmdMintNFT() *cobra.Command {
@@ -106,24 +110,25 @@ $ %s tx nft mint [denomID] --media_uri=<media_uri> --preview_uri=<preview_uri> -
 				return err
 			}
 
-			var recipient = clientCtx.GetFromAddress()
+			name := viper.GetString(FlagTokenName)
+			description := viper.GetString(FlagDenomDescription)
+			media_uri := viper.GetString(FlagMediaURI)
+			previewURI := viper.GetString(FlagPreviewURI)
 
-			recipientStr := strings.TrimSpace(viper.GetString(FlagRecipient))
-			if len(recipientStr) > 0 {
-				recipient, err = sdk.AccAddressFromBech32(recipientStr)
-				if err != nil {
-					return err
-				}
+			metaData := types.Metadata{
+				Name:        name,
+				Description: description,
+				MediaURI:    media_uri,
+				PreviewURI:  previewURI,
 			}
 
-			msg := types.NewMsgCreateDenom(
-				args[1],
+			msg := types.NewMsgMintNFT(
 				args[0],
-				viper.GetString(FlagTokenName),
-				viper.GetString(FlagTokenURI),
 				viper.GetString(FlagTokenData),
-				clientCtx.GetFromAddress(),
-				recipient,
+				clientCtx.GetFromAddress().String(),
+				viper.GetString(FlagRoyalties),
+				metaData,
+				viper.GetBool(FlagTransferable),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -136,6 +141,7 @@ $ %s tx nft mint [denomID] --media_uri=<media_uri> --preview_uri=<preview_uri> -
 
 	return cmd
 }
+
 //
 //// GetCmdEditNFT is the CLI command for sending an MsgEditNFT transaction
 //func GetCmdEditNFT() *cobra.Command {
