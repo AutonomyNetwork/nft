@@ -41,7 +41,7 @@ func GetQueryCmd() *cobra.Command {
 		//GetCmdQueryCollection(),
 		//GetCmdQuerySupply(),
 		//GetCmdQueryOwner(),
-		//GetCmdQueryNFT(),
+		GetCmdQueryNFT(),
 	)
 
 	return queryCmd
@@ -239,45 +239,47 @@ $ %s query nft denom <denom>`, version.AppName)),
 	return cmd
 }
 
-//
-//// GetCmdQueryNFT queries a single NFTs from a collection
-//func GetCmdQueryNFT() *cobra.Command {
-//	cmd := &cobra.Command{
-//		Use: "token [denomID] [tokenID]",
-//		Long: strings.TrimSpace(
-//			fmt.Sprintf(`Query a single NFT from a collection
-//Example:
-//$ %s query nft token <denom> <tokenID>`, version.AppName)),
-//		Args: cobra.ExactArgs(2),
-//		RunE: func(cmd *cobra.Command, args []string) error {
-//			clientCtx := client.GetClientContextFromCmd(cmd)
-//			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
-//			if err != nil {
-//				return err
-//			}
-//
-//			denom := strings.TrimSpace(args[0])
-//			if err := types.ValidateDenomID(denom); err != nil {
-//				return err
-//			}
-//
-//			tokenID := strings.TrimSpace(args[1])
-//			if err := types.ValidateTokenID(tokenID); err != nil {
-//				return err
-//			}
-//
-//			queryClient := types.NewQueryClient(clientCtx)
-//			resp, err := queryClient.NFT(context.Background(), &types.QueryNFTRequest{
-//				Denom: denom,
-//				Id:    tokenID,
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			return clientCtx.PrintProto(resp.NFT)
-//		},
-//	}
-//	flags.AddQueryFlagsToCmd(cmd)
-//
-//	return cmd
-//}
+// GetCmdQueryNFT queries a single NFTs from a collection
+func GetCmdQueryNFT() *cobra.Command {
+	cmd := &cobra.Command{
+		Use: "token [denomID] [tokenID]",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Query a single NFT from a collection
+Example:
+$ %s query nft token <denom> <tokenID>`, version.AppName)),
+		Args: cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			clientCtx, err = client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			denom := strings.TrimSpace(args[0])
+			if err := types.ValidateDenomID(denom); err != nil {
+				return err
+			}
+
+			tokenID := strings.TrimSpace(args[1])
+			if err := types.ValidateNFTID(tokenID); err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+			resp, err := queryClient.NFT(context.Background(), &types.QueryNFTRequest{
+				DenomId: denom,
+				Id:      tokenID,
+			})
+			if err != nil {
+				return err
+			}
+			return clientCtx.PrintProto(resp.NFT)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}

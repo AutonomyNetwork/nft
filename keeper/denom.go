@@ -38,6 +38,7 @@ func (k Keeper) SetDenom(ctx sdk.Context, denom types.Denom) error {
 	if len(denom.Name) > 0 {
 		store.Set(types.KeyDenomName(denom.Name), []byte(denom.Id))
 	}
+
 	return nil
 }
 

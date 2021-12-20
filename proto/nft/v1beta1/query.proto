@@ -8,11 +8,11 @@ option go_package = "github.com/AutonomyNetwork/nft/types";
 
 service Query {
   rpc Denom(QueryDenomRequest) returns (QueryDenomResponse) {
-    option (google.api.http).get = "/autonomyNetwork/nft/v1beta1/denoms/{denom_id}";
+    option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/denoms/{denom_id}";
   }
 
   rpc NFT(QueryNFTRequest) returns (QueryNFTResponse) {
-    option (google.api.http).get = "/autonomyNetwork/nft/v1beta1/denoms/{denom_id}/nfts/{id}";
+    option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/denoms/{denom_id}/nfts/{id}";
   }
 }
 

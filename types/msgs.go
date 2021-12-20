@@ -42,7 +42,7 @@ var (
 
 func NewMsgCreateDenom(name, symbol, description, preview_uri, creator string) *MsgCreateDenom {
 	return &MsgCreateDenom{
-		Id:          GenUniqueID(DenomPrifix),
+		Id:          GenUniqueID(DenomPrefix),
 		Name:        name,
 		Symbol:      symbol,
 		Description: description,
@@ -151,11 +151,16 @@ func (msg MsgMintNFT) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{from}
 }
 
-func NewMsgUpdateNFT(royalties, data string, transferable bool) *MsgUpdateNFT {
+func NewMsgUpdateNFT(id, denomId, royalties, data, description, name, owner string, transferable bool) *MsgUpdateNFT {
 	return &MsgUpdateNFT{
+		Id:           id,
+		DenomID:      denomId,
 		Royalties:    royalties,
 		Transferable: transferable,
 		Data:         data,
+		Description:  description,
+		Name:         name,
+		Owner:        owner,
 	}
 }
 
@@ -164,9 +169,9 @@ func (msg MsgUpdateNFT) Route() string { return RouterKey }
 func (msg MsgUpdateNFT) Type() string { return TypeUpdateNFT }
 
 func (msg MsgUpdateNFT) ValidateBasic() error {
-	if _, err := sdk.AccAddressFromBech32(msg.Owner); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid owner address %s", err)
-	}
+	//if _, err := sdk.AccAddressFromBech32(msg.Owner); err != nil {
+	//	return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid owner address %s", err)
+	//}
 	return nil
 }
 
@@ -180,7 +185,7 @@ func (msg MsgUpdateNFT) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{from}
 }
 
-func NewTransferNFT(id, denom, sender, recipient string) *MsgTransferNFT {
+func NewMsgTransferNFT(id, denom, sender, recipient string) *MsgTransferNFT {
 	return &MsgTransferNFT{
 		Id:        id,
 		DenomId:   denom,

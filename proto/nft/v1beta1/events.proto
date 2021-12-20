@@ -17,3 +17,16 @@ message EventMintNFT {
   string denomId = 2;
   string creator = 3;
 }
+
+message EventTransferNFT {
+  string id = 1;
+  string denomID = 2;
+  string sender = 3;
+  string recipient = 4;
+}
+
+message EventUpdateNFT {
+  string id = 1;
+  string denom_id =2;
+  string owner = 3;
+}

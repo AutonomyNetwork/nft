@@ -300,9 +300,9 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Denom_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"autonomyNetwork", "nft", "v1beta1", "denoms", "denom_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Denom_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"AutonomyNetwork", "nft", "v1beta1", "denoms", "denom_id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_NFT_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"autonomyNetwork", "nft", "v1beta1", "denoms", "denom_id", "nfts", "id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_NFT_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"AutonomyNetwork", "nft", "v1beta1", "denoms", "denom_id", "nfts", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

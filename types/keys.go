@@ -22,7 +22,7 @@ const (
 )
 
 const (
-	DenomPrifix = "nftDenom"
+	DenomPrefix = "nftdenom"
 	NFTPrefix   = "nft"
 )
 

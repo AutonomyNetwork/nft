@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"github.com/AutonomyNetwork/nft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"strings"
@@ -9,14 +10,6 @@ import (
 
 type msgServer struct {
 	Keeper
-}
-
-func (m msgServer) UpdateNFT(ctx context.Context, nft *types.MsgUpdateNFT) (*types.MsgUpdateNFTResponse, error) {
-	panic("implement me")
-}
-
-func (m msgServer) TransferNFT(ctx context.Context, nft *types.MsgTransferNFT) (*types.MsgTransferNFTResponse, error) {
-	panic("implement me")
 }
 
 var _ types.MsgServer = msgServer{}
@@ -138,75 +131,76 @@ func (m msgServer) MintNFT(goCtx context.Context,
 		&types.EventMintNFT{
 			Id:      msg.Id,
 			DenomId: msg.DenomId,
-			Creator:   msg.Creator,
+			Creator: msg.Creator,
 		},
 	)
 
 	return &types.MsgMintNFTResponse{}, nil
 }
 
-//func (m msgServer) EditONFT(goCtx context.Context,
-//	msg *types.MsgEditONFT) (*types.MsgEditONFTResponse, error) {
-//
-//	sender, err := sdk.AccAddressFromBech32(msg.Sender)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	ctx := sdk.UnwrapSDKContext(goCtx)
-//	if err := m.Keeper.EditONFT(ctx, msg.DenomId, msg.Id,
-//		msg.Metadata,
-//		msg.Data,
-//		msg.Transferable,
-//		msg.Extensible,
-//		sender,
-//	); err != nil {
-//		return nil, err
-//	}
-//
-//	ctx.EventManager().EmitTypedEvent(
-//		&types.EventEditONFT{
-//			Id:      msg.Id,
-//			DenomId: msg.DenomId,
-//			Owner:   msg.Sender,
-//		},
-//	)
-//	return &types.MsgEditONFTResponse{}, nil
-//}
-//
-//func (m msgServer) TransferONFT(goCtx context.Context,
-//	msg *types.MsgTransferONFT) (*types.MsgTransferONFTResponse, error) {
-//
-//	sender, err := sdk.AccAddressFromBech32(msg.Sender)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	recipient, err := sdk.AccAddressFromBech32(msg.Recipient)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	ctx := sdk.UnwrapSDKContext(goCtx)
-//	if err := m.Keeper.TransferOwnership(ctx, msg.DenomId, msg.Id,
-//		sender,
-//		recipient,
-//	); err != nil {
-//		return nil, err
-//	}
-//
-//	ctx.EventManager().EmitTypedEvent(
-//		&types.EventTransferONFT{
-//			Id:        msg.Id,
-//			DenomId:   msg.DenomId,
-//			Sender:    msg.Sender,
-//			Recipient: msg.Recipient,
-//		},
-//	)
-//
-//	return &types.MsgTransferONFTResponse{}, nil
-//}
-//
+func (m msgServer) UpdateNFT(goCtx context.Context,
+	msg *types.MsgUpdateNFT) (*types.MsgUpdateNFTResponse, error) {
+
+	owner, err := sdk.AccAddressFromBech32(msg.Owner)
+	if err != nil {
+		return nil, err
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	if err := m.Keeper.UpdateNFT(ctx, msg.DenomID, msg.Id,
+		msg.Data,
+		msg.Name,
+		msg.Description,
+		msg.Royalties,
+		msg.Transferable,
+		owner,
+	); err != nil {
+		return nil, err
+	}
+
+	ctx.EventManager().EmitTypedEvent(
+		&types.EventUpdateNFT{
+			Id:      msg.Id,
+			DenomId: msg.DenomID,
+			Owner:   msg.Owner,
+		},
+	)
+	return &types.MsgUpdateNFTResponse{}, nil
+}
+
+func (m msgServer) TransferNFT(goCtx context.Context,
+	msg *types.MsgTransferNFT) (*types.MsgTransferNFTResponse, error) {
+	fmt.Println("======================================== ", msg)
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, err
+	}
+
+	recipient, err := sdk.AccAddressFromBech32(msg.Recipient)
+	if err != nil {
+		return nil, err
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	if err := m.Keeper.TransferOwner(ctx, msg.DenomId, msg.Id,
+		sender,
+		recipient,
+	); err != nil {
+		return nil, err
+	}
+
+	ctx.EventManager().EmitTypedEvent(
+		&types.EventTransferNFT{
+			Id:        msg.Id,
+			DenomID:   msg.DenomId,
+			Sender:    msg.Sender,
+			Recipient: msg.Recipient,
+		},
+	)
+
+	return &types.MsgTransferNFTResponse{}, nil
+}
+
 //func (m msgServer) BurnONFT(goCtx context.Context,
 //	msg *types.MsgBurnONFT) (*types.MsgBurnONFTResponse, error) {
 //
