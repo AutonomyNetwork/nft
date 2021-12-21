@@ -152,7 +152,6 @@ func (m msgServer) UpdateNFT(goCtx context.Context,
 		msg.Name,
 		msg.Description,
 		msg.Royalties,
-		msg.Transferable,
 		owner,
 	); err != nil {
 		return nil, err

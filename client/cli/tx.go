@@ -57,7 +57,7 @@ func GetCmdCreateDenom() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Create a new denom.
 Example:
-$ %s tx nft create --from=<key-name> --name=<name> --data=<data> --symbol=<symbol> --description=<description> --preview_uri=<preview_uri> --chain-id=<chain-id> --fees=<fee>`,
+$ %s tx nft create [denom] --data=<data> --symbol=<symbol> --description=<description> --preview_uri=<preview_uri> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
 				version.AppName,
 			),
 		),
@@ -74,7 +74,7 @@ $ %s tx nft create --from=<key-name> --name=<name> --data=<data> --symbol=<symbo
 			msg := types.NewMsgCreateDenom(
 				args[0],
 				viper.GetString(FlagSymbol),
-				viper.GetString(FlagDenomDescription),
+				viper.GetString(FlagDescription),
 				viper.GetString(FlagPreviewURI),
 				clientCtx.GetFromAddress().String(),
 			)
@@ -98,7 +98,7 @@ func GetCmdMintNFT() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Mint an NFT and set the owner to the recipient.
 Example:
-$ %s tx nft mint [denomID] --media_uri=<media_uri> --preview_uri=<preview_uri> --name=<name> --description=<description> --data=<data> --transferable=<transferable> --creator=<creator> --royalties=<royalties> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+$ %s tx nft mint [denomID] --media_uri=<media_uri> --preview_uri=<preview_uri> --name=<name> --description=<description> --data=<data> --transferable=<transferable> --royalties=<royalties> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
 				version.AppName,
 			),
 		),
@@ -114,7 +114,7 @@ $ %s tx nft mint [denomID] --media_uri=<media_uri> --preview_uri=<preview_uri> -
 			}
 
 			name := viper.GetString(FlagTokenName)
-			description := viper.GetString(FlagDenomDescription)
+			description := viper.GetString(FlagDescription)
 			media_uri := viper.GetString(FlagMediaURI)
 			previewURI := viper.GetString(FlagPreviewURI)
 
@@ -153,7 +153,7 @@ func GetCmdUpdateNFT() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Edit the tokenData of an NFT.
 Example:
-$ %s tx nft update [denomID] [tokenID] --data=<data> --name=<name> --trasnferable=<transferable> --description=<description> --royalties=<royalties> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+$ %s tx nft update [denomID] [tokenID] --data=<data> --name=<name> --transferable=<transferable> --description=<description> --royalties=<royalties> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
 				version.AppName,
 			),
 		),
@@ -168,15 +168,19 @@ $ %s tx nft update [denomID] [tokenID] --data=<data> --name=<name> --trasnferabl
 				return err
 			}
 
+			data := viper.GetString(FlagData)
+			description := viper.GetString(FlagDescription)
+
+			fmt.Println("data, description: ", data, description)
+
 			msg := types.NewMsgUpdateNFT(
 				args[1],
 				args[0],
 				viper.GetString(FlagRoyalties),
 				viper.GetString(FlagData),
-				viper.GetString(FlagDenomDescription),
+				viper.GetString(FlagDescription),
 				viper.GetString(FlagTokenName),
 				clientCtx.GetFromAddress().String(),
-				viper.GetBool(FlagTransferable),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -220,7 +224,6 @@ $ %s tx nft transfer [denomID] [nftID] [recipient] --from=<key-name> --chain-id=
 				args[2],
 			)
 
-			fmt.Println("Message {{{{{{{{{{{{{{{{{", msg)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

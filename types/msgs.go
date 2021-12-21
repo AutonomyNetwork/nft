@@ -151,16 +151,15 @@ func (msg MsgMintNFT) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{from}
 }
 
-func NewMsgUpdateNFT(id, denomId, royalties, data, description, name, owner string, transferable bool) *MsgUpdateNFT {
+func NewMsgUpdateNFT(id, denomId, royalties, data, description, name, owner string) *MsgUpdateNFT {
 	return &MsgUpdateNFT{
-		Id:           id,
-		DenomID:      denomId,
-		Royalties:    royalties,
-		Transferable: transferable,
-		Data:         data,
-		Description:  description,
-		Name:         name,
-		Owner:        owner,
+		Id:          id,
+		DenomID:     denomId,
+		Royalties:   royalties,
+		Data:        data,
+		Description: description,
+		Name:        name,
+		Owner:       owner,
 	}
 }
 

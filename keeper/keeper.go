@@ -64,7 +64,7 @@ func (k Keeper) MintNFT(ctx sdk.Context,
 
 // EditNFT updates an already existing NFTs
 func (k Keeper) UpdateNFT(ctx sdk.Context,
-	denomID, tokenID, data, name, description, royalties string, transferable bool,
+	denomID, tokenID, data, name, description, royalties string,
 	owner sdk.AccAddress) error {
 	if !k.HasDenomID(ctx, denomID) {
 		return sdkerrors.Wrapf(types.ErrInvalidDenom, "denomID %s not exists", denomID)
@@ -75,22 +75,21 @@ func (k Keeper) UpdateNFT(ctx sdk.Context,
 		return err
 	}
 
-	if name != "" {
+	if name != "[do-not-modify]" {
 		nft.Metadata.Name = name
 	}
 
-	if description != "" {
+	if description != "[do-not-modify]" {
 		nft.Metadata.Description = description
 	}
 
-	if data != "" {
+	if data != "[do-not-modify]" {
 		nft.Data = data
 	}
-	if royalties != "" {
+	if royalties != "[do-not-modify]" {
 		nft.Royalties = royalties
 	}
 
-	nft.Transferable = transferable
 	k.SetNFT(ctx, denomID, nft)
 	return nil
 }
