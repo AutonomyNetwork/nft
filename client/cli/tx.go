@@ -58,7 +58,7 @@ func GetCmdCreateDenom() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Create a new denom.
 Example:
-$ %s tx nft create [denom] --data=<data> --symbol=<symbol> --description=<description> --preview_uri=<preview_uri> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+$ %s tx nft create [denom] --symbol=<symbol> --description=<description> --preview_uri=<preview_uri> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
 				version.AppName,
 			),
 		),
@@ -97,7 +97,7 @@ func GetCmdMintNFT() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Mint an NFT and set the owner to the recipient.
 Example:
-$ %s tx nft mint [denomID] --media_uri=<media_uri> --preview_uri=<preview_uri> --name=<name> --description=<description> --data=<data> --transferable=<transferable> --royalties=<royalties> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+$ %s tx nft mint [denomID] --media_uri=<media_uri> --preview_uri=<preview_uri> --name=<name> --description=<description> --transferable=<transferable> --royalties=<royalties> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
 				version.AppName,
 			),
 		),
@@ -152,7 +152,7 @@ func GetCmdUpdateNFT() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Edit the tokenData of an NFT.
 Example:
-$ %s tx nft update [denomID] [tokenID] --data=<data> --name=<name> --transferable=<transferable> --description=<description> --royalties=<royalties> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+$ %s tx nft update [denomID] [tokenID] --name=<name> --description=<description> --royalties=<royalties> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
 				version.AppName,
 			),
 		),
@@ -167,16 +167,10 @@ $ %s tx nft update [denomID] [tokenID] --data=<data> --name=<name> --transferabl
 				return err
 			}
 
-			data := viper.GetString(FlagData)
-			description := viper.GetString(FlagDescription)
-
-			fmt.Println("data, description: ", data, description)
-
 			msg := types.NewMsgUpdateNFT(
 				args[1],
 				args[0],
 				viper.GetString(FlagRoyalties),
-				viper.GetString(FlagData),
 				viper.GetString(FlagDescription),
 				viper.GetString(FlagTokenName),
 				clientCtx.GetFromAddress().String(),

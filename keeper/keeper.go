@@ -37,7 +37,7 @@ func (k Keeper) CreateDenom(ctx sdk.Context, id, name, symbol, description, prev
 
 // MintNFT mints an NFT and manages that NFTs existence within Collections and Owners
 func (k Keeper) MintNFT(ctx sdk.Context,
-	denomID, nftID, data, royalties string, transferable bool,
+	denomID, nftID, royalties string, transferable bool,
 	owner, creator sdk.AccAddress, metadata types.Metadata) error {
 	if !k.HasDenomID(ctx, denomID) {
 		return sdkerrors.Wrapf(types.ErrInvalidDenom, "denomID %s not exists", denomID)
@@ -51,7 +51,6 @@ func (k Keeper) MintNFT(ctx sdk.Context,
 		nftID,
 		metadata,
 		owner,
-		data,
 		transferable,
 		royalties,
 		creator,
@@ -64,7 +63,7 @@ func (k Keeper) MintNFT(ctx sdk.Context,
 
 // EditNFT updates an already existing NFTs
 func (k Keeper) UpdateNFT(ctx sdk.Context,
-	denomID, tokenID, data, name, description, royalties string,
+	denomID, tokenID, name, description, royalties string,
 	owner sdk.AccAddress) error {
 	if !k.HasDenomID(ctx, denomID) {
 		return sdkerrors.Wrapf(types.ErrInvalidDenom, "denomID %s not exists", denomID)
@@ -83,9 +82,6 @@ func (k Keeper) UpdateNFT(ctx sdk.Context,
 		nft.Metadata.Description = description
 	}
 
-	if data != "[do-not-modify]" {
-		nft.Data = data
-	}
 	if royalties != "[do-not-modify]" {
 		nft.Royalties = royalties
 	}

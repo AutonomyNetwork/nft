@@ -9,6 +9,5 @@ type NFT interface {
 	GetID() string
 	GetName() string
 	GetOwner() sdk.AccAddress
-	GetData() string
 	IsTransferable() bool
 }
