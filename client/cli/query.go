@@ -283,3 +283,50 @@ $ %s query nft token <denom> <tokenID>`, version.AppName)),
 
 	return cmd
 }
+
+func CmdQueryMarketNFT() *cobra.Command {
+	cmd := &cobra.Command{
+		Use: "marketNFT [denomID] [NFTID]",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Query a single NFT from a market place.
+Example:
+$ %s query nft marketNFT [denomID] [NFTID]`,
+				version.AppName,
+			),
+		),
+		Args: cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cliCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			cliCtx, err = client.ReadPersistentCommandFlags(cliCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			if err := types.ValidateDenomID(args[0]); err != nil {
+				return err
+			}
+			if err := types.ValidateNFTID(args[1]); err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(cliCtx)
+			res, err := queryClient.MarketPlaceNFT(context.Background(), &types.QueryMarketPlaceNFTRequest{
+				DenomId: args[0],
+				Id:      args[1],
+			})
+
+			if err != nil {
+				return err
+			}
+
+			return cliCtx.PrintProto(res.MarketPlace)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}

@@ -103,7 +103,12 @@ func KeyDenomName(name string) []byte {
 	return append(key, []byte(name)...)
 }
 
-func KeyMarketPlace(denomID, tokenID string) []byte {
+func KeyMarketPlace(id string) []byte {
+	key := append(PrefixMarketPlace, delimiter...)
+	return append(key, []byte(id)...)
+}
+
+func KeyMarketPlaceNFT(denomID, tokenID string) []byte {
 	key := append(PrefixMarketPlace, delimiter...)
 	if len(denomID) > 0 {
 		key = append(key, []byte(denomID)...)

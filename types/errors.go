@@ -17,4 +17,5 @@ var (
 	ErrInvalidTokenID     = sdkerrors.Register(ModuleName, 11, "invalid tokenID")
 	ErrInvalidTokenURI    = sdkerrors.Register(ModuleName, 12, "invalid tokenURI")
 	ErrTransfer           = sdkerrors.Register(ModuleName, 13, "unauthorized to transfer")
+	ErrUnknownMarketPlace = sdkerrors.Register(ModuleName, 14, "unknown MarketPlace collection")
 )

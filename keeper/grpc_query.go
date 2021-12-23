@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -52,4 +53,36 @@ func (k Keeper) NFT(c context.Context, request *types.QueryNFTRequest) (*types.Q
 	return &types.QueryNFTResponse{
 		NFT: &NFT,
 	}, nil
+}
+
+func (k Keeper) MarketPlaceNFT(c context.Context, request *types.QueryMarketPlaceNFTRequest) (*types.QueryMarketPlaceNFTResponse, error) {
+	denom := strings.ToLower(strings.TrimSpace(request.DenomId))
+	nftID := strings.ToLower(strings.TrimSpace(request.Id))
+	ctx := sdk.UnwrapSDKContext(c)
+
+	marketplace, err := k.GetMarketPlaceNFT(ctx, denom, nftID)
+	if err != nil {
+		return nil, err
+	}
+
+	MarketPlace, ok := marketplace.(types.MarketPlace)
+	if !ok {
+		return nil, sdkerrors.Wrapf(types.ErrUnknownNFT, "invalid type MarketPlace %s from collection %s", request.Id, request.DenomId)
+	}
+
+	return &types.QueryMarketPlaceNFTResponse{
+		MarketPlace: &MarketPlace,
+	}, nil
+
+}
+
+func (k Keeper) MarketPlace(c context.Context, request *types.QueryMarketPlaceRequest) (*types.QueryMarketPlaceResponse, error) {
+	denomId := strings.ToLower(strings.TrimSpace(request.DenomId))
+
+	ctx := sdk.UnwrapSDKContext(c)
+
+	nfts := k.GetMarketPlaceNFTs(ctx, denomId)
+
+	fmt.Println(nfts)
+	return nil, nil
 }

@@ -74,5 +74,5 @@ func (k Keeper) SetNFTMarketPlace(ctx sdk.Context, order types.MarketPlace) {
 	store := ctx.KVStore(k.storeKey)
 
 	bz := k.cdc.MustMarshal(&order)
-	store.Set(types.KeyMarketPlace(order.GetDenomID(), order.GetNFTID()), bz)
+	store.Set(types.KeyMarketPlaceNFT(order.GetDenomID(), order.GetNFTID()), bz)
 }

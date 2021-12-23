@@ -48,12 +48,11 @@ message NFT {
   string id = 1;
   Metadata metadata = 2 [(gogoproto.nullable) = false];
   string owner = 3;
-  string data = 4;
-  bool transferable = 5;
-  string royalties = 6;
-  string creator = 7;
-  bool listed = 8;
-  google.protobuf.Timestamp created_at = 9 [
+  bool transferable = 4;
+  string royalties = 5;
+  string creator = 6;
+  bool listed = 7;
+  google.protobuf.Timestamp created_at = 8 [
     (gogoproto.nullable) = false,
     (gogoproto.stdtime) = true,
     (gogoproto.moretags) = "yaml:\"created_at\""

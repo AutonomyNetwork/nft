@@ -47,10 +47,9 @@ message MsgUpdateNFT{
   string id = 1;
   string denomID = 2 [(gogoproto.moretags) = "yaml:\"denom_id\""];
   string royalties = 3;
-  string data = 4;
-  string owner = 5;
-  string name = 6;
-  string description = 7;
+  string owner = 4;
+  string name = 5;
+  string description = 6;
 }
 
 message MsgUpdateNFTResponse{}

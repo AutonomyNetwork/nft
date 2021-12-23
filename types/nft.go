@@ -13,7 +13,7 @@ import (
 var _ exported.NFT = NFT{}
 
 // NewBaseNFT creates a new NFT instance
-func NewBaseNFT(id string, metadata Metadata, owner sdk.AccAddress, data string,
+func NewBaseNFT(id string, metadata Metadata, owner sdk.AccAddress,
 	transferable bool, royalties string, creator sdk.AccAddress, createdTime time.Time) NFT {
 	return NFT{
 		Id:           strings.ToLower(strings.TrimSpace(id)),
@@ -53,10 +53,6 @@ func (nft NFT) GetPreviewURI() string {
 func (nft NFT) GetOwner() sdk.AccAddress {
 	owner, _ := sdk.AccAddressFromBech32(nft.Owner)
 	return owner
-}
-
-func (nft NFT) GetData() string {
-	return nft.Data
 }
 
 func (nft NFT) IsTransferable() bool {

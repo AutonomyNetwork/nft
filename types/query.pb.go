@@ -213,43 +213,242 @@ func (m *QueryNFTResponse) GetNFT() *NFT {
 	return nil
 }
 
+type QueryMarketPlaceNFTRequest struct {
+	Id      string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	DenomId string `protobuf:"bytes,2,opt,name=denom_id,json=denomId,proto3" json:"denom_id,omitempty" yaml:"denom_id"`
+}
+
+func (m *QueryMarketPlaceNFTRequest) Reset()         { *m = QueryMarketPlaceNFTRequest{} }
+func (m *QueryMarketPlaceNFTRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryMarketPlaceNFTRequest) ProtoMessage()    {}
+func (*QueryMarketPlaceNFTRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a1847976fa17c924, []int{4}
+}
+func (m *QueryMarketPlaceNFTRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryMarketPlaceNFTRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryMarketPlaceNFTRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryMarketPlaceNFTRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryMarketPlaceNFTRequest.Merge(m, src)
+}
+func (m *QueryMarketPlaceNFTRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryMarketPlaceNFTRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryMarketPlaceNFTRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryMarketPlaceNFTRequest proto.InternalMessageInfo
+
+func (m *QueryMarketPlaceNFTRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *QueryMarketPlaceNFTRequest) GetDenomId() string {
+	if m != nil {
+		return m.DenomId
+	}
+	return ""
+}
+
+type QueryMarketPlaceNFTResponse struct {
+	MarketPlace *MarketPlace `protobuf:"bytes,1,opt,name=market_place,json=marketPlace,proto3" json:"market_place,omitempty"`
+}
+
+func (m *QueryMarketPlaceNFTResponse) Reset()         { *m = QueryMarketPlaceNFTResponse{} }
+func (m *QueryMarketPlaceNFTResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryMarketPlaceNFTResponse) ProtoMessage()    {}
+func (*QueryMarketPlaceNFTResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a1847976fa17c924, []int{5}
+}
+func (m *QueryMarketPlaceNFTResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryMarketPlaceNFTResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryMarketPlaceNFTResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryMarketPlaceNFTResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryMarketPlaceNFTResponse.Merge(m, src)
+}
+func (m *QueryMarketPlaceNFTResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryMarketPlaceNFTResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryMarketPlaceNFTResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryMarketPlaceNFTResponse proto.InternalMessageInfo
+
+func (m *QueryMarketPlaceNFTResponse) GetMarketPlace() *MarketPlace {
+	if m != nil {
+		return m.MarketPlace
+	}
+	return nil
+}
+
+type QueryMarketPlaceRequest struct {
+	DenomId string `protobuf:"bytes,1,opt,name=denom_id,json=denomId,proto3" json:"denom_id,omitempty" yaml:"denom_id"`
+}
+
+func (m *QueryMarketPlaceRequest) Reset()         { *m = QueryMarketPlaceRequest{} }
+func (m *QueryMarketPlaceRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryMarketPlaceRequest) ProtoMessage()    {}
+func (*QueryMarketPlaceRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a1847976fa17c924, []int{6}
+}
+func (m *QueryMarketPlaceRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryMarketPlaceRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryMarketPlaceRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryMarketPlaceRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryMarketPlaceRequest.Merge(m, src)
+}
+func (m *QueryMarketPlaceRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryMarketPlaceRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryMarketPlaceRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryMarketPlaceRequest proto.InternalMessageInfo
+
+func (m *QueryMarketPlaceRequest) GetDenomId() string {
+	if m != nil {
+		return m.DenomId
+	}
+	return ""
+}
+
+type QueryMarketPlaceResponse struct {
+	NFTs []*NFT `protobuf:"bytes,1,rep,name=nfts,proto3" json:"nfts,omitempty" yaml:"NFTs"`
+}
+
+func (m *QueryMarketPlaceResponse) Reset()         { *m = QueryMarketPlaceResponse{} }
+func (m *QueryMarketPlaceResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryMarketPlaceResponse) ProtoMessage()    {}
+func (*QueryMarketPlaceResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a1847976fa17c924, []int{7}
+}
+func (m *QueryMarketPlaceResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryMarketPlaceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryMarketPlaceResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryMarketPlaceResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryMarketPlaceResponse.Merge(m, src)
+}
+func (m *QueryMarketPlaceResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryMarketPlaceResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryMarketPlaceResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryMarketPlaceResponse proto.InternalMessageInfo
+
+func (m *QueryMarketPlaceResponse) GetNFTs() []*NFT {
+	if m != nil {
+		return m.NFTs
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*QueryDenomRequest)(nil), "nft.v1beta1.QueryDenomRequest")
 	proto.RegisterType((*QueryDenomResponse)(nil), "nft.v1beta1.QueryDenomResponse")
 	proto.RegisterType((*QueryNFTRequest)(nil), "nft.v1beta1.QueryNFTRequest")
 	proto.RegisterType((*QueryNFTResponse)(nil), "nft.v1beta1.QueryNFTResponse")
+	proto.RegisterType((*QueryMarketPlaceNFTRequest)(nil), "nft.v1beta1.QueryMarketPlaceNFTRequest")
+	proto.RegisterType((*QueryMarketPlaceNFTResponse)(nil), "nft.v1beta1.QueryMarketPlaceNFTResponse")
+	proto.RegisterType((*QueryMarketPlaceRequest)(nil), "nft.v1beta1.QueryMarketPlaceRequest")
+	proto.RegisterType((*QueryMarketPlaceResponse)(nil), "nft.v1beta1.QueryMarketPlaceResponse")
 }
 
 func init() { proto.RegisterFile("nft/v1beta1/query.proto", fileDescriptor_a1847976fa17c924) }
 
 var fileDescriptor_a1847976fa17c924 = []byte{
-	// 415 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0xcf, 0x4b, 0x2b, 0xd1,
-	0x2f, 0x33, 0x4c, 0x4a, 0x2d, 0x49, 0x34, 0xd4, 0x2f, 0x2c, 0x4d, 0x2d, 0xaa, 0xd4, 0x2b, 0x28,
-	0xca, 0x2f, 0xc9, 0x17, 0xe2, 0xce, 0x4b, 0x2b, 0xd1, 0x83, 0x4a, 0x48, 0x89, 0xa4, 0xe7, 0xa7,
-	0xe7, 0x83, 0xc5, 0xf5, 0x41, 0x2c, 0x88, 0x12, 0x29, 0x51, 0x64, 0xbd, 0x20, 0xe5, 0x10, 0x61,
-	0x99, 0xf4, 0xfc, 0xfc, 0xf4, 0x9c, 0x54, 0xfd, 0xc4, 0x82, 0x4c, 0xfd, 0xc4, 0xbc, 0xbc, 0xfc,
-	0x92, 0xc4, 0x92, 0xcc, 0xfc, 0xbc, 0x62, 0x88, 0xac, 0x92, 0x33, 0x97, 0x60, 0x20, 0xc8, 0x1a,
-	0x97, 0xd4, 0xbc, 0xfc, 0xdc, 0xa0, 0xd4, 0xc2, 0xd2, 0xd4, 0xe2, 0x12, 0x21, 0x3d, 0x2e, 0x8e,
-	0x14, 0x10, 0x3f, 0x3e, 0x33, 0x45, 0x82, 0x51, 0x81, 0x51, 0x83, 0xd3, 0x49, 0xf8, 0xd3, 0x3d,
-	0x79, 0xfe, 0xca, 0xc4, 0xdc, 0x1c, 0x2b, 0x25, 0x98, 0x8c, 0x52, 0x10, 0x3b, 0x98, 0xe9, 0x99,
-	0xa2, 0x64, 0xc7, 0x25, 0x84, 0x6c, 0x48, 0x71, 0x41, 0x7e, 0x5e, 0x71, 0xaa, 0x90, 0x06, 0x17,
-	0x2b, 0x58, 0x01, 0xd8, 0x08, 0x6e, 0x23, 0x21, 0x3d, 0x24, 0x2f, 0xe8, 0x41, 0x94, 0x42, 0x14,
-	0x28, 0x05, 0x72, 0xf1, 0x83, 0xf5, 0xfb, 0xb9, 0x85, 0x90, 0xe9, 0x04, 0x21, 0x3e, 0x2e, 0xa6,
-	0xcc, 0x14, 0x09, 0x26, 0x90, 0xca, 0x20, 0xa6, 0xcc, 0x14, 0x25, 0x5f, 0x2e, 0x01, 0x84, 0x91,
-	0x50, 0x07, 0x59, 0x72, 0x31, 0xe7, 0xa5, 0x95, 0x40, 0x9d, 0x23, 0x80, 0xe2, 0x1c, 0x3f, 0xb7,
-	0x10, 0x27, 0xd1, 0x47, 0xf7, 0xe4, 0x99, 0xfd, 0xdc, 0x42, 0x3e, 0xdd, 0x93, 0xe7, 0x82, 0xd8,
-	0xe3, 0xe7, 0x16, 0xa2, 0x14, 0x04, 0xd2, 0x63, 0x34, 0x91, 0x89, 0x8b, 0x15, 0x6c, 0x9e, 0x50,
-	0x03, 0x23, 0x17, 0x2b, 0xd8, 0xf1, 0x42, 0x72, 0x28, 0x26, 0x60, 0x84, 0xa2, 0x94, 0x3c, 0x4e,
-	0x79, 0x88, 0x7b, 0x94, 0xcc, 0x9a, 0x2e, 0x3f, 0x99, 0xcc, 0x64, 0x20, 0xa4, 0xa7, 0xef, 0x58,
-	0x5a, 0x92, 0x9f, 0x97, 0x9f, 0x5b, 0xe9, 0x97, 0x5a, 0x52, 0x9e, 0x5f, 0x94, 0xad, 0x8f, 0x1c,
-	0x93, 0x60, 0x1f, 0x16, 0xeb, 0x57, 0xc3, 0x3c, 0x5d, 0x2b, 0xd4, 0xc2, 0xc8, 0x05, 0x72, 0xa7,
-	0x90, 0x0c, 0xa6, 0x05, 0x88, 0x10, 0x94, 0x92, 0xc5, 0x21, 0x0b, 0xb5, 0xdc, 0x01, 0x6c, 0xb9,
-	0x95, 0x90, 0x05, 0x69, 0x96, 0x83, 0x64, 0x8b, 0xf5, 0xab, 0x33, 0x53, 0x6a, 0x9d, 0xec, 0x4e,
-	0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x09, 0x8f, 0xe5, 0x18,
-	0x2e, 0x3c, 0x96, 0x63, 0xb8, 0xf1, 0x58, 0x8e, 0x21, 0x4a, 0x25, 0x3d, 0xb3, 0x24, 0xa3, 0x34,
-	0x49, 0x2f, 0x39, 0x3f, 0x17, 0xab, 0xe9, 0x25, 0x95, 0x05, 0xa9, 0xc5, 0x49, 0x6c, 0xe0, 0x14,
-	0x68, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x81, 0x63, 0xcb, 0xfd, 0xf4, 0x02, 0x00, 0x00,
+	// 589 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x94, 0xdd, 0x6a, 0x13, 0x41,
+	0x14, 0xc7, 0x33, 0xf9, 0xf0, 0xe3, 0x44, 0xda, 0x3a, 0x5a, 0x12, 0xd6, 0xba, 0x5b, 0x86, 0x8a,
+	0xb9, 0xda, 0xb5, 0x15, 0x44, 0x5b, 0x5a, 0x34, 0xd5, 0x48, 0x2f, 0xb2, 0xd8, 0x25, 0x37, 0x16,
+	0xa1, 0x6c, 0x9a, 0x49, 0x5c, 0x9a, 0xdd, 0x49, 0xb3, 0x13, 0x25, 0x14, 0x41, 0xc4, 0x07, 0x10,
+	0x7c, 0x00, 0xdf, 0xc1, 0xa7, 0xf0, 0xb2, 0xe0, 0x8d, 0x57, 0x41, 0x12, 0x2f, 0xbc, 0xce, 0x13,
+	0xc8, 0xce, 0x6e, 0xcc, 0xac, 0x49, 0x53, 0xad, 0x77, 0x3b, 0x73, 0xce, 0xf9, 0xff, 0x7f, 0xe7,
+	0xcc, 0x49, 0x20, 0xe7, 0xd5, 0xb9, 0xf1, 0x6a, 0xb5, 0x4a, 0xb9, 0xbd, 0x6a, 0x1c, 0x75, 0x68,
+	0xbb, 0xab, 0xb7, 0xda, 0x8c, 0x33, 0x9c, 0xf5, 0xea, 0x5c, 0x8f, 0x02, 0xca, 0xf5, 0x06, 0x6b,
+	0x30, 0x71, 0x6f, 0x04, 0x5f, 0x61, 0x8a, 0xb2, 0x28, 0xd7, 0x06, 0xe9, 0xe1, 0xb5, 0x2a, 0x5f,
+	0xbb, 0x76, 0xfb, 0x90, 0xf2, 0xfd, 0x56, 0xd3, 0x3e, 0xa0, 0x51, 0x7c, 0xa9, 0xc1, 0x58, 0xa3,
+	0x49, 0x0d, 0xbb, 0xe5, 0x18, 0xb6, 0xe7, 0x31, 0x6e, 0x73, 0x87, 0x79, 0x7e, 0x18, 0x25, 0xdb,
+	0x70, 0x75, 0x37, 0xc0, 0x78, 0x4c, 0x3d, 0xe6, 0x5a, 0xf4, 0xa8, 0x43, 0x7d, 0x8e, 0x75, 0xb8,
+	0x54, 0x0b, 0xce, 0xfb, 0x4e, 0x2d, 0x8f, 0x96, 0x51, 0xe1, 0x72, 0xf1, 0xda, 0xb0, 0xa7, 0xcd,
+	0x77, 0x6d, 0xb7, 0xb9, 0x4e, 0x46, 0x11, 0x62, 0x5d, 0x14, 0x9f, 0x3b, 0x35, 0xb2, 0x05, 0x58,
+	0x16, 0xf1, 0x5b, 0xcc, 0xf3, 0x29, 0x2e, 0x40, 0x46, 0x24, 0x08, 0x89, 0xec, 0x1a, 0xd6, 0xa5,
+	0x16, 0xf5, 0x30, 0x35, 0x4c, 0x20, 0xbb, 0x30, 0x2f, 0xea, 0xcd, 0x52, 0xe5, 0x9c, 0x08, 0x78,
+	0x0e, 0x92, 0x4e, 0x2d, 0x9f, 0x0c, 0x32, 0xad, 0xa4, 0x53, 0x23, 0x65, 0x58, 0x18, 0x4b, 0x46,
+	0x40, 0x0f, 0x20, 0xe5, 0xd5, 0x79, 0x84, 0xb3, 0x10, 0xc3, 0x31, 0x4b, 0x95, 0xe2, 0x62, 0xbf,
+	0xa7, 0xa5, 0xcc, 0x52, 0x65, 0xd8, 0xd3, 0x20, 0xf4, 0x31, 0x4b, 0x15, 0x62, 0x05, 0x35, 0xe4,
+	0x05, 0x28, 0x42, 0xae, 0x2c, 0xe6, 0xfb, 0x2c, 0x18, 0xaf, 0x04, 0x1b, 0x9a, 0xa3, 0x91, 0x79,
+	0x0c, 0x3e, 0xf9, 0x17, 0xf3, 0xdb, 0x83, 0x1b, 0x53, 0xd5, 0x23, 0xee, 0x0d, 0xb8, 0x22, 0xbf,
+	0x6b, 0xd4, 0x40, 0x3e, 0xd6, 0x80, 0x54, 0x6a, 0x65, 0xdd, 0xf1, 0x81, 0xec, 0x40, 0xee, 0x4f,
+	0xed, 0xf3, 0x3e, 0xf3, 0x73, 0xc8, 0x4f, 0x4a, 0x45, 0x8c, 0x9b, 0x90, 0xf6, 0xea, 0xdc, 0xcf,
+	0xa3, 0xe5, 0xd4, 0xd4, 0xe1, 0xe6, 0xfa, 0x3d, 0x2d, 0x6d, 0x96, 0x2a, 0xfe, 0xb0, 0xa7, 0x65,
+	0x7f, 0x4f, 0xd7, 0x27, 0x96, 0x28, 0x5b, 0xfb, 0x99, 0x86, 0x8c, 0xd0, 0xc6, 0x6f, 0x11, 0x64,
+	0xc4, 0x72, 0x60, 0x35, 0x26, 0x32, 0xb1, 0xa5, 0x8a, 0x76, 0x6a, 0x3c, 0x64, 0x22, 0xf7, 0xde,
+	0x7d, 0xfd, 0xf1, 0x31, 0x79, 0x07, 0xeb, 0xc6, 0xa3, 0x0e, 0x67, 0x1e, 0x73, 0xbb, 0x26, 0xe5,
+	0xaf, 0x59, 0xfb, 0xd0, 0x90, 0x7f, 0x32, 0xa2, 0x3b, 0xdf, 0x38, 0x1e, 0x35, 0xfc, 0x06, 0xbf,
+	0x47, 0x10, 0xec, 0x01, 0x5e, 0x9a, 0x34, 0x18, 0x3f, 0xba, 0x72, 0xf3, 0x94, 0x68, 0x64, 0xfe,
+	0x50, 0x98, 0xaf, 0xe3, 0xfb, 0xff, 0x66, 0x1e, 0x44, 0x7d, 0xe3, 0x38, 0xc0, 0xf8, 0x8c, 0x60,
+	0x2e, 0xbe, 0x11, 0xf8, 0xf6, 0xa4, 0xe7, 0xd4, 0x8d, 0x54, 0x0a, 0x67, 0x27, 0x46, 0x9c, 0x65,
+	0xc1, 0xf9, 0x14, 0x3f, 0x99, 0xc9, 0x29, 0xef, 0xdf, 0x4c, 0xe8, 0x4f, 0x08, 0xb2, 0x92, 0x13,
+	0x5e, 0x99, 0x09, 0x32, 0xc2, 0xbd, 0x75, 0x46, 0x56, 0xc4, 0xba, 0x2d, 0x58, 0x37, 0xf1, 0xc6,
+	0x7f, 0xb0, 0x16, 0xb7, 0xbe, 0xf4, 0x55, 0x74, 0xd2, 0x57, 0xd1, 0xf7, 0xbe, 0x8a, 0x3e, 0x0c,
+	0xd4, 0xc4, 0xc9, 0x40, 0x4d, 0x7c, 0x1b, 0xa8, 0x89, 0xbd, 0x95, 0x86, 0xc3, 0x5f, 0x76, 0xaa,
+	0xfa, 0x01, 0x73, 0xa7, 0x1a, 0xf0, 0x6e, 0x8b, 0xfa, 0xd5, 0x0b, 0xe2, 0x8f, 0xf3, 0xee, 0xaf,
+	0x00, 0x00, 0x00, 0xff, 0xff, 0x9f, 0xbf, 0x1b, 0x38, 0xcb, 0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -266,6 +465,8 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	Denom(ctx context.Context, in *QueryDenomRequest, opts ...grpc.CallOption) (*QueryDenomResponse, error)
 	NFT(ctx context.Context, in *QueryNFTRequest, opts ...grpc.CallOption) (*QueryNFTResponse, error)
+	MarketPlaceNFT(ctx context.Context, in *QueryMarketPlaceNFTRequest, opts ...grpc.CallOption) (*QueryMarketPlaceNFTResponse, error)
+	MarketPlace(ctx context.Context, in *QueryMarketPlaceRequest, opts ...grpc.CallOption) (*QueryMarketPlaceResponse, error)
 }
 
 type queryClient struct {
@@ -294,10 +495,30 @@ func (c *queryClient) NFT(ctx context.Context, in *QueryNFTRequest, opts ...grpc
 	return out, nil
 }
 
+func (c *queryClient) MarketPlaceNFT(ctx context.Context, in *QueryMarketPlaceNFTRequest, opts ...grpc.CallOption) (*QueryMarketPlaceNFTResponse, error) {
+	out := new(QueryMarketPlaceNFTResponse)
+	err := c.cc.Invoke(ctx, "/nft.v1beta1.Query/MarketPlaceNFT", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) MarketPlace(ctx context.Context, in *QueryMarketPlaceRequest, opts ...grpc.CallOption) (*QueryMarketPlaceResponse, error) {
+	out := new(QueryMarketPlaceResponse)
+	err := c.cc.Invoke(ctx, "/nft.v1beta1.Query/MarketPlace", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	Denom(context.Context, *QueryDenomRequest) (*QueryDenomResponse, error)
 	NFT(context.Context, *QueryNFTRequest) (*QueryNFTResponse, error)
+	MarketPlaceNFT(context.Context, *QueryMarketPlaceNFTRequest) (*QueryMarketPlaceNFTResponse, error)
+	MarketPlace(context.Context, *QueryMarketPlaceRequest) (*QueryMarketPlaceResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -309,6 +530,12 @@ func (*UnimplementedQueryServer) Denom(ctx context.Context, req *QueryDenomReque
 }
 func (*UnimplementedQueryServer) NFT(ctx context.Context, req *QueryNFTRequest) (*QueryNFTResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NFT not implemented")
+}
+func (*UnimplementedQueryServer) MarketPlaceNFT(ctx context.Context, req *QueryMarketPlaceNFTRequest) (*QueryMarketPlaceNFTResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MarketPlaceNFT not implemented")
+}
+func (*UnimplementedQueryServer) MarketPlace(ctx context.Context, req *QueryMarketPlaceRequest) (*QueryMarketPlaceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MarketPlace not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -351,6 +578,42 @@ func _Query_NFT_Handler(srv interface{}, ctx context.Context, dec func(interface
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_MarketPlaceNFT_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryMarketPlaceNFTRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).MarketPlaceNFT(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nft.v1beta1.Query/MarketPlaceNFT",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).MarketPlaceNFT(ctx, req.(*QueryMarketPlaceNFTRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_MarketPlace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryMarketPlaceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).MarketPlace(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nft.v1beta1.Query/MarketPlace",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).MarketPlace(ctx, req.(*QueryMarketPlaceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "nft.v1beta1.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -362,6 +625,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "NFT",
 			Handler:    _Query_NFT_Handler,
+		},
+		{
+			MethodName: "MarketPlaceNFT",
+			Handler:    _Query_MarketPlaceNFT_Handler,
+		},
+		{
+			MethodName: "MarketPlace",
+			Handler:    _Query_MarketPlace_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -505,6 +776,145 @@ func (m *QueryNFTResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryMarketPlaceNFTRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryMarketPlaceNFTRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryMarketPlaceNFTRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.DenomId) > 0 {
+		i -= len(m.DenomId)
+		copy(dAtA[i:], m.DenomId)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.DenomId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Id) > 0 {
+		i -= len(m.Id)
+		copy(dAtA[i:], m.Id)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Id)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryMarketPlaceNFTResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryMarketPlaceNFTResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryMarketPlaceNFTResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.MarketPlace != nil {
+		{
+			size, err := m.MarketPlace.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryMarketPlaceRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryMarketPlaceRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryMarketPlaceRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.DenomId) > 0 {
+		i -= len(m.DenomId)
+		copy(dAtA[i:], m.DenomId)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.DenomId)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryMarketPlaceResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryMarketPlaceResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryMarketPlaceResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.NFTs) > 0 {
+		for iNdEx := len(m.NFTs) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.NFTs[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -568,6 +978,64 @@ func (m *QueryNFTResponse) Size() (n int) {
 	if m.NFT != nil {
 		l = m.NFT.Size()
 		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryMarketPlaceNFTRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	l = len(m.DenomId)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryMarketPlaceNFTResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.MarketPlace != nil {
+		l = m.MarketPlace.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryMarketPlaceRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.DenomId)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryMarketPlaceResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.NFTs) > 0 {
+		for _, e := range m.NFTs {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
 	}
 	return n
 }
@@ -922,6 +1390,372 @@ func (m *QueryNFTResponse) Unmarshal(dAtA []byte) error {
 				m.NFT = &NFT{}
 			}
 			if err := m.NFT.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryMarketPlaceNFTRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryMarketPlaceNFTRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryMarketPlaceNFTRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DenomId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DenomId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryMarketPlaceNFTResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryMarketPlaceNFTResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryMarketPlaceNFTResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MarketPlace", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.MarketPlace == nil {
+				m.MarketPlace = &MarketPlace{}
+			}
+			if err := m.MarketPlace.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryMarketPlaceRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryMarketPlaceRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryMarketPlaceRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DenomId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DenomId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryMarketPlaceResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryMarketPlaceResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryMarketPlaceResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NFTs", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.NFTs = append(m.NFTs, &NFT{})
+			if err := m.NFTs[len(m.NFTs)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
