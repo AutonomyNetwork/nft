@@ -27,11 +27,12 @@ const (
 )
 
 var (
-	PrefixNFT        = []byte{0x01}
-	PrefixOwners     = []byte{0x02} // key for a owner
-	PrefixCollection = []byte{0x03} // key for balance of NFTs held by the denom
-	PrefixDenom      = []byte{0x04} // key for denom of the nft
-	PrefixDenomName  = []byte{0x05} // key for denom name of the nft
+	PrefixNFT         = []byte{0x01}
+	PrefixOwners      = []byte{0x02} // key for a owner
+	PrefixCollection  = []byte{0x03} // key for balance of NFTs held by the denom
+	PrefixDenom       = []byte{0x04} // key for denom of the nft
+	PrefixDenomName   = []byte{0x05} // key for denom name of the nft
+	PrefixMarketPlace = []byte{0x06} // key for market place
 
 	delimiter = []byte("/")
 )
@@ -100,4 +101,17 @@ func KeyDenomID(id string) []byte {
 func KeyDenomName(name string) []byte {
 	key := append(PrefixDenomName, delimiter...)
 	return append(key, []byte(name)...)
+}
+
+func KeyMarketPlace(denomID, tokenID string) []byte {
+	key := append(PrefixMarketPlace, delimiter...)
+	if len(denomID) > 0 {
+		key = append(key, []byte(denomID)...)
+		key = append(key, delimiter...)
+	}
+
+	if len(denomID) > 0 && len(tokenID) > 0 {
+		key = append(key, []byte(tokenID)...)
+	}
+	return key
 }

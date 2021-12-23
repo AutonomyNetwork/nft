@@ -18,10 +18,12 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgMintNFT{}, "AutonomyNetwork/nft/MsgMintNFT", nil)
 	cdc.RegisterConcrete(&MsgUpdateNFT{}, "AutonomyNetwork/nft/MsgUpdateNFT", nil)
 	cdc.RegisterConcrete(&MsgTransferNFT{}, "AutonomyNetwork/nft/MsgTransferNFT", nil)
-
+	cdc.RegisterConcrete(&MsgSellNFT{}, "AutonomyNetwork/nft/MsgSellNFT", nil)
 
 	cdc.RegisterInterface((*exported.NFT)(nil), nil)
+	cdc.RegisterInterface((*exported.MarketPlace)(nil), nil)
 	cdc.RegisterConcrete(&NFT{}, "AutonomyNetwork/nft/NFT", nil)
+	cdc.RegisterConcrete(&MarketPlace{}, "AutonomyNetwork/nft/MarketPlace", nil)
 }
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {
@@ -30,11 +32,12 @@ func RegisterInterfaces(registry types.InterfaceRegistry) {
 		&MsgMintNFT{},
 		&MsgUpdateNFT{},
 		&MsgTransferNFT{},
+		&MsgSellNFT{},
 	)
 
-	registry.RegisterImplementations((*exported.NFT)(nil),
-		&NFT{},
-	)
+	registry.RegisterImplementations((*exported.NFT)(nil), &NFT{})
+	registry.RegisterImplementations((*exported.MarketPlace)(nil), &MarketPlace{})
+
 }
 
 var (

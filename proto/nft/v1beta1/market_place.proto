@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package nft.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/AutonomyNetwork/nft/types";
+option (gogoproto.goproto_getters_all) = false;
+
+message MarketPlace {
+  string nftId = 1 [(gogoproto.moretags) = "yaml:\"NFTID\""];
+  string denomID = 2 [
+    (gogoproto.moretags) = "yaml:\"denom_id\""
+  ];
+  string price = 3;
+  string seller = 4;
+  string buyer = 5;
+}

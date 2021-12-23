@@ -12,6 +12,7 @@ service Msg {
   rpc MintNFT(MsgMintNFT) returns (MsgMintNFTResponse);
   rpc UpdateNFT(MsgUpdateNFT) returns (MsgUpdateNFTResponse);
   rpc TransferNFT(MsgTransferNFT) returns (MsgTransferNFTResponse);
+  rpc SellNFT(MsgSellNFT) returns (MsgSellNFTResponse);
 }
 
 message MsgCreateDenom {
@@ -44,7 +45,7 @@ message MsgMintNFTResponse {}
 
 message MsgUpdateNFT{
   string id = 1;
-  string denomID = 2 [(gogoproto.moretags) = "yaml\"denom_id\""];
+  string denomID = 2 [(gogoproto.moretags) = "yaml:\"denom_id\""];
   string royalties = 3;
   string data = 4;
   string owner = 5;
@@ -56,9 +57,24 @@ message MsgUpdateNFTResponse{}
 
 message MsgTransferNFT {
   string id = 1;
-  string denom_id = 2 [(gogoproto.moretags) = "yaml\"denom_id\""];
+  string denom_id = 2 [(gogoproto.moretags) = "yaml:\"denom_id\""];
   string sender = 3;
   string recipient = 4;
 }
 
 message MsgTransferNFTResponse{}
+
+message MsgSellNFT {
+  string id = 1;
+  string denom_id = 2 [(gogoproto.moretags) = "yaml:\"denom_id\""];
+  string price = 3;
+  string seller = 4;
+}
+
+message MsgSellNFTResponse{}
+
+message MsgBuyNFT {
+  string id = 1;
+  string denom_id = 2 [(gogoproto.moretags) = "yaml:\"denom_id\""];
+  string buyer = 3;
+}

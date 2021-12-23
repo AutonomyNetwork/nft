@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"github.com/AutonomyNetwork/nft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"strings"
@@ -169,7 +168,6 @@ func (m msgServer) UpdateNFT(goCtx context.Context,
 
 func (m msgServer) TransferNFT(goCtx context.Context,
 	msg *types.MsgTransferNFT) (*types.MsgTransferNFTResponse, error) {
-	fmt.Println("======================================== ", msg)
 	sender, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
 		return nil, err
@@ -198,6 +196,30 @@ func (m msgServer) TransferNFT(goCtx context.Context,
 	)
 
 	return &types.MsgTransferNFTResponse{}, nil
+}
+
+func (m msgServer) SellNFT(goCtx context.Context,
+	msg *types.MsgSellNFT) (*types.MsgSellNFTResponse, error) {
+
+	seller, err := sdk.AccAddressFromBech32(msg.Seller)
+	if err != nil {
+		return nil, err
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	if err := m.Keeper.SellNFT(ctx, msg.Id, msg.DenomId, msg.Price, seller); err != nil {
+		return nil, err
+	}
+
+	ctx.EventManager().EmitTypedEvent(
+		&types.EventSellNFT{
+			Id:      msg.Id,
+			DenomId: msg.DenomId,
+			Price:   msg.Price,
+			Seller:  msg.Seller,
+		})
+
+	return &types.MsgSellNFTResponse{}, nil
 }
 
 //func (m msgServer) BurnONFT(goCtx context.Context,

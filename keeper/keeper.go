@@ -113,3 +113,34 @@ func (k Keeper) TransferOwner(ctx sdk.Context,
 	k.swapOwner(ctx, denomID, tokenID, srcOwner, dstOwner)
 	return nil
 }
+
+func (k Keeper) SellNFT(ctx sdk.Context, id, denomId string, price string, seller sdk.AccAddress) error {
+
+	fmt.Println("DenomID: ", denomId)
+	if !k.HasDenomID(ctx, denomId) {
+		return sdkerrors.Wrapf(types.ErrInvalidDenom, "denomId %s does not exist", denomId)
+	}
+
+	if !k.HasNFT(ctx, denomId, id) {
+		return sdkerrors.Wrapf(types.ErrInvalidNFT, "nft %s does not exist in collection %s", id, denomId)
+	}
+
+	nft, err := k.Authorize(ctx, denomId, id, seller)
+	if err != nil {
+		return err
+	}
+
+	if !nft.IsTransferable() {
+		return sdkerrors.Wrapf(types.ErrTransfer, "nft %s is not transferable", id)
+	}
+
+	nft.Listed = true
+	k.SetNFT(ctx, denomId, nft)
+	k.SetNFTMarketPlace(ctx, types.NewMarketPlace(
+		id,
+		denomId,
+		price,
+		seller,
+	))
+	return nil
+}

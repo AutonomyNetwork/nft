@@ -69,3 +69,10 @@ func (k Keeper) deleteNFT(ctx sdk.Context, denomID string, nft exported.NFT) {
 	store := ctx.KVStore(k.storeKey)
 	store.Delete(types.KeyNFT(denomID, nft.GetID()))
 }
+
+func (k Keeper) SetNFTMarketPlace(ctx sdk.Context, order types.MarketPlace) {
+	store := ctx.KVStore(k.storeKey)
+
+	bz := k.cdc.MustMarshal(&order)
+	store.Set(types.KeyMarketPlace(order.GetDenomID(), order.GetNFTID()), bz)
+}

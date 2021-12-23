@@ -30,3 +30,10 @@ message EventUpdateNFT {
   string denom_id =2;
   string owner = 3;
 }
+
+message EventSellNFT {
+  string id = 1;
+  string denom_id = 2;
+  string price = 3;
+  string seller = 4;
+}

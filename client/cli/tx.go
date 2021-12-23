@@ -43,6 +43,7 @@ func NewTxCmd() *cobra.Command {
 		GetCmdMintNFT(),
 		GetCmdUpdateNFT(),
 		GetCmdTransferNFT(),
+		GetCmdSellNFT(),
 		//GetCmdBurnNFT(),
 	)
 
@@ -68,8 +69,6 @@ $ %s tx nft create [denom] --data=<data> --symbol=<symbol> --description=<descri
 			if err != nil {
 				return err
 			}
-
-			fmt.Println("Creator address: ", clientCtx.FromAddress)
 
 			msg := types.NewMsgCreateDenom(
 				args[0],
@@ -233,6 +232,45 @@ $ %s tx nft transfer [denomID] [nftID] [recipient] --from=<key-name> --chain-id=
 	cmd.Flags().AddFlagSet(FsTransferNFT)
 	flags.AddTxFlagsToCmd(cmd)
 
+	return cmd
+}
+
+func GetCmdSellNFT() *cobra.Command {
+	cmd := &cobra.Command{
+		Use: "sell [denomID] [NFTID] [price]",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Add an NFT to market place.
+Example:
+$ %s tx nft sell [denomID] [NFTID] [price] --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+				version.AppName,
+			),
+		),
+		Args: cobra.ExactArgs(3),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cliCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			cliCtx, err = client.ReadPersistentCommandFlags(cliCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgSellNFT(
+				args[1],
+				args[0],
+				args[2],
+				cliCtx.GetFromAddress().String(),
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
 
