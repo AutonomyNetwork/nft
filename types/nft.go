@@ -16,14 +16,13 @@ var _ exported.NFT = NFT{}
 func NewBaseNFT(id string, metadata Metadata, owner sdk.AccAddress, data string,
 	transferable bool, royalties string, creator sdk.AccAddress, createdTime time.Time) NFT {
 	return NFT{
-		Id:    strings.ToLower(strings.TrimSpace(id)),
-		Metadata: metadata,
-		Owner: owner.String(),
-		Data: data,
+		Id:           strings.ToLower(strings.TrimSpace(id)),
+		Metadata:     metadata,
+		Owner:        owner.String(),
 		Transferable: transferable,
-		Royalties: royalties,
-		Creator: creator.String(),
-		CreatedAt: createdTime,
+		Royalties:    royalties,
+		Creator:      creator.String(),
+		CreatedAt:    createdTime,
 	}
 }
 
@@ -64,7 +63,7 @@ func (nft NFT) IsTransferable() bool {
 	return nft.Transferable
 }
 
-func (nft NFT) GetRoyalties() string  {
+func (nft NFT) GetRoyalties() string {
 	return nft.Royalties
 }
 

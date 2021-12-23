@@ -52,7 +52,7 @@ message NFT {
   bool transferable = 5;
   string royalties = 6;
   string creator = 7;
-  string Price = 8;
+  bool listed = 8;
   google.protobuf.Timestamp created_at = 9 [
     (gogoproto.nullable) = false,
     (gogoproto.stdtime) = true,
