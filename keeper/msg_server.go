@@ -220,6 +220,29 @@ func (m msgServer) SellNFT(goCtx context.Context,
 	return &types.MsgSellNFTResponse{}, nil
 }
 
+func (m msgServer) BuyNFT(goCtx context.Context,
+	msg *types.MsgBuyNFT) (*types.MsgBuyNFTResponse, error) {
+
+	buyer, err := sdk.AccAddressFromBech32(msg.Buyer)
+	if err != nil {
+		return nil, err
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	if err := m.Keeper.BuyNFT(ctx, msg.Id, msg.DenomId, buyer); err != nil {
+		return nil, err
+	}
+
+	ctx.EventManager().EmitTypedEvent(
+		&types.EventBuyNFT{
+			Id:      msg.Id,
+			DenomId: msg.DenomId,
+			Buyer:   msg.Buyer,
+		})
+
+	return &types.MsgBuyNFTResponse{}, nil
+}
+
 //func (m msgServer) BurnONFT(goCtx context.Context,
 //	msg *types.MsgBurnONFT) (*types.MsgBurnONFTResponse, error) {
 //

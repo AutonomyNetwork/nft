@@ -2,26 +2,28 @@ package keeper
 
 import (
 	"fmt"
-	"github.com/tendermint/tendermint/libs/log"
-
+	"github.com/AutonomyNetwork/nft/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
-	"github.com/AutonomyNetwork/nft/types"
+	"github.com/tendermint/tendermint/libs/log"
 )
 
 // Keeper maintains the link to data storage and exposes getter/setter methods for the various parts of the state machine
 type Keeper struct {
-	storeKey sdk.StoreKey // Unexposed key to access store from sdk.Context
-	cdc      codec.BinaryCodec
+	storeKey      sdk.StoreKey // Unexposed key to access store from sdk.Context
+	cdc           codec.BinaryCodec
+	accountKeeper types.AccountKeeper
+	bankKeeper    types.BankKeeper
 }
 
 // NewKeeper creates new instances of the nft Keeper
-func NewKeeper(cdc codec.BinaryCodec, storeKey sdk.StoreKey) Keeper {
+func NewKeeper(cdc codec.BinaryCodec, storeKey sdk.StoreKey, ak types.AccountKeeper, bk types.BankKeeper) Keeper {
 	return Keeper{
-		storeKey: storeKey,
-		cdc:      cdc,
+		storeKey:      storeKey,
+		cdc:           cdc,
+		accountKeeper: ak,
+		bankKeeper:    bk,
 	}
 }
 
@@ -112,7 +114,6 @@ func (k Keeper) TransferOwner(ctx sdk.Context,
 
 func (k Keeper) SellNFT(ctx sdk.Context, id, denomId string, price string, seller sdk.AccAddress) error {
 
-	fmt.Println("DenomID: ", denomId)
 	if !k.HasDenomID(ctx, denomId) {
 		return sdkerrors.Wrapf(types.ErrInvalidDenom, "denomId %s does not exist", denomId)
 	}
@@ -138,5 +139,56 @@ func (k Keeper) SellNFT(ctx sdk.Context, id, denomId string, price string, selle
 		price,
 		seller,
 	))
+	return nil
+}
+
+func (k Keeper) BuyNFT(ctx sdk.Context, id, denom_id string, buyer sdk.AccAddress) error {
+	if !k.HasDenomID(ctx, denom_id) {
+		return sdkerrors.Wrapf(types.ErrInvalidDenom, "denom %s does not exist", denom_id)
+	}
+
+	if !k.HasNFT(ctx, denom_id, id) {
+		return sdkerrors.Wrapf(types.ErrInvalidNFT, "nft %s does not exist in collection %s", id, denom_id)
+	}
+
+	orderNFT, err := k.GetMarketPlaceNFT(ctx, denom_id, id)
+	if err != nil {
+		return err
+	}
+
+	priceStr := orderNFT.GetPrice()
+	price, err := sdk.ParseCoinNormalized(priceStr)
+	if err != nil {
+		return err
+	}
+
+	buyerAccount := k.bankKeeper.GetBalance(ctx, buyer, price.Denom)
+	if buyerAccount.IsLT(price) {
+		return sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "buyer do not have balance")
+	}
+
+	nft, err := k.GetNFT(ctx, denom_id, id)
+	if err != nil {
+		return err
+	}
+
+	royaltyDec, err := sdk.NewDecFromStr(nft.GetRoyalties())
+	if err != nil {
+		return err
+	}
+
+	creatorCoin := sdk.NewCoin(price.Denom, price.Amount.Quo(sdk.Int(royaltyDec)))
+	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetCreator(), sdk.Coins{creatorCoin})
+	if err != nil {
+		return err
+	}
+
+	sellerAmount := price.Sub(creatorCoin)
+	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetOwner(), sdk.Coins{sellerAmount})
+	if err != nil {
+		return err
+	}
+
+	k.swapOwner(ctx, denom_id, id, nft.GetOwner(), buyer)
 	return nil
 }

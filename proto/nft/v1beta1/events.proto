@@ -37,3 +37,9 @@ message EventSellNFT {
   string price = 3;
   string seller = 4;
 }
+
+message EventBuyNFT {
+  string id = 1;
+  string denom_id = 2;
+  string buyer = 3;
+}

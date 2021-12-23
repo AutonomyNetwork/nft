@@ -13,6 +13,7 @@ service Msg {
   rpc UpdateNFT(MsgUpdateNFT) returns (MsgUpdateNFTResponse);
   rpc TransferNFT(MsgTransferNFT) returns (MsgTransferNFTResponse);
   rpc SellNFT(MsgSellNFT) returns (MsgSellNFTResponse);
+  rpc BuyNFT(MsgBuyNFT) returns (MsgBuyNFTResponse);
 }
 
 message MsgCreateDenom {
@@ -77,3 +78,5 @@ message MsgBuyNFT {
   string denom_id = 2 [(gogoproto.moretags) = "yaml:\"denom_id\""];
   string buyer = 3;
 }
+
+message MsgBuyNFTResponse{}

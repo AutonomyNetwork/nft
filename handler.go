@@ -30,6 +30,9 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgSellNFT:
 			res, err := msgServer.SellNFT(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgBuyNFT:
+			res, err := msgServer.BuyNFT(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 
 		default:
 			return nil, sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized nft message type: %T", msg)

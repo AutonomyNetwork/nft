@@ -25,6 +25,7 @@ const (
 	TypeUpdateNFT   = "update_nft"
 	TypeTransferNFT = "transfer_nft"
 	TypeSellNFT     = "sell_nft"
+	TypeBuyNFT      = "buy_nft"
 )
 
 var (
@@ -40,6 +41,7 @@ var (
 	_ sdk.Msg = &MsgUpdateNFT{}
 	_ sdk.Msg = &MsgTransferNFT{}
 	_ sdk.Msg = &MsgSellNFT{}
+	_ sdk.Msg = &MsgBuyNFT{}
 )
 
 func NewMsgCreateDenom(name, symbol, description, preview_uri, creator string) *MsgCreateDenom {
@@ -262,5 +264,43 @@ func (msg MsgSellNFT) GetSignBytes() []byte {
 
 func (msg MsgSellNFT) GetSigners() []sdk.AccAddress {
 	from, _ := sdk.AccAddressFromBech32(msg.Seller)
+	return []sdk.AccAddress{from}
+}
+
+func NewMsgBuyNFT(id, denomId, buyer string) *MsgBuyNFT {
+	return &MsgBuyNFT{
+		Id:      id,
+		DenomId: denomId,
+		Buyer:   buyer,
+	}
+}
+
+func (msg MsgBuyNFT) Route() string { return RouterKey }
+
+func (msg MsgBuyNFT) Type() string { return TypeBuyNFT }
+
+func (msg MsgBuyNFT) ValidateBasic() error {
+	if err := ValidateNFTID(msg.Id); err != nil {
+		return err
+	}
+
+	if err := ValidateDenomID(msg.DenomId); err != nil {
+		return err
+	}
+
+	if _, err := sdk.AccAddressFromBech32(msg.Buyer); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid buyer address %s", msg.Buyer)
+	}
+
+	return nil
+}
+
+func (msg MsgBuyNFT) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(&msg)
+	return sdk.MustSortJSON(bz)
+}
+
+func (msg MsgBuyNFT) GetSigners() []sdk.AccAddress {
+	from, _ := sdk.AccAddressFromBech32(msg.Buyer)
 	return []sdk.AccAddress{from}
 }
