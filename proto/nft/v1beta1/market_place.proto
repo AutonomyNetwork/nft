@@ -15,4 +15,5 @@ message MarketPlace {
   string price = 3;
   string seller = 4;
   string buyer = 5;
+  bool filled = 6;
 }

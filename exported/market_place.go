@@ -8,4 +8,5 @@ type MarketPlace interface {
 	GetPrice() string
 	GetSeller() sdk.AccAddress
 	GetBuyer() sdk.AccAddress
+	GetFilled() bool
 }

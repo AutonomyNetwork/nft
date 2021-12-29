@@ -13,6 +13,7 @@ func NewMarketPlace(id, denomID, price string, seller sdk.AccAddress) MarketPlac
 		DenomID: denomID,
 		Price:   price,
 		Seller:  seller.String(),
+		Filled:  false,
 	}
 }
 
@@ -36,4 +37,8 @@ func (m MarketPlace) GetSeller() sdk.AccAddress {
 func (m MarketPlace) GetBuyer() sdk.AccAddress {
 	buyer, _ := sdk.AccAddressFromBech32(m.Buyer)
 	return buyer
+}
+
+func (m MarketPlace) GetFilled() bool {
+	return m.Filled
 }

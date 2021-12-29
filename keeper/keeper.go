@@ -156,15 +156,13 @@ func (k Keeper) BuyNFT(ctx sdk.Context, id, denom_id string, buyer sdk.AccAddres
 		return err
 	}
 
+	if orderNFT.GetFilled() == true {
+		return sdkerrors.Wrapf(types.ErrFilledNFT, "%s is already filled", orderNFT.GetNFTID())
+	}
 	priceStr := orderNFT.GetPrice()
-	price, err := sdk.ParseCoinNormalized(priceStr)
+	price, err := sdk.ParseDecCoins(priceStr)
 	if err != nil {
 		return err
-	}
-
-	buyerAccount := k.bankKeeper.GetBalance(ctx, buyer, price.Denom)
-	if buyerAccount.IsLT(price) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "buyer do not have balance")
 	}
 
 	nft, err := k.GetNFT(ctx, denom_id, id)
@@ -177,18 +175,40 @@ func (k Keeper) BuyNFT(ctx sdk.Context, id, denom_id string, buyer sdk.AccAddres
 		return err
 	}
 
-	creatorCoin := sdk.NewCoin(price.Denom, price.Amount.Quo(sdk.Int(royaltyDec)))
-	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetCreator(), sdk.Coins{creatorCoin})
+	fmt.Println("RoyaltyDec ========================= : ", royaltyDec, price)
+	creatorRoyalty := price.MulDec(royaltyDec)
+	coins, decimals := creatorRoyalty.TruncateDecimal()
+	fmt.Println("Creator royalty -------------------------- ", coins, decimals)
+
+	buyerAccount := k.bankKeeper.GetBalance(ctx, buyer, price.GetDenomByIndex(0))
+	//if buyerAccount.IsLT(price.) {
+	//	return sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "buyer do not have balance")
+	//}
+
+	fmt.Println("Buyer account {{{{{{{{{{{{{{{{{{{{{{{{{: ", buyerAccount)
+
+	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetCreator(), coins)
 	if err != nil {
 		return err
 	}
 
-	sellerAmount := price.Sub(creatorCoin)
-	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetOwner(), sdk.Coins{sellerAmount})
+	sellerAmount := price.Sub(creatorRoyalty)
+	sellerCoin, sellerDecimal := sellerAmount.TruncateDecimal()
+	fmt.Println("Seller Amount +++++++++++++++++++++ ", sellerCoin, sellerDecimal)
+	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetOwner(), sellerCoin)
 	if err != nil {
 		return err
 	}
 
+	fmt.Println("Buyer := ////////////////////// ", buyer.String())
+	nft1 := nft.(types.NFT)
+	nft1.Owner = buyer.String()
+	k.SetNFT(ctx, denom_id, nft1)
+
+	orderNFT1 := orderNFT.(types.MarketPlace)
+	orderNFT1.Buyer = buyer.String()
+	orderNFT1.Filled = true
+	k.SetNFTMarketPlace(ctx, orderNFT1)
 	k.swapOwner(ctx, denom_id, id, nft.GetOwner(), buyer)
 	return nil
 }

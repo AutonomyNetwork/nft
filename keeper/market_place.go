@@ -7,6 +7,13 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+func (k Keeper) SetNFTMarketPlace(ctx sdk.Context, order types.MarketPlace) {
+	store := ctx.KVStore(k.storeKey)
+
+	bz := k.cdc.MustMarshal(&order)
+	store.Set(types.KeyMarketPlaceNFT(order.GetDenomID(), order.GetNFTID()), bz)
+}
+
 func (k Keeper) GetMarketPlaceNFT(ctx sdk.Context, denomID, id string) (marketplace exported.MarketPlace, err error) {
 	store := ctx.KVStore(k.storeKey)
 
