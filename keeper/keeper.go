@@ -159,12 +159,18 @@ func (k Keeper) BuyNFT(ctx sdk.Context, id, denom_id string, buyer sdk.AccAddres
 	if orderNFT.GetFilled() == true {
 		return sdkerrors.Wrapf(types.ErrFilledNFT, "%s is already filled", orderNFT.GetNFTID())
 	}
+
 	priceStr := orderNFT.GetPrice()
-	price, err := sdk.ParseDecCoins(priceStr)
+	price, err := sdk.ParseDecCoin(priceStr)
 	if err != nil {
 		return err
 	}
 
+	buyerAccount := k.bankKeeper.GetBalance(ctx, buyer, price.Denom)
+	priceCoin, err := sdk.ParseCoinNormalized(priceStr)
+	if buyerAccount.IsLT(priceCoin) {
+		return sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "buyer does not have balance")
+	}
 	nft, err := k.GetNFT(ctx, denom_id, id)
 	if err != nil {
 		return err
@@ -175,32 +181,24 @@ func (k Keeper) BuyNFT(ctx sdk.Context, id, denom_id string, buyer sdk.AccAddres
 		return err
 	}
 
-	fmt.Println("RoyaltyDec ========================= : ", royaltyDec, price)
-	creatorRoyalty := price.MulDec(royaltyDec)
-	coins, decimals := creatorRoyalty.TruncateDecimal()
-	fmt.Println("Creator royalty -------------------------- ", coins, decimals)
+	royalty := royaltyDec.Quo(sdk.OneDec())
 
-	buyerAccount := k.bankKeeper.GetBalance(ctx, buyer, price.GetDenomByIndex(0))
-	//if buyerAccount.IsLT(price.) {
-	//	return sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "buyer do not have balance")
-	//}
+	creatorRoyalty := royalty.Mul(price.Amount)
+	creatorToken := sdk.NewCoin(price.Denom, creatorRoyalty.TruncateInt())
 
-	fmt.Println("Buyer account {{{{{{{{{{{{{{{{{{{{{{{{{: ", buyerAccount)
-
-	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetCreator(), coins)
+	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetCreator(), sdk.Coins{creatorToken})
 	if err != nil {
 		return err
 	}
 
-	sellerAmount := price.Sub(creatorRoyalty)
-	sellerCoin, sellerDecimal := sellerAmount.TruncateDecimal()
-	fmt.Println("Seller Amount +++++++++++++++++++++ ", sellerCoin, sellerDecimal)
-	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetOwner(), sellerCoin)
+	sellerAmount := price.Amount.Sub(creatorRoyalty)
+	sellerTokens := sdk.NewCoin(price.Denom, sellerAmount.TruncateInt())
+
+	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetOwner(), sdk.Coins{sellerTokens})
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Buyer := ////////////////////// ", buyer.String())
 	nft1 := nft.(types.NFT)
 	nft1.Owner = buyer.String()
 	k.SetNFT(ctx, denom_id, nft1)
