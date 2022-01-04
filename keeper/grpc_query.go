@@ -27,13 +27,13 @@ func (k Keeper) Denom(c context.Context, request *types.QueryDenomRequest) (*typ
 	}, nil
 }
 
-//func (k Keeper) Denoms(c context.Context, request *types.QueryDenomsRequest) (*types.QueryDenomsResponse, error) {
-//	ctx := sdk.UnwrapSDKContext(c)
-//	denoms := k.GetDenoms(ctx)
-//	return &types.QueryDenomsResponse{
-//		Denoms: denoms,
-//	}, nil
-//}
+func (k Keeper) Denoms(c context.Context, request *types.QueryDenomsRequest) (*types.QueryDenomsResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	denoms := k.GetDenoms(ctx)
+	return &types.QueryDenomsResponse{
+		Denoms: denoms,
+	}, nil
+}
 
 func (k Keeper) NFT(c context.Context, request *types.QueryNFTRequest) (*types.QueryNFTResponse, error) {
 	denom := strings.ToLower(strings.TrimSpace(request.DenomId))
@@ -82,6 +82,7 @@ func (k Keeper) MarketPlace(c context.Context, request *types.QueryMarketPlaceRe
 	ctx := sdk.UnwrapSDKContext(c)
 
 	nfts := k.GetMarketPlaceNFTs(ctx, denomId)
+	//nfts1 := nfts.(types.NFTs)
 
 	fmt.Println(nfts)
 	return nil, nil

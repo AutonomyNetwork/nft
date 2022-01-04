@@ -37,7 +37,8 @@ func GetQueryCmd() *cobra.Command {
 
 	queryCmd.AddCommand(
 		GetCmdQueryDenom(),
-		//GetCmdQueryDenoms(),
+		GetCmdQueryDenoms(),
+		GetCmdQueryMarketNFT(),
 		//GetCmdQueryCollection(),
 		//GetCmdQuerySupply(),
 		//GetCmdQueryOwner(),
@@ -172,34 +173,37 @@ func GetQueryCmd() *cobra.Command {
 //	return cmd
 //}
 //
-//// GetCmdQueryDenoms queries all denoms
-//func GetCmdQueryDenoms() *cobra.Command {
-//	cmd := &cobra.Command{
-//		Use: "denoms",
-//		Long: strings.TrimSpace(
-//			fmt.Sprintf(`Query all denominations of all collections of NFTs
-//Example:
-//$ %s query nft denoms`, version.AppName)),
-//		RunE: func(cmd *cobra.Command, args []string) error {
-//			clientCtx := client.GetClientContextFromCmd(cmd)
-//			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
-//			if err != nil {
-//				return err
-//			}
-//
-//			queryClient := types.NewQueryClient(clientCtx)
-//			resp, err := queryClient.Denoms(context.Background(), &types.QueryDenomsRequest{})
-//			if err != nil {
-//				return err
-//			}
-//			return clientCtx.PrintProto(resp)
-//		},
-//	}
-//	flags.AddQueryFlagsToCmd(cmd)
-//
-//	return cmd
-//}
-//
+// GetCmdQueryDenoms queries all denoms
+func GetCmdQueryDenoms() *cobra.Command {
+	cmd := &cobra.Command{
+		Use: "denoms",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Query all denominations of all collections of NFTs
+Example:
+$ %s query nft denoms`, version.AppName)),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			clientCtx, err = client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+			resp, err := queryClient.Denoms(context.Background(), &types.QueryDenomsRequest{})
+			if err != nil {
+				return err
+			}
+			return clientCtx.PrintProto(resp)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
 // GetCmdQueryDenoms queries the specified denoms
 func GetCmdQueryDenom() *cobra.Command {
 	cmd := &cobra.Command{
@@ -284,7 +288,7 @@ $ %s query nft token <denom> <tokenID>`, version.AppName)),
 	return cmd
 }
 
-func CmdQueryMarketNFT() *cobra.Command {
+func GetCmdQueryMarketNFT() *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "marketNFT [denomID] [NFTID]",
 		Long: strings.TrimSpace(

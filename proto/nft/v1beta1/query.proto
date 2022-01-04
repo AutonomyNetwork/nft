@@ -12,6 +12,9 @@ service Query {
     option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/denoms/{denom_id}";
   }
 
+  rpc Denoms(QueryDenomsRequest) returns (QueryDenomsResponse) {
+    option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/denoms";
+  }
   rpc NFT(QueryNFTRequest) returns (QueryNFTResponse) {
     option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/denoms/{denom_id}/nfts/{id}";
   }
@@ -31,6 +34,11 @@ message QueryDenomRequest {
 
 message QueryDenomResponse {
   Denom denom = 1;
+}
+
+message QueryDenomsRequest {}
+message QueryDenomsResponse {
+  repeated Denom denoms = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryNFTRequest {
