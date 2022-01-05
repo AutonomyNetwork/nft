@@ -54,57 +54,6 @@ func (m msgServer) CreateDenom(goCtx context.Context,
 	return &types.MsgCreateDenomResponse{}, nil
 }
 
-//func (m msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom) (*types.MsgUpdateDenomResponse, error) {
-//	ctx := sdk.UnwrapSDKContext(goCtx)
-//
-//	sender, err := sdk.AccAddressFromBech32(msg.Sender)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	err = m.Keeper.UpdateDenom(ctx, msg.Id, msg.Name, msg.Description, msg.PreviewURI, sender)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	ctx.EventManager().EmitTypedEvent(
-//		&types.EventUpdateDenom{
-//			Id:      msg.Id,
-//			Name:    msg.Name,
-//			Creator: msg.Sender,
-//		},
-//	)
-//
-//	return &types.MsgUpdateDenomResponse{}, nil
-//}
-
-//func (m msgServer) TransferDenom(goCtx context.Context, msg *types.MsgTransferDenom) (*types.MsgTransferDenomResponse, error) {
-//	ctx := sdk.UnwrapSDKContext(goCtx)
-//
-//	sender, err := sdk.AccAddressFromBech32(msg.Sender)
-//	if err != nil {
-//		return nil, err
-//	}
-//	recipient, err := sdk.AccAddressFromBech32(msg.Recipient)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	err = m.Keeper.TransferDenomOwner(ctx, msg.Id, sender, recipient)
-//	if err != nil {
-//		return nil, err
-//	}
-//	ctx.EventManager().EmitTypedEvent(
-//		&types.EventTransferDenom{
-//			Id:        msg.Id,
-//			Sender:    msg.Sender,
-//			Recipient: msg.Recipient,
-//		},
-//	)
-//
-//	return &types.MsgTransferDenomResponse{}, nil
-//}
-
 func (m msgServer) MintNFT(goCtx context.Context,
 	msg *types.MsgMintNFT) (*types.MsgMintNFTResponse, error) {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
@@ -242,27 +191,3 @@ func (m msgServer) BuyNFT(goCtx context.Context,
 
 	return &types.MsgBuyNFTResponse{}, nil
 }
-
-//func (m msgServer) BurnONFT(goCtx context.Context,
-//	msg *types.MsgBurnONFT) (*types.MsgBurnONFTResponse, error) {
-//
-//	sender, err := sdk.AccAddressFromBech32(msg.Sender)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	ctx := sdk.UnwrapSDKContext(goCtx)
-//	if err := m.Keeper.BurnONFT(ctx, msg.DenomId, msg.Id, sender); err != nil {
-//		return nil, err
-//	}
-//
-//	ctx.EventManager().EmitTypedEvent(
-//		&types.EventBurnONFT{
-//			Id:      msg.Id,
-//			DenomId: msg.DenomId,
-//			Owner:   msg.Sender,
-//		},
-//	)
-//
-//	return &types.MsgBurnONFTResponse{}, nil
-//}

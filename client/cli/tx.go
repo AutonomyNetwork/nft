@@ -45,7 +45,6 @@ func NewTxCmd() *cobra.Command {
 		GetCmdTransferNFT(),
 		GetCmdSellNFT(),
 		GetCmdBuyNFT(),
-		//GetCmdBurnNFT(),
 	)
 
 	return txCmd
@@ -308,34 +307,3 @@ $ %s tx nft buy [denomID] [NFTID] --from=<key-name> --chain-id=<chain-id> --fees
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
-
-//// GetCmdBurnNFT is the CLI command for sending a BurnNFT transaction
-//func GetCmdBurnNFT() *cobra.Command {
-//	cmd := &cobra.Command{
-//		Use: "burn [denomID] [tokenID]",
-//		Long: strings.TrimSpace(
-//			fmt.Sprintf(`Burn an NFT.
-//Example:
-//$ %s tx nft burn [denomID] [tokenID] --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
-//				version.AppName,
-//			),
-//		),
-//		Args: cobra.ExactArgs(2),
-//		RunE: func(cmd *cobra.Command, args []string) error {
-//			clientCtx := client.GetClientContextFromCmd(cmd)
-//			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
-//			if err != nil {
-//				return err
-//			}
-//
-//			msg := types.NewMsgBurnNFT(clientCtx.GetFromAddress(), args[1], args[0])
-//			if err := msg.ValidateBasic(); err != nil {
-//				return err
-//			}
-//			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-//		},
-//	}
-//	flags.AddTxFlagsToCmd(cmd)
-//
-//	return cmd
-//}
