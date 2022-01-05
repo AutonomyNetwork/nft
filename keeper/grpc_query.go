@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -82,8 +81,22 @@ func (k Keeper) MarketPlace(c context.Context, request *types.QueryMarketPlaceRe
 	ctx := sdk.UnwrapSDKContext(c)
 
 	nfts := k.GetMarketPlaceNFTs(ctx, denomId)
-	//nfts1 := nfts.(types.NFTs)
+	return &types.QueryMarketPlaceResponse{
+		NFTs: nfts,
+	}, nil
+}
 
-	fmt.Println(nfts)
-	return nil, nil
+func (k Keeper) OwnerNFTs(c context.Context, request *types.QueryOwnerNFTsRequest) (*types.QueryOwnerNFTsResponse, error) {
+
+	ctx := sdk.UnwrapSDKContext(c)
+	owner, err := sdk.AccAddressFromBech32(request.Owner)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "Invalid owner address %s", owner.String())
+	}
+
+	ownerNFTCollections := k.GetOwnerNFTs(ctx, owner)
+	return &types.QueryOwnerNFTsResponse{
+		Owner:       request.Owner,
+		Collections: ownerNFTCollections,
+	}, nil
 }

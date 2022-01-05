@@ -26,6 +26,10 @@ service Query {
   rpc MarketPlace(QueryMarketPlaceRequest) returns (QueryMarketPlaceResponse) {
     option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/market_place/denoms/{denom_id}";
   }
+
+  rpc OwnerNFTs(QueryOwnerNFTsRequest) returns (QueryOwnerNFTsResponse) {
+    option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/owner/{owner}/nfts";
+  }
 }
 
 message QueryDenomRequest {
@@ -64,5 +68,19 @@ message QueryMarketPlaceRequest {
 }
 
 message QueryMarketPlaceResponse {
-  repeated NFT nfts = 1 [(gogoproto.moretags) = "yaml:\"NFTs\"", (gogoproto.customname) = "NFTs"];
+  repeated NFT nfts = 1 [(gogoproto.moretags) = "yaml:\"NFTs\"", (gogoproto.customname) = "NFTs", (gogoproto.nullable) = false];
+}
+
+message QueryOwnerNFTsRequest {
+  string owner = 1;
+}
+
+message QueryOwnerNFTsResponse {
+  string owner = 1;
+  repeated OwnerNFTCollection collections = 2 [(gogoproto.nullable) = false];
+}
+
+message OwnerNFTCollection {
+  Denom denom = 1 [(gogoproto.nullable) = false];
+  repeated NFT nfts = 2 [(gogoproto.nullable) = false];
 }

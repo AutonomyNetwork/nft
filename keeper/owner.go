@@ -88,3 +88,48 @@ func (k Keeper) swapOwner(ctx sdk.Context,
 	//set new owner key
 	k.setOwner(ctx, denomID, tokenID, dstOwner)
 }
+
+func (k Keeper) GetOwnerNFTs(ctx sdk.Context, owner sdk.AccAddress) []types.OwnerNFTCollection {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.KeyOwner(owner, "", ""))
+	owner1 := types.Owner{
+		Address:       owner.String(),
+		IDCollections: types.IDCollections{},
+	}
+	idsMap := make(map[string][]string)
+	var ownerCollections []types.OwnerNFTCollection
+
+	for ; iterator.Valid(); iterator.Next() {
+		_, denomID, tokenID, _ := types.SplitKeyOwner(iterator.Key())
+		if ids, ok := idsMap[denomID]; ok {
+			idsMap[denomID] = append(ids, tokenID)
+		} else {
+			idsMap[denomID] = []string{tokenID}
+			owner1.IDCollections = append(
+				owner1.IDCollections,
+				types.IDCollection{
+					DenomId: denomID,
+				},
+			)
+		}
+	}
+
+	for i := 0; i < len(owner1.IDCollections); i++ {
+		owner1.IDCollections[i].NftIds = idsMap[owner1.IDCollections[i].DenomId]
+		denom, _ := k.GetDenom(ctx, owner1.IDCollections[i].DenomId)
+		var nfts []types.NFT
+		for _, nftId := range owner1.IDCollections[i].NftIds {
+			nft, _ := k.GetNFT(ctx, denom.Id, nftId)
+			nfts = append(nfts, nft.(types.NFT))
+		}
+
+		ownerCollection := types.OwnerNFTCollection{
+			Denom: denom,
+			Nfts:  nfts,
+		}
+
+		ownerCollections = append(ownerCollections, ownerCollection)
+	}
+
+	return ownerCollections
+}

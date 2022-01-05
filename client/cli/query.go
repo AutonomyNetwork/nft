@@ -39,6 +39,7 @@ func GetQueryCmd() *cobra.Command {
 		GetCmdQueryDenom(),
 		GetCmdQueryDenoms(),
 		GetCmdQueryMarketNFT(),
+		GetCmdQueryOwnerCollections(),
 		//GetCmdQueryCollection(),
 		//GetCmdQuerySupply(),
 		//GetCmdQueryOwner(),
@@ -328,6 +329,45 @@ $ %s query nft marketNFT [denomID] [NFTID]`,
 			}
 
 			return cliCtx.PrintProto(res.MarketPlace)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func GetCmdQueryOwnerCollections() *cobra.Command {
+	cmd := &cobra.Command{
+		Use: "collections [owner]",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Query all NFTs for a owner.
+Example:
+$ %s query nft collections [owner]`,
+				version.AppName,
+			),
+		),
+		Args: cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cliCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			cliCtx, err = client.ReadPersistentCommandFlags(cliCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(cliCtx)
+			res, err := queryClient.OwnerNFTs(context.Background(), &types.QueryOwnerNFTsRequest{
+				Owner: args[0],
+			})
+
+			if err != nil {
+				return err
+			}
+
+			return cliCtx.PrintProto(res)
 		},
 	}
 
