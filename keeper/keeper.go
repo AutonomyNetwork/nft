@@ -105,6 +105,10 @@ func (k Keeper) TransferOwner(ctx sdk.Context,
 		return err
 	}
 
+	if !nft.Transferable {
+		return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "nft %s is not transferable", nft.Id)
+	}
+
 	nft.Owner = dstOwner.String()
 
 	k.SetNFT(ctx, denomID, nft)
