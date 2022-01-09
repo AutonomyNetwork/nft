@@ -25,6 +25,7 @@ func GetQueryCmd() *cobra.Command {
 		GetCmdQueryMarketNFT(),
 		GetCmdQueryOwnerCollections(),
 		GetCmdQueryNFT(),
+		GetCmdQueryMarketPlace(),
 	)
 
 	return queryCmd
@@ -227,6 +228,40 @@ $ %s query nft collections [owner]`,
 		},
 	}
 
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func GetCmdQueryMarketPlace() *cobra.Command {
+	cmd := &cobra.Command{
+		Use: "marketPlace",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Query marketPlace.
+Example:
+$ %s query nft marketPlace`,
+				version.AppName,
+			),
+		),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cliCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			cliCtx, err = client.ReadPersistentCommandFlags(cliCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(cliCtx)
+			res, err := queryClient.MarketPlace(context.Background(), &types.QueryMarketPlaceRequest{})
+			if err != nil {
+				return err
+			}
+
+			return cliCtx.PrintProto(res)
+		},
+	}
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
