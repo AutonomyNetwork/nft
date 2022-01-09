@@ -261,24 +261,6 @@ func request_Query_MarketPlace_0(ctx context.Context, marshaler runtime.Marshale
 	var protoReq QueryMarketPlaceRequest
 	var metadata runtime.ServerMetadata
 
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["denom_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "denom_id")
-	}
-
-	protoReq.DenomId, err = runtime.String(val)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "denom_id", err)
-	}
-
 	msg, err := client.MarketPlace(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -287,24 +269,6 @@ func request_Query_MarketPlace_0(ctx context.Context, marshaler runtime.Marshale
 func local_request_Query_MarketPlace_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryMarketPlaceRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["denom_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "denom_id")
-	}
-
-	protoReq.DenomId, err = runtime.String(val)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "denom_id", err)
-	}
 
 	msg, err := server.MarketPlace(ctx, &protoReq)
 	return msg, metadata, err
@@ -682,7 +646,7 @@ var (
 
 	pattern_Query_MarketPlaceNFT_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"AutonomyNetwork", "nft", "v1beta1", "market_place", "denoms", "denom_id", "nfts", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MarketPlace_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"AutonomyNetwork", "nft", "v1beta1", "market_place", "denoms", "denom_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_MarketPlace_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"AutonomyNetwork", "nft", "v1beta1", "market_place"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Query_OwnerNFTs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"AutonomyNetwork", "nft", "v1beta1", "owner", "nfts"}, "", runtime.AssumeColonVerbOpt(true)))
 )

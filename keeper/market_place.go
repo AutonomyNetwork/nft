@@ -27,17 +27,17 @@ func (k Keeper) GetMarketPlaceNFT(ctx sdk.Context, denomID, id string) (marketpl
 	return order, nil
 }
 
-func (k Keeper) GetMarketPlaceNFTs(ctx sdk.Context, denomID string) (marketNFTs []types.NFT) {
+func (k Keeper) GetMarketPlace(ctx sdk.Context) (marketPlace []types.MarketPlace) {
 
 	store := ctx.KVStore(k.storeKey)
 
-	iterator := sdk.KVStorePrefixIterator(store, types.KeyMarketPlaceNFT(denomID, ""))
+	iterator := sdk.KVStorePrefixIterator(store, types.KeyMarketPlaceNFT("", ""))
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
-		var nft types.NFT
-		k.cdc.MustUnmarshal(iterator.Value(), &nft)
-		marketNFTs = append(marketNFTs, nft)
+		var marketPlace1 types.MarketPlace
+		k.cdc.MustUnmarshal(iterator.Value(), &marketPlace1)
+		marketPlace = append(marketPlace, marketPlace1)
 	}
 
-	return marketNFTs
+	return marketPlace
 }

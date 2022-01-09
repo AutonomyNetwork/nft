@@ -76,13 +76,12 @@ func (k Keeper) MarketPlaceNFT(c context.Context, request *types.QueryMarketPlac
 }
 
 func (k Keeper) MarketPlace(c context.Context, request *types.QueryMarketPlaceRequest) (*types.QueryMarketPlaceResponse, error) {
-	denomId := strings.ToLower(strings.TrimSpace(request.DenomId))
 
 	ctx := sdk.UnwrapSDKContext(c)
 
-	nfts := k.GetMarketPlaceNFTs(ctx, denomId)
+	marketPlace := k.GetMarketPlace(ctx)
 	return &types.QueryMarketPlaceResponse{
-		NFTs: nfts,
+		MarketPlace: marketPlace,
 	}, nil
 }
 
