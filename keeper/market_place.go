@@ -31,7 +31,7 @@ func (k Keeper) GetMarketPlace(ctx sdk.Context) (marketPlace []types.MarketPlace
 
 	store := ctx.KVStore(k.storeKey)
 
-	iterator := sdk.KVStorePrefixIterator(store, types.KeyMarketPlaceNFT("", ""))
+	iterator := sdk.KVStorePrefixIterator(store, types.PrefixMarketPlace)
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var marketPlace1 types.MarketPlace
