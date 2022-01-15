@@ -24,23 +24,27 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, data types.GenesisState) {
 			panic(err)
 		}
 	}
+	
+	for _, o := range data.Orders {
+		k.SetNFTMarketPlace(ctx, o)
+	}
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper.
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
-	return types.NewGenesisState(k.GetCollections(ctx))
+	return types.NewGenesisState(k.GetCollections(ctx), k.GetMarketPlace(ctx))
 }
 
 // DefaultGenesisState returns a default genesis state
 func DefaultGenesisState() *types.GenesisState {
-	return types.NewGenesisState([]types.Collection{})
+	return types.NewGenesisState([]types.Collection{}, []types.MarketPlace{})
 }
 
 // ValidateGenesis performs basic validation of nfts genesis data returning an
 // error for any failed validation criteria.
 func ValidateGenesis(data types.GenesisState) error {
 	for _, c := range data.Collections {
-		if err := types.ValidateDenomID(c.Denom.Name); err != nil {
+		if err := types.ValidateDenomID(c.Denom.Id); err != nil {
 			return err
 		}
 		if !utf8.ValidString(c.Denom.Name) {
