@@ -2,7 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
+	
 	"github.com/AutonomyNetwork/nft/types"
 )
 
@@ -11,13 +11,13 @@ func (k Keeper) GetOwner(ctx sdk.Context, address sdk.AccAddress, denom string) 
 	store := ctx.KVStore(k.storeKey)
 	iterator := sdk.KVStorePrefixIterator(store, types.KeyOwner(address, denom, ""))
 	defer iterator.Close()
-
+	
 	owner := types.Owner{
 		Address:       address.String(),
 		IDCollections: types.IDCollections{},
 	}
 	idsMap := make(map[string][]string)
-
+	
 	for ; iterator.Valid(); iterator.Next() {
 		_, denom, tokenID, _ := types.SplitKeyOwner(iterator.Key())
 		if ids, ok := idsMap[denom]; ok {
@@ -29,7 +29,7 @@ func (k Keeper) GetOwner(ctx sdk.Context, address sdk.AccAddress, denom string) 
 			})
 		}
 	}
-
+	
 	for i := 0; i < len(owner.IDCollections); i++ {
 		owner.IDCollections[i].NftIds = idsMap[owner.IDCollections[i].DenomId]
 	}
@@ -41,7 +41,7 @@ func (k Keeper) GetOwners(ctx sdk.Context) (owners types.Owners) {
 	store := ctx.KVStore(k.storeKey)
 	iterator := sdk.KVStoreReversePrefixIterator(store, types.KeyOwner(nil, "", ""))
 	defer iterator.Close()
-
+	
 	idcsMap := make(map[string]types.IDCollections)
 	for ; iterator.Valid(); iterator.Next() {
 		key := iterator.Key()
@@ -73,7 +73,7 @@ func (k Keeper) setOwner(ctx sdk.Context,
 	denomID, tokenID string,
 	owner sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
-
+	
 	bz := types.MustMarshalTokenID(k.cdc, tokenID)
 	store.Set(types.KeyOwner(owner, denomID, tokenID), bz)
 }
@@ -81,11 +81,11 @@ func (k Keeper) setOwner(ctx sdk.Context,
 func (k Keeper) swapOwner(ctx sdk.Context,
 	denomID, tokenID string,
 	srcOwner, dstOwner sdk.AccAddress) {
-
-	//delete old owner key
+	
+	// delete old owner key
 	k.deleteOwner(ctx, denomID, tokenID, srcOwner)
-
-	//set new owner key
+	
+	// set new owner key
 	k.setOwner(ctx, denomID, tokenID, dstOwner)
 }
 
@@ -98,7 +98,7 @@ func (k Keeper) GetOwnerNFTs(ctx sdk.Context, owner sdk.AccAddress) []types.Owne
 	}
 	idsMap := make(map[string][]string)
 	var ownerCollections []types.OwnerNFTCollection
-
+	
 	for ; iterator.Valid(); iterator.Next() {
 		_, denomID, tokenID, _ := types.SplitKeyOwner(iterator.Key())
 		if ids, ok := idsMap[denomID]; ok {
@@ -113,7 +113,7 @@ func (k Keeper) GetOwnerNFTs(ctx sdk.Context, owner sdk.AccAddress) []types.Owne
 			)
 		}
 	}
-
+	
 	for i := 0; i < len(owner1.IDCollections); i++ {
 		owner1.IDCollections[i].NftIds = idsMap[owner1.IDCollections[i].DenomId]
 		denom, _ := k.GetDenom(ctx, owner1.IDCollections[i].DenomId)
@@ -122,14 +122,14 @@ func (k Keeper) GetOwnerNFTs(ctx sdk.Context, owner sdk.AccAddress) []types.Owne
 			nft, _ := k.GetNFT(ctx, denom.Id, nftId)
 			nfts = append(nfts, nft.(types.NFT))
 		}
-
+		
 		ownerCollection := types.OwnerNFTCollection{
 			Denom: denom,
 			Nfts:  nfts,
 		}
-
+		
 		ownerCollections = append(ownerCollections, ownerCollection)
 	}
-
+	
 	return ownerCollections
 }

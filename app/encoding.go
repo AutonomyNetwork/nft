@@ -1,8 +1,9 @@
 package app
 
 import (
-	"github.com/AutonomyNetwork/nft/app/params"
 	"github.com/cosmos/cosmos-sdk/std"
+	
+	"github.com/AutonomyNetwork/nft/app/params"
 )
 
 // MakeEncodingConfig creates an EncodingConfig for testing

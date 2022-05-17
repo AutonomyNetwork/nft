@@ -3,10 +3,10 @@ package types
 import (
 	"strings"
 	"time"
-
+	
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
+	
 	"github.com/AutonomyNetwork/nft/exported"
 )
 
@@ -14,7 +14,7 @@ var _ exported.NFT = NFT{}
 
 // NewBaseNFT creates a new NFT instance
 func NewBaseNFT(id string, metadata Metadata, owner sdk.AccAddress,
-	transferable bool, royalties string, creator sdk.AccAddress, createdTime time.Time) NFT {
+	transferable bool, royalties string, creator sdk.AccAddress, createdTime time.Time, attributes string) NFT {
 	return NFT{
 		Id:           strings.ToLower(strings.TrimSpace(id)),
 		Metadata:     metadata,
@@ -23,6 +23,7 @@ func NewBaseNFT(id string, metadata Metadata, owner sdk.AccAddress,
 		Royalties:    royalties,
 		Creator:      creator.String(),
 		CreatedAt:    createdTime,
+		Data:         attributes,
 	}
 }
 
@@ -70,6 +71,10 @@ func (nft NFT) GetCreator() sdk.AccAddress {
 
 func (nft NFT) GetCreatedTime() time.Time {
 	return nft.CreatedAt
+}
+
+func (nft NFT) GetAttributes() string {
+	return nft.Data
 }
 
 // ----------------------------------------------------------------------------

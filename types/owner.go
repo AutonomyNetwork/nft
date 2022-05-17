@@ -2,6 +2,7 @@ package types
 
 import (
 	"bytes"
+	
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -9,7 +10,7 @@ import (
 func NewIDCollection(denomId string, ids []string) IDCollection {
 	return IDCollection{
 		DenomId: denomId,
-		NftIds:   ids,
+		NftIds:  ids,
 	}
 }
 
@@ -38,7 +39,7 @@ func (idcs IDCollections) Add(denom, id string) IDCollections {
 	}
 	return append(idcs, IDCollection{
 		DenomId: denom,
-		NftIds:   []string{id},
+		NftIds:  []string{id},
 	})
 }
 
@@ -47,7 +48,7 @@ func (idcs IDCollections) String() string {
 	if len(idcs) == 0 {
 		return ""
 	}
-
+	
 	var buf bytes.Buffer
 	for _, idCollection := range idcs {
 		if buf.Len() > 0 {
@@ -59,10 +60,10 @@ func (idcs IDCollections) String() string {
 }
 
 // Owner of non fungible tokens
-//type Owner struct {
+// type Owner struct {
 //	Address       sdk.AccAddress `json:"address" yaml:"address"`
 //	IDCollections IDCollections  `json:"id_collections" yaml:"id_collections"`
-//}
+// }
 
 // NewOwner creates a new Owner
 func NewOwner(owner sdk.AccAddress, idCollections ...IDCollection) Owner {

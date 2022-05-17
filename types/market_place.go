@@ -1,8 +1,9 @@
 package types
 
 import (
-	"github.com/AutonomyNetwork/nft/exported"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	
+	"github.com/AutonomyNetwork/nft/exported"
 )
 
 var _ exported.MarketPlace = MarketPlace{}
