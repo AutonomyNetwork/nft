@@ -2,7 +2,7 @@ package rest
 
 import (
 	"github.com/gorilla/mux"
-
+	
 	"github.com/cosmos/cosmos-sdk/client"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
@@ -10,8 +10,8 @@ import (
 
 // RegisterHandlers register distribution REST routes.
 func RegisterHandlers(cliCtx client.Context, r *mux.Router, queryRoute string) {
-	//registerQueryRoutes(cliCtx, r, queryRoute)
-	//registerTxRoutes(cliCtx, r, queryRoute)
+	// registerQueryRoutes(cliCtx, r, queryRoute)
+	// registerTxRoutes(cliCtx, r, queryRoute)
 }
 
 const (

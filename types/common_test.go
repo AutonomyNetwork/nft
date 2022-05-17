@@ -3,7 +3,7 @@ package types_test
 import (
 	"bytes"
 	"strconv"
-
+	
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -23,13 +23,13 @@ var (
 func CreateTestAddrs(numAddrs int) []sdk.AccAddress {
 	var addresses []sdk.AccAddress
 	var buffer bytes.Buffer
-
+	
 	// start at 100 so we can make up to 999 test addresses with valid test addresses
 	for i := 100; i < (numAddrs + 100); i++ {
 		numString := strconv.Itoa(i)
-		buffer.WriteString("A58856F0FD53BF058B4909A21AEC019107BA6") //base address string
-
-		buffer.WriteString(numString) //adding on final two digits to make addresses unique
+		buffer.WriteString("A58856F0FD53BF058B4909A21AEC019107BA6") // base address string
+		
+		buffer.WriteString(numString) // adding on final two digits to make addresses unique
 		res, _ := sdk.AccAddressFromHex(buffer.String())
 		bech := res.String()
 		addresses = append(addresses, testAddr(buffer.String(), bech))
@@ -48,7 +48,7 @@ func testAddr(addr string, bech string) sdk.AccAddress {
 	if bech != bechexpected {
 		panic("Bech encoding doesn't match reference")
 	}
-
+	
 	bechres, err := sdk.AccAddressFromBech32(bech)
 	if err != nil {
 		panic(err)
@@ -56,6 +56,6 @@ func testAddr(addr string, bech string) sdk.AccAddress {
 	if !bytes.Equal(bechres, res) {
 		panic("Bech decode and hex decode don't match")
 	}
-
+	
 	return res
 }

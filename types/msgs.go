@@ -1,11 +1,12 @@
 package types
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"regexp"
 	"strings"
 	"unicode/utf8"
+	
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // constant used to indicate that some field should not be updated
@@ -15,17 +16,18 @@ const (
 	MaxDenomLen  = 64
 	MinSymbolLen = 3
 	MaxSymbolLen = 12
-
-	MaxURILen = 256
+	MaxURILen    = 256
 )
 
 const (
-	TypeCreateDenom = "create_denom"
-	TypeMintNFT     = "mint_nft"
-	TypeUpdateNFT   = "update_nft"
-	TypeTransferNFT = "transfer_nft"
-	TypeSellNFT     = "sell_nft"
-	TypeBuyNFT      = "buy_nft"
+	TypeCreateDenom     = "create_denom"
+	TypeMintNFT         = "mint_nft"
+	TypeUpdateNFT       = "update_nft"
+	TypeTransferNFT     = "transfer_nft"
+	TypeSellNFT         = "sell_nft"
+	TypeBuyNFT          = "buy_nft"
+	TypeCreateCommunity = "create_community"
+	TypeJoinCommunity   = "join_community"
 )
 
 var (
@@ -42,16 +44,20 @@ var (
 	_ sdk.Msg = &MsgTransferNFT{}
 	_ sdk.Msg = &MsgSellNFT{}
 	_ sdk.Msg = &MsgBuyNFT{}
+	_ sdk.Msg = &MsgCreateCommunity{}
+	_ sdk.Msg = &MsgJoinCommunity{}
 )
 
-func NewMsgCreateDenom(name, symbol, description, preview_uri, creator string) *MsgCreateDenom {
+func NewMsgCreateDenom(name, symbol, description, preview_uri, creator, community_id string, dependecy_collection []string) *MsgCreateDenom {
 	return &MsgCreateDenom{
-		Id:          GenUniqueID(DenomPrefix),
-		Name:        name,
-		Symbol:      symbol,
-		Description: description,
-		PreviewURI:  preview_uri,
-		Creator:     creator,
+		Id:                 GenUniqueID(DenomPrefix),
+		Name:               name,
+		Symbol:             symbol,
+		Description:        description,
+		PreviewURI:         preview_uri,
+		Creator:            creator,
+		CommunityId:        community_id,
+		DepedentCollection: dependecy_collection,
 	}
 }
 
@@ -63,16 +69,16 @@ func (msg MsgCreateDenom) ValidateBasic() error {
 	if err := ValidateDenomID(msg.Id); err != nil {
 		return err
 	}
-
+	
 	if err := ValidateDenomSymbol(msg.Symbol); err != nil {
 		return err
 	}
-
+	
 	name := strings.TrimSpace(msg.Name)
 	if len(name) > 0 && !utf8.ValidString(name) {
 		return sdkerrors.Wrap(ErrInvalidDenom, "denom name is invalid")
 	}
-
+	
 	if _, err := sdk.AccAddressFromBech32(msg.Creator); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
@@ -89,7 +95,7 @@ func (msg MsgCreateDenom) GetSigners() []sdk.AccAddress {
 	if err != nil {
 		panic(err)
 	}
-
+	
 	return []sdk.AccAddress{from}
 }
 
@@ -112,29 +118,29 @@ func (msg MsgMintNFT) ValidateBasic() error {
 	if err := ValidateNFTID(msg.Id); err != nil {
 		return err
 	}
-
+	
 	if err := ValidateDenomID(msg.DenomId); err != nil {
 		return err
 	}
-
+	
 	name := strings.TrimSpace(msg.Metadata.Name)
 	if len(name) > 0 && !utf8.ValidString(name) {
 		return sdkerrors.Wrap(ErrInvalidDenom, "name is invalid")
 	}
-
+	
 	description := strings.TrimSpace(msg.Metadata.Description)
 	if len(description) > 0 && !utf8.ValidString(description) {
 		return sdkerrors.Wrap(ErrInvalidDenom, "description is invalid")
 	}
-
+	
 	if err := ValidateMediaURI(msg.Metadata.MediaURI); err != nil {
 		return err
 	}
-
+	
 	if err := ValidatePreviewURI(msg.Metadata.PreviewURI); err != nil {
 		return err
 	}
-
+	
 	if _, err := sdk.AccAddressFromBech32(msg.Creator); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
@@ -151,7 +157,7 @@ func (msg MsgMintNFT) GetSigners() []sdk.AccAddress {
 	if err != nil {
 		panic(err)
 	}
-
+	
 	return []sdk.AccAddress{from}
 }
 
@@ -171,9 +177,9 @@ func (msg MsgUpdateNFT) Route() string { return RouterKey }
 func (msg MsgUpdateNFT) Type() string { return TypeUpdateNFT }
 
 func (msg MsgUpdateNFT) ValidateBasic() error {
-	//if _, err := sdk.AccAddressFromBech32(msg.Owner); err != nil {
+	// if _, err := sdk.AccAddressFromBech32(msg.Owner); err != nil {
 	//	return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid owner address %s", err)
-	//}
+	// }
 	return nil
 }
 
@@ -207,11 +213,11 @@ func (msg MsgTransferNFT) ValidateBasic() error {
 	if err := ValidateDenomID(msg.DenomId); err != nil {
 		return err
 	}
-
+	
 	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address %s", err)
 	}
-
+	
 	if _, err := sdk.AccAddressFromBech32(msg.Recipient); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid recipient address %s", err)
 	}
@@ -245,15 +251,15 @@ func (msg MsgSellNFT) ValidateBasic() error {
 	if err := ValidateNFTID(msg.Id); err != nil {
 		return err
 	}
-
+	
 	if err := ValidateDenomID(msg.DenomId); err != nil {
 		return err
 	}
-
+	
 	if _, err := sdk.AccAddressFromBech32(msg.Seller); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid seller address %s", err)
 	}
-
+	
 	return nil
 }
 
@@ -283,15 +289,15 @@ func (msg MsgBuyNFT) ValidateBasic() error {
 	if err := ValidateNFTID(msg.Id); err != nil {
 		return err
 	}
-
+	
 	if err := ValidateDenomID(msg.DenomId); err != nil {
 		return err
 	}
-
+	
 	if _, err := sdk.AccAddressFromBech32(msg.Buyer); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid buyer address %s", msg.Buyer)
 	}
-
+	
 	return nil
 }
 
@@ -302,5 +308,61 @@ func (msg MsgBuyNFT) GetSignBytes() []byte {
 
 func (msg MsgBuyNFT) GetSigners() []sdk.AccAddress {
 	from, _ := sdk.AccAddressFromBech32(msg.Buyer)
+	return []sdk.AccAddress{from}
+}
+
+func NewMsgCreateCommunity(name, desc, creator, uri string) *MsgCreateCommunity {
+	return &MsgCreateCommunity{
+		Name:        name,
+		Description: desc,
+		Creator:     creator,
+		PreviewUri:  uri,
+		Id:          GenUniqueID(CommunityPrefix),
+	}
+}
+
+func (msg MsgCreateCommunity) Route() string { return RouterKey }
+
+func (msg MsgCreateCommunity) Type() string { return TypeCreateCommunity }
+
+func (m MsgCreateCommunity) ValidateBasic() error {
+	return nil // TODO: Implement validate methods
+}
+func (msg MsgCreateCommunity) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(&msg)
+	return sdk.MustSortJSON(bz)
+}
+
+func (msg MsgCreateCommunity) GetSigners() []sdk.AccAddress {
+	from, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	
+	return []sdk.AccAddress{from}
+}
+
+func NewMsgJoinCommunity(id, creator string) *MsgJoinCommunity {
+	return &MsgJoinCommunity{
+		CommunityId: id,
+		Address:     creator,
+	}
+}
+
+func (msg MsgJoinCommunity) Route() string { return RouterKey }
+
+func (msg MsgJoinCommunity) Type() string { return TypeJoinCommunity }
+
+func (msg MsgJoinCommunity) ValidateBasic() error {
+	return nil // TODO: validate basic
+}
+
+func (msg MsgJoinCommunity) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(&msg)
+	return sdk.MustSortJSON(bz)
+}
+
+func (msg MsgJoinCommunity) GetSigners() []sdk.AccAddress {
+	from, _ := sdk.AccAddressFromBech32(msg.Address)
 	return []sdk.AccAddress{from}
 }

@@ -29,6 +29,9 @@ message Denom {
     (gogoproto.moretags) = "yaml:\"preview_uri\"",
     (gogoproto.customname) = "PreviewURI"
   ];
+
+  repeated  string dependent_denoms = 7;
+  string community_id = 8;
 }
 
 message Metadata {
@@ -57,15 +60,16 @@ message NFT {
     (gogoproto.stdtime) = true,
     (gogoproto.moretags) = "yaml:\"created_at\""
   ];
+  string data = 9;
 }
 
 message Owner {
-  option (gogoproto.equal)             = true;
+  option (gogoproto.equal) = true;
 
-  string                address        = 1;
+  string                address = 1;
   repeated IDCollection id_collections = 2 [
-    (gogoproto.moretags)   = "yaml:\"idcs\"",
+    (gogoproto.moretags) = "yaml:\"idcs\"",
     (gogoproto.customname) = "IDCollections",
-    (gogoproto.nullable)   = false
+    (gogoproto.nullable) = false
   ];
 }

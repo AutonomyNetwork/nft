@@ -14,6 +14,8 @@ service Msg {
   rpc TransferNFT(MsgTransferNFT) returns (MsgTransferNFTResponse);
   rpc SellNFT(MsgSellNFT) returns (MsgSellNFTResponse);
   rpc BuyNFT(MsgBuyNFT) returns (MsgBuyNFTResponse);
+  rpc CreateCommunity(MsgCreateCommunity) returns (MsgCreateCommunityResponse);
+  rpc JoinCommunity(MsgJoinCommunity) returns(MsgJoinCommunityResponse);
 }
 
 message MsgCreateDenom {
@@ -28,6 +30,8 @@ message MsgCreateDenom {
     (gogoproto.customname) = "PreviewURI"
   ];
   string creator = 6;
+  repeated  string depedent_collection = 7;
+  string community_id = 8;
 }
 
 message MsgCreateDenomResponse {}
@@ -80,3 +84,24 @@ message MsgBuyNFT {
 }
 
 message MsgBuyNFTResponse{}
+
+message  MsgCreateCommunity{
+  string name = 1;
+  string description = 2;
+  string creator = 3;
+  string preview_uri = 4;
+  string id = 5;
+}
+
+message MsgCreateCommunityResponse {
+  string id = 1;
+}
+
+message MsgJoinCommunity {
+  string community_id = 1;
+  string address = 2;
+}
+
+message MsgJoinCommunityResponse {
+
+}

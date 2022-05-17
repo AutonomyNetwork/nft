@@ -27,7 +27,7 @@ message EventTransferNFT {
 
 message EventUpdateNFT {
   string id = 1;
-  string denom_id =2;
+  string denom_id = 2;
   string owner = 3;
 }
 
@@ -42,4 +42,15 @@ message EventBuyNFT {
   string id = 1;
   string denom_id = 2;
   string buyer = 3;
+}
+
+message EventCreateCommunity {
+  string id = 1;
+  string creator = 2;
+  string name = 3;
+}
+
+message  EventJoinCommunity {
+  string id = 1;
+  string creator = 2;
 }

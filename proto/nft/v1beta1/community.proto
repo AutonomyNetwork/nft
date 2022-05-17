@@ -1,0 +1,26 @@
+syntax = "proto3";
+package  nft.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+
+option go_package = "github.com/AutonomyNetwork/nft/types";
+option (gogoproto.goproto_getters_all) = false;
+
+message Community {
+  string name = 1;
+  string id = 2;
+  string creator = 3;
+  string description = 4;
+  string preview_uri = 5 [
+    (gogoproto.moretags) = "yaml:\"preview_uri\"",
+    (gogoproto.customname) = "PreviewURI"
+  ];
+}
+
+message  CommunityMembers {
+  string community_id = 1;
+  repeated  string addresses = 2 ;
+}
+

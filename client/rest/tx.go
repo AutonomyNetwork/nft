@@ -1,6 +1,7 @@
 package rest
+
 //
-//import (
+// import (
 //	"fmt"
 //	"net/http"
 //
@@ -12,9 +13,9 @@ package rest
 //	"github.com/cosmos/cosmos-sdk/types/rest"
 //
 //	"github.com/AutonomyNetwork/nft/types"
-//)
+// )
 //
-//func registerTxRoutes(cliCtx client.Context, r *mux.Router, queryRoute string) {
+// func registerTxRoutes(cliCtx client.Context, r *mux.Router, queryRoute string) {
 //	// Mint an NFT
 //	r.HandleFunc(
 //		"/nft/nfts/denoms/issue",
@@ -44,9 +45,9 @@ package rest
 //		fmt.Sprintf("/nft/nfts/{%s}/{%s}/burn", RestParamDenom, RestParamTokenID),
 //		burnNFTHandlerFn(cliCtx),
 //	).Methods("POST")
-//}
+// }
 //
-//func issueDenomHandlerFn(cliCtx client.Context) http.HandlerFunc {
+// func issueDenomHandlerFn(cliCtx client.Context) http.HandlerFunc {
 //	return func(w http.ResponseWriter, r *http.Request) {
 //		var req issueDenomReq
 //		if !rest.ReadRESTReq(w, r, cliCtx.LegacyAmino, &req) {
@@ -66,9 +67,9 @@ package rest
 //		}
 //		tx.WriteGeneratedTxResponse(cliCtx, w, req.BaseReq, msg)
 //	}
-//}
+// }
 //
-//func mintNFTHandlerFn(cliCtx client.Context) http.HandlerFunc {
+// func mintNFTHandlerFn(cliCtx client.Context) http.HandlerFunc {
 //	return func(w http.ResponseWriter, r *http.Request) {
 //		var req mintNFTReq
 //		if !rest.ReadRESTReq(w, r, cliCtx.LegacyAmino, &req) {
@@ -99,9 +100,9 @@ package rest
 //		}
 //		tx.WriteGeneratedTxResponse(cliCtx, w, req.BaseReq, msg)
 //	}
-//}
+// }
 //
-//func editNFTHandlerFn(cliCtx client.Context) http.HandlerFunc {
+// func editNFTHandlerFn(cliCtx client.Context) http.HandlerFunc {
 //	return func(w http.ResponseWriter, r *http.Request) {
 //		var req editNFTReq
 //		if !rest.ReadRESTReq(w, r, cliCtx.LegacyAmino, &req) {
@@ -128,9 +129,9 @@ package rest
 //		}
 //		tx.WriteGeneratedTxResponse(cliCtx, w, req.BaseReq, msg)
 //	}
-//}
+// }
 //
-//func transferNFTHandlerFn(cliCtx client.Context) http.HandlerFunc {
+// func transferNFTHandlerFn(cliCtx client.Context) http.HandlerFunc {
 //	return func(w http.ResponseWriter, r *http.Request) {
 //		var req transferNFTReq
 //		if !rest.ReadRESTReq(w, r, cliCtx.LegacyAmino, &req) {
@@ -164,9 +165,9 @@ package rest
 //		}
 //		tx.WriteGeneratedTxResponse(cliCtx, w, req.BaseReq, msg)
 //	}
-//}
+// }
 //
-//func burnNFTHandlerFn(cliCtx client.Context) http.HandlerFunc {
+// func burnNFTHandlerFn(cliCtx client.Context) http.HandlerFunc {
 //	return func(w http.ResponseWriter, r *http.Request) {
 //		var req burnNFTReq
 //		if !rest.ReadRESTReq(w, r, cliCtx.LegacyAmino, &req) {
@@ -192,4 +193,4 @@ package rest
 //		}
 //		tx.WriteGeneratedTxResponse(cliCtx, w, req.BaseReq, msg)
 //	}
-//}
+// }

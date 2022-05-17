@@ -3,12 +3,14 @@ package cli
 import (
 	"context"
 	"fmt"
-	"github.com/AutonomyNetwork/nft/types"
+	"strings"
+	
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
-	"strings"
+	
+	"github.com/AutonomyNetwork/nft/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -18,7 +20,7 @@ func GetQueryCmd() *cobra.Command {
 		Short:              "Querying commands for the NFT module",
 		DisableFlagParsing: true,
 	}
-
+	
 	queryCmd.AddCommand(
 		GetCmdQueryDenom(),
 		GetCmdQueryDenoms(),
@@ -27,7 +29,7 @@ func GetQueryCmd() *cobra.Command {
 		GetCmdQueryNFT(),
 		GetCmdQueryMarketPlace(),
 	)
-
+	
 	return queryCmd
 }
 
@@ -48,7 +50,7 @@ $ %s query nft denoms`, version.AppName)),
 			if err != nil {
 				return err
 			}
-
+			
 			queryClient := types.NewQueryClient(clientCtx)
 			resp, err := queryClient.Denoms(context.Background(), &types.QueryDenomsRequest{})
 			if err != nil {
@@ -58,7 +60,7 @@ $ %s query nft denoms`, version.AppName)),
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
-
+	
 	return cmd
 }
 
@@ -80,12 +82,12 @@ $ %s query nft denom <denom>`, version.AppName)),
 			if err != nil {
 				return err
 			}
-
+			
 			denom := strings.TrimSpace(args[0])
 			if err := types.ValidateDenomID(denom); err != nil {
 				return err
 			}
-
+			
 			queryClient := types.NewQueryClient(clientCtx)
 			resp, err := queryClient.Denom(context.Background(), &types.QueryDenomRequest{
 				DenomId: denom,
@@ -97,7 +99,7 @@ $ %s query nft denom <denom>`, version.AppName)),
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
-
+	
 	return cmd
 }
 
@@ -119,17 +121,17 @@ $ %s query nft token <denom> <tokenID>`, version.AppName)),
 			if err != nil {
 				return err
 			}
-
+			
 			denom := strings.TrimSpace(args[0])
 			if err := types.ValidateDenomID(denom); err != nil {
 				return err
 			}
-
+			
 			tokenID := strings.TrimSpace(args[1])
 			if err := types.ValidateNFTID(tokenID); err != nil {
 				return err
 			}
-
+			
 			queryClient := types.NewQueryClient(clientCtx)
 			resp, err := queryClient.NFT(context.Background(), &types.QueryNFTRequest{
 				DenomId: denom,
@@ -142,7 +144,7 @@ $ %s query nft token <denom> <tokenID>`, version.AppName)),
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
-
+	
 	return cmd
 }
 
@@ -162,33 +164,33 @@ $ %s query nft marketNFT [denomID] [NFTID]`,
 			if err != nil {
 				return err
 			}
-
+			
 			cliCtx, err = client.ReadPersistentCommandFlags(cliCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
-
+			
 			if err := types.ValidateDenomID(args[0]); err != nil {
 				return err
 			}
 			if err := types.ValidateNFTID(args[1]); err != nil {
 				return err
 			}
-
+			
 			queryClient := types.NewQueryClient(cliCtx)
 			res, err := queryClient.MarketPlaceNFT(context.Background(), &types.QueryMarketPlaceNFTRequest{
 				DenomId: args[0],
 				Id:      args[1],
 			})
-
+			
 			if err != nil {
 				return err
 			}
-
+			
 			return cliCtx.PrintProto(res.MarketPlace)
 		},
 	}
-
+	
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
@@ -209,25 +211,25 @@ $ %s query nft collections [owner]`,
 			if err != nil {
 				return err
 			}
-
+			
 			cliCtx, err = client.ReadPersistentCommandFlags(cliCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
-
+			
 			queryClient := types.NewQueryClient(cliCtx)
 			res, err := queryClient.OwnerNFTs(context.Background(), &types.QueryOwnerNFTsRequest{
 				Owner: args[0],
 			})
-
+			
 			if err != nil {
 				return err
 			}
-
+			
 			return cliCtx.PrintProto(res)
 		},
 	}
-
+	
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
@@ -247,18 +249,18 @@ $ %s query nft marketPlace`,
 			if err != nil {
 				return err
 			}
-
+			
 			cliCtx, err = client.ReadPersistentCommandFlags(cliCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
-
+			
 			queryClient := types.NewQueryClient(cliCtx)
 			res, err := queryClient.MarketPlace(context.Background(), &types.QueryMarketPlaceRequest{})
 			if err != nil {
 				return err
 			}
-
+			
 			return cliCtx.PrintProto(res)
 		},
 	}

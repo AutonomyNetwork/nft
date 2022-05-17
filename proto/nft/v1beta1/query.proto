@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "nft/v1beta1/nft.proto";
 import "nft/v1beta1/market_place.proto";
 import "google/api/annotations.proto";
+import "nft/v1beta1/community.proto";
 option go_package = "github.com/AutonomyNetwork/nft/types";
 
 service Query {
@@ -15,6 +16,11 @@ service Query {
   rpc Denoms(QueryDenomsRequest) returns (QueryDenomsResponse) {
     option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/denoms";
   }
+
+  rpc Collection(QueryCollectionRequest) returns(QueryCollectionResponse) {
+    option(google.api.http).get = "/AutonomyNetwork/nft/v1beta1/collection/{denom_id}";
+  }
+
   rpc NFT(QueryNFTRequest) returns (QueryNFTResponse) {
     option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/denoms/{denom_id}/nfts/{id}";
   }
@@ -29,6 +35,19 @@ service Query {
 
   rpc OwnerNFTs(QueryOwnerNFTsRequest) returns (QueryOwnerNFTsResponse) {
     option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/owner/{owner}/nfts";
+  }
+
+
+  rpc Communities(QueryCommunitiesRequest) returns(QueryCommunitiesResponse) {
+    option(google.api.http).get = "/AutonomyNetwork/nft/v1beta1/communities";
+  }
+
+  rpc Community(QueryCommunityRequest) returns(QueryCommunityResponse) {
+    option(google.api.http).get = "/AutonomyNetwork/nft/v1beta1/communities/{community_id}";
+  }
+
+  rpc CommunityMembers(QueryCommunityMembersRequest) returns(QueryCommunityMembersResponse){
+    option(google.api.http).get = "/AutonomyNetwork/nft/v1beta1/communities/{community_id}/members";
   }
 }
 
@@ -81,4 +100,36 @@ message QueryOwnerNFTsResponse {
 message OwnerNFTCollection {
   Denom denom = 1 [(gogoproto.nullable) = false];
   repeated NFT nfts = 2 [(gogoproto.nullable) = false];
+}
+
+message QueryCommunityRequest {
+  string community_id = 1 [(gogoproto.moretags) = "yaml:\"community_id\""];
+}
+
+message  QueryCommunityResponse {
+  Community community = 1;
+}
+
+
+message QueryCommunitiesRequest{
+  // TODO: pagination
+}
+message  QueryCommunitiesResponse {
+  repeated Community communities = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryCommunityMembersRequest {
+  string community_id = 1 ;
+}
+
+message  QueryCommunityMembersResponse {
+  CommunityMembers members = 1;
+}
+
+message QueryCollectionRequest {
+  string denom_id = 1;
+}
+
+message  QueryCollectionResponse {
+  Collection collection = 1;
 }

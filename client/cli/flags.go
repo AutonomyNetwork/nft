@@ -10,7 +10,7 @@ const (
 	FlagTokenData = "data"
 	FlagRecipient = "recipient"
 	FlagOwner     = "owner"
-
+	
 	FlagDenomName    = "name"
 	FlagDenom        = "denom"
 	FlagData         = "data"
@@ -37,7 +37,7 @@ func init() {
 	FsCreateDenom.String(FlagSymbol, "", "The symbol of the denom")
 	FsCreateDenom.String(FlagDescription, "", "Description of the denom")
 	FsCreateDenom.String(FlagPreviewURI, "", "preview_uri of the denom")
-
+	
 	FsMintNFT.String(FlagTokenURI, "", "URI for supplemental off-chain tokenData (should return a JSON object)")
 	FsMintNFT.String(FlagRecipient, "", "Receiver of the nft, if not filled, the default is the sender of the transaction")
 	FsMintNFT.String(FlagTokenData, "", "The origin data of nft")
@@ -46,19 +46,19 @@ func init() {
 	FsMintNFT.String(FlagMediaURI, "", "Media uri of the nft")
 	FsMintNFT.String(FlagRoyalties, "", "royalties")
 	FsMintNFT.String(FlagPreviewURI, "", "preview_uri")
-
+	
 	FsEditNFT.String(FlagTokenURI, "[do-not-modify]", "URI for supplemental off-chain tokenData (should return a JSON object)")
 	FsEditNFT.String(FlagTokenData, "[do-not-modify]", "The tokenData of nft")
 	FsEditNFT.String(FlagTokenName, "[do-not-modify]", "The name of nft")
 	FsEditNFT.String(FlagOwner, "", "owner of the nft")
 	FsEditNFT.String(FlagRoyalties, "[do-not-modify]", "royalties of the nft")
 	FsEditNFT.String(FlagDescription, "[do-not-modify]", "Description of the nft")
-
+	
 	FsTransferNFT.String(FlagTokenURI, "[do-not-modify]", "URI for supplemental off-chain tokenData (should return a JSON object)")
 	FsTransferNFT.String(FlagTokenData, "[do-not-modify]", "The tokenData of nft")
 	FsTransferNFT.String(FlagTokenName, "[do-not-modify]", "The name of nft")
-
+	
 	FsQuerySupply.String(FlagOwner, "", "The owner of a nft")
-
+	
 	FsQueryOwner.String(FlagDenom, "", "The name of a collection")
 }

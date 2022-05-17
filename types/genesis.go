@@ -4,6 +4,6 @@ package types
 func NewGenesisState(collections []Collection, orders []MarketPlace) *GenesisState {
 	return &GenesisState{
 		Collections: collections,
-		Orders: orders,
+		Orders:      orders,
 	}
 }

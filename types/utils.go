@@ -1,8 +1,9 @@
 package types
 
 import (
-	"github.com/google/uuid"
 	"strings"
+	
+	"github.com/google/uuid"
 )
 
 func GenUniqueID(prefix string) string {

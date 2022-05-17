@@ -1,6 +1,6 @@
 module github.com/AutonomyNetwork/nft
 
-go 1.14
+go 1.17
 
 require (
 	github.com/cosmos/cosmos-sdk v0.44.3

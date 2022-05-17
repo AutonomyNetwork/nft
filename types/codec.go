@@ -8,7 +8,7 @@ import (
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	gogotypes "github.com/gogo/protobuf/types"
-
+	
 	"github.com/AutonomyNetwork/nft/exported"
 )
 
@@ -20,7 +20,8 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgTransferNFT{}, "AutonomyNetwork/nft/MsgTransferNFT", nil)
 	cdc.RegisterConcrete(&MsgSellNFT{}, "AutonomyNetwork/nft/MsgSellNFT", nil)
 	cdc.RegisterConcrete(&MsgBuyNFT{}, "AutonomyNetwork/nft/MsgBuyNFT", nil)
-
+	cdc.RegisterConcrete(&MsgCreateCommunity{}, "AutonomyNetwork/nft/MsgCreateCommunity", nil)
+	
 	cdc.RegisterInterface((*exported.NFT)(nil), nil)
 	cdc.RegisterInterface((*exported.MarketPlace)(nil), nil)
 	cdc.RegisterConcrete(&NFT{}, "AutonomyNetwork/nft/NFT", nil)
@@ -35,16 +36,18 @@ func RegisterInterfaces(registry types.InterfaceRegistry) {
 		&MsgTransferNFT{},
 		&MsgSellNFT{},
 		&MsgBuyNFT{},
+		&MsgCreateCommunity{},
+		&MsgJoinCommunity{},
 	)
-
+	
 	registry.RegisterImplementations((*exported.NFT)(nil), &NFT{})
 	registry.RegisterImplementations((*exported.MarketPlace)(nil), &MarketPlace{})
-
+	
 }
 
 var (
 	amino = codec.NewLegacyAmino()
-
+	
 	ModuleCdc = codec.NewAminoCodec(amino)
 )
 

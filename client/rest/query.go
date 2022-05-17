@@ -1,6 +1,7 @@
 package rest
+
 //
-//import (
+// import (
 //	"encoding/binary"
 //	"fmt"
 //	"net/http"
@@ -13,9 +14,9 @@ package rest
 //	"github.com/cosmos/cosmos-sdk/types/rest"
 //
 //	"github.com/AutonomyNetwork/nft/types"
-//)
+// )
 //
-//func registerQueryRoutes(cliCtx client.Context, r *mux.Router, queryRoute string) {
+// func registerQueryRoutes(cliCtx client.Context, r *mux.Router, queryRoute string) {
 //	// Get the total supply of a collection or owner
 //	r.HandleFunc(
 //		fmt.Sprintf("/nft/nfts/supplies/{%s}", RestParamDenom),
@@ -51,9 +52,9 @@ package rest
 //		fmt.Sprintf("/nft/nfts/{%s}/{%s}", RestParamDenom, RestParamTokenID),
 //		queryNFT(cliCtx, queryRoute),
 //	).Methods("GET")
-//}
+// }
 //
-//func querySupply(cliCtx client.Context, queryRoute string) http.HandlerFunc {
+// func querySupply(cliCtx client.Context, queryRoute string) http.HandlerFunc {
 //	return func(w http.ResponseWriter, r *http.Request) {
 //		denom := strings.TrimSpace(mux.Vars(r)[RestParamDenom])
 //		if err := types.ValidateDenomID(denom); err != nil {
@@ -90,9 +91,9 @@ package rest
 //		cliCtx = cliCtx.WithHeight(height)
 //		rest.PostProcessResponse(w, cliCtx, out)
 //	}
-//}
+// }
 //
-//func queryOwner(cliCtx client.Context, queryRoute string) http.HandlerFunc {
+// func queryOwner(cliCtx client.Context, queryRoute string) http.HandlerFunc {
 //	return func(w http.ResponseWriter, r *http.Request) {
 //		ownerStr := mux.Vars(r)[RestParamOwner]
 //		if len(ownerStr) == 0 {
@@ -128,9 +129,9 @@ package rest
 //		cliCtx = cliCtx.WithHeight(height)
 //		rest.PostProcessResponse(w, cliCtx, res)
 //	}
-//}
+// }
 //
-//func queryCollection(cliCtx client.Context, queryRoute string) http.HandlerFunc {
+// func queryCollection(cliCtx client.Context, queryRoute string) http.HandlerFunc {
 //	return func(w http.ResponseWriter, r *http.Request) {
 //		denom := mux.Vars(r)[RestParamDenom]
 //		if err := types.ValidateDenomID(denom); err != nil {
@@ -159,9 +160,9 @@ package rest
 //		cliCtx = cliCtx.WithHeight(height)
 //		rest.PostProcessResponse(w, cliCtx, res)
 //	}
-//}
+// }
 //
-//func queryDenom(cliCtx client.Context, queryRoute string) http.HandlerFunc {
+// func queryDenom(cliCtx client.Context, queryRoute string) http.HandlerFunc {
 //	return func(w http.ResponseWriter, r *http.Request) {
 //		cliCtx, ok := rest.ParseQueryHeightOrReturnBadRequest(w, cliCtx, r)
 //		if !ok {
@@ -190,9 +191,9 @@ package rest
 //		cliCtx = cliCtx.WithHeight(height)
 //		rest.PostProcessResponse(w, cliCtx, res)
 //	}
-//}
+// }
 //
-//func queryDenoms(cliCtx client.Context, queryRoute string) http.HandlerFunc {
+// func queryDenoms(cliCtx client.Context, queryRoute string) http.HandlerFunc {
 //	return func(w http.ResponseWriter, r *http.Request) {
 //		cliCtx, ok := rest.ParseQueryHeightOrReturnBadRequest(w, cliCtx, r)
 //		if !ok {
@@ -209,9 +210,9 @@ package rest
 //		cliCtx = cliCtx.WithHeight(height)
 //		rest.PostProcessResponse(w, cliCtx, res)
 //	}
-//}
+// }
 //
-//func queryNFT(cliCtx client.Context, queryRoute string) http.HandlerFunc {
+// func queryNFT(cliCtx client.Context, queryRoute string) http.HandlerFunc {
 //	return func(w http.ResponseWriter, r *http.Request) {
 //		vars := mux.Vars(r)
 //
@@ -247,4 +248,4 @@ package rest
 //		cliCtx = cliCtx.WithHeight(height)
 //		rest.PostProcessResponse(w, cliCtx, res)
 //	}
-//}
+// }
