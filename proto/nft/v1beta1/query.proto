@@ -71,6 +71,7 @@ message QueryNFTRequest {
 
 message QueryNFTResponse {
   NFT nft = 1 [(gogoproto.moretags) = "yaml:\"NFT\"", (gogoproto.customname) = "NFT"];
+  Denom denom = 2 ;
 }
 
 message QueryMarketPlaceNFTRequest {
