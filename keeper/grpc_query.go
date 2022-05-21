@@ -18,7 +18,7 @@ func (k Keeper) Denom(c context.Context, request *types.QueryDenomRequest) (*typ
 	
 	denomObject, err := k.GetDenom(ctx, denom)
 	if err != nil {
-		return nil, err
+		return nil, sdkerrors.Wrapf(types.ErrInvalidCollection, "invalid collection %s", request.DenomId)
 	}
 	
 	return &types.QueryDenomResponse{
@@ -39,6 +39,12 @@ func (k Keeper) NFT(c context.Context, request *types.QueryNFTRequest) (*types.Q
 	tokenID := strings.ToLower(strings.TrimSpace(request.Id))
 	ctx := sdk.UnwrapSDKContext(c)
 	
+	denomObject, err := k.GetDenom(ctx, denom)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidCollection, "invalid collection %s", request.DenomId)
+	}
+	
+	
 	nft, err := k.GetNFT(ctx, denom, tokenID)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrUnknownNFT, "invalid NFT %s from collection %s", request.Id, request.DenomId)
@@ -49,8 +55,10 @@ func (k Keeper) NFT(c context.Context, request *types.QueryNFTRequest) (*types.Q
 		return nil, sdkerrors.Wrapf(types.ErrUnknownNFT, "invalid type NFT %s from collection %s", request.Id, request.DenomId)
 	}
 	
+	
 	return &types.QueryNFTResponse{
 		NFT: &NFT,
+		Denom: &denomObject,
 	}, nil
 }
 
@@ -74,6 +82,8 @@ func (k Keeper) MarketPlaceNFT(c context.Context, request *types.QueryMarketPlac
 	}, nil
 	
 }
+
+
 
 func (k Keeper) MarketPlace(c context.Context, request *types.QueryMarketPlaceRequest) (*types.QueryMarketPlaceResponse, error) {
 	
