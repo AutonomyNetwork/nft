@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"strings"
+	
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	
@@ -67,4 +69,22 @@ func (k Keeper) GetDenoms(ctx sdk.Context) (denoms []types.Denom) {
 		denoms = append(denoms, denom)
 	}
 	return denoms
+}
+
+
+func (k Keeper)GetDenomsByOwner(ctx sdk.Context, address string)([]types.Denom, error){
+	
+	denoms := k.GetDenoms(ctx)
+	if len(denoms) == 0 {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidDenom, "unable to find collection")
+	}
+	
+	var data []types.Denom
+	for _, denom := range denoms{
+		if strings.EqualFold(address, denom.Creator){
+			data = 	append(data,denom )
+		}
+	}
+	
+	return data, nil
 }

@@ -47,7 +47,7 @@ func (m msgServer) CreateDenom(goCtx context.Context,
 	
 	access := m.AuthorizedCommunityMember(ctx, msg.CommunityId, collectionCreator)
 	if !(access) {
-		return nil, sdkerrors.Wrapf(types.ErrUnauthorized, "%s, not have access to create collection", msg.Creator)
+		return nil, sdkerrors.Wrapf(types.ErrUnauthorized, "%s, doesn't have access to create collection", msg.Creator)
 	}
 	
 	// Check is there any dependent collection
@@ -90,8 +90,18 @@ func (m msgServer) MintNFT(goCtx context.Context,
 	if err != nil {
 		return nil, err
 	}
+	
 	owner := creator
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	denom, err := m.GetDenom(ctx, msg.DenomId)
+	if err!=nil{
+		return nil, sdkerrors.Wrapf(types.ErrInvalidCollection, "%s collection", msg.DenomId)
+	}
+	
+	if !strings.EqualFold(denom.Creator, msg.Creator){
+		return nil, sdkerrors.Wrapf(types.ErrUnauthorized, "%s don't have access to mint nft in %s collection", msg.Creator, denom.Id)
+	}
+	
 	if err := m.Keeper.MintNFT(ctx,
 		msg.DenomId,
 		msg.Id,
@@ -205,12 +215,12 @@ func (m msgServer) BuyNFT(goCtx context.Context,
 	
 	buyer, err := sdk.AccAddressFromBech32(msg.Buyer)
 	if err != nil {
-		return nil, err
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, err.Error())
 	}
 	
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	if err := m.Keeper.BuyNFT(ctx, msg.Id, msg.DenomId, buyer); err != nil {
-		return nil, err
+		return nil, sdkerrors.Wrapf(types.ErrInvalidNFT, err.Error())
 	}
 	
 	ctx.EventManager().EmitTypedEvent(
