@@ -6,48 +6,53 @@ import "nft/v1beta1/nft.proto";
 import "nft/v1beta1/market_place.proto";
 import "google/api/annotations.proto";
 import "nft/v1beta1/community.proto";
+
 option go_package = "github.com/AutonomyNetwork/nft/types";
+
 
 service Query {
   rpc Denom(QueryDenomRequest) returns (QueryDenomResponse) {
-    option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/denoms/{denom_id}";
+    option (google.api.http).get = "/autonomy/nft/v1beta1/denoms/{denom_id}";
   }
 
   rpc Denoms(QueryDenomsRequest) returns (QueryDenomsResponse) {
-    option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/denoms";
+    option (google.api.http).get = "/autonomy/nft/v1beta1/denoms";
+  }
+
+  rpc DenomIDsByOwner(QueryDenomIDsByOwnerRequest) returns (QueryDenomIDsByOwnerResponse){
+    option (google.api.http).get = "/autonomy/nft/v1beta1/denomsbyowner/{address}";
   }
 
   rpc Collection(QueryCollectionRequest) returns(QueryCollectionResponse) {
-    option(google.api.http).get = "/AutonomyNetwork/nft/v1beta1/collection/{denom_id}";
+    option(google.api.http).get = "/autonomy/nft/v1beta1/collection/{denom_id}";
   }
 
   rpc NFT(QueryNFTRequest) returns (QueryNFTResponse) {
-    option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/denoms/{denom_id}/nfts/{id}";
+    option (google.api.http).get = "/autonomy/nft/v1beta1/denoms/{denom_id}/nfts/{id}";
   }
 
   rpc MarketPlaceNFT(QueryMarketPlaceNFTRequest) returns (QueryMarketPlaceNFTResponse) {
-    option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/market_place/denoms/{denom_id}/nfts/{id}";
+    option (google.api.http).get = "/autonomy/nft/v1beta1/market_place/denoms/{denom_id}/nfts/{id}";
   }
 
   rpc MarketPlace(QueryMarketPlaceRequest) returns (QueryMarketPlaceResponse) {
-    option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/market_place";
+    option (google.api.http).get = "/autonomy/nft/v1beta1/market_place";
   }
 
   rpc OwnerNFTs(QueryOwnerNFTsRequest) returns (QueryOwnerNFTsResponse) {
-    option (google.api.http).get = "/AutonomyNetwork/nft/v1beta1/owner/{owner}/nfts";
+    option (google.api.http).get = "/autonomy/nft/v1beta1/owner/{owner}/nfts";
   }
 
-
   rpc Communities(QueryCommunitiesRequest) returns(QueryCommunitiesResponse) {
-    option(google.api.http).get = "/AutonomyNetwork/nft/v1beta1/communities";
+    option(google.api.http).get = "/autonomy/nft/v1beta1/communities";
   }
 
   rpc Community(QueryCommunityRequest) returns(QueryCommunityResponse) {
-    option(google.api.http).get = "/AutonomyNetwork/nft/v1beta1/communities/{community_id}";
+    option(google.api.http).get = "/autonomy/nft/v1beta1/communities/{community_id}";
   }
 
   rpc CommunityMembers(QueryCommunityMembersRequest) returns(QueryCommunityMembersResponse){
-    option(google.api.http).get = "/AutonomyNetwork/nft/v1beta1/communities/{community_id}/members";
+    option(google.api.http).get = "/autonomy/nft/v1beta1/communities/{community_id}/members";
   }
 }
 
@@ -133,4 +138,12 @@ message QueryCollectionRequest {
 
 message  QueryCollectionResponse {
   Collection collection = 1;
+}
+
+message QueryDenomIDsByOwnerRequest {
+  string address =1;
+}
+
+message QueryDenomIDsByOwnerResponse {
+  repeated string ids = 1;
 }

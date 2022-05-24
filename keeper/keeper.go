@@ -51,6 +51,15 @@ func (k Keeper) MintNFT(ctx sdk.Context,
 		return sdkerrors.Wrapf(types.ErrNFTAlreadyExists, "NFT %s already exists in collection %s", nftID, denomID)
 	}
 	
+	
+	decValue, err := sdk.NewDecFromStr(royalties)
+	if err != nil {
+		return sdkerrors.Wrapf(types.ErrInvalidNFT, "unable to parse the royalities %s",err.Error())
+	}
+	
+	if !(decValue.GTE(sdk.ZeroDec()) && decValue.LTE(sdk.OneDec())){
+		return sdkerrors.Wrapf(types.ErrInvalidNFT, "royalities in between 0 to 1; given :%s", decValue.String())
+	}
 	k.SetNFT(ctx, denomID, types.NewBaseNFT(
 		nftID,
 		metadata,
@@ -161,7 +170,7 @@ func (k Keeper) BuyNFT(ctx sdk.Context, id, denom_id string, buyer sdk.AccAddres
 	
 	orderNFT, err := k.GetMarketPlaceNFT(ctx, denom_id, id)
 	if err != nil {
-		return err
+		return sdkerrors.Wrapf(types.ErrInvalidNFT, "unable to find nft in market place %s", err.Error())
 	}
 	
 	if orderNFT.GetFilled() == true {
@@ -171,22 +180,24 @@ func (k Keeper) BuyNFT(ctx sdk.Context, id, denom_id string, buyer sdk.AccAddres
 	priceStr := orderNFT.GetPrice()
 	price, err := sdk.ParseDecCoin(priceStr)
 	if err != nil {
-		return err
+		 return sdkerrors.Wrapf(types.ErrInvalidNFT, "unable to parse the  nft price in market place %s",err.Error())
 	}
+	
 	
 	buyerAccount := k.bankKeeper.GetBalance(ctx, buyer, price.Denom)
 	priceCoin, err := sdk.ParseCoinNormalized(priceStr)
 	if buyerAccount.IsLT(priceCoin) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "buyer does not have balance")
 	}
+	
 	nft, err := k.GetNFT(ctx, denom_id, id)
 	if err != nil {
-		return err
+		return sdkerrors.Wrapf(types.ErrInvalidNFT, "unable to get the nft  %s",err.Error())
 	}
 	
 	royaltyDec, err := sdk.NewDecFromStr(nft.GetRoyalties())
 	if err != nil {
-		return err
+		 return sdkerrors.Wrapf(types.ErrInvalidNFT, "unable to convert royalities  %s",err.Error())
 	}
 	
 	royalty := royaltyDec.Quo(sdk.OneDec())
@@ -194,21 +205,26 @@ func (k Keeper) BuyNFT(ctx sdk.Context, id, denom_id string, buyer sdk.AccAddres
 	creatorRoyalty := royalty.Mul(price.Amount)
 	creatorToken := sdk.NewCoin(price.Denom, creatorRoyalty.TruncateInt())
 	
-	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetCreator(), sdk.Coins{creatorToken})
-	if err != nil {
-		return err
+	if creatorToken.IsPositive(){
+		err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetCreator(), sdk.Coins{creatorToken})
+			if err != nil {
+				return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "unable to transfer tokens  %s")
+			}
 	}
 	
 	sellerAmount := price.Amount.Sub(creatorRoyalty)
 	sellerTokens := sdk.NewCoin(price.Denom, sellerAmount.TruncateInt())
 	
-	err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetOwner(), sdk.Coins{sellerTokens})
-	if err != nil {
-		return err
+	if sellerTokens.IsPositive(){
+		err = k.bankKeeper.SendCoins(ctx, buyer, nft.GetOwner(), sdk.Coins{sellerTokens})
+		if err != nil {
+			return  sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "unable to transfer tokens  %s",err.Error())
+		}
 	}
 	
 	nft1 := nft.(types.NFT)
 	nft1.Owner = buyer.String()
+	nft1.Listed = false
 	k.SetNFT(ctx, denom_id, nft1)
 	
 	orderNFT1 := orderNFT.(types.MarketPlace)

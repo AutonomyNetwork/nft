@@ -260,6 +260,7 @@ func (msg MsgSellNFT) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid seller address %s", err)
 	}
 	
+	
 	return nil
 }
 
