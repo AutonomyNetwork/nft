@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"fmt"
 	
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -85,7 +84,6 @@ func (k Keeper) GetCommunityMembers(ctx sdk.Context, community_id string) (types
 	}
 	
 	var cm types.CommunityMembers
-	fmt.Println("Community Member get =============================================")
 	k.cdc.MustUnmarshal(data, &cm)
 	return cm, nil
 }
@@ -94,5 +92,4 @@ func (k Keeper) SetCommunityMembers(ctx sdk.Context, community_member types.Comm
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.KeyCommunityMembers(community_member.CommunityId), k.cdc.MustMarshal(&community_member))
 	
-	fmt.Println("CommunityMember ============================================")
 }

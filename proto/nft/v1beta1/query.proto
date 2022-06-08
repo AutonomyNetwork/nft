@@ -43,12 +43,20 @@ service Query {
     option (google.api.http).get = "/autonomy/nft/v1beta1/owner/{owner}/nfts";
   }
 
+  rpc AllNFTs(QueryAllNFTsRequest) returns (QueryAllNFTsResponse) {
+    option (google.api.http).get = "/autonomy/nft/v1beta1/nfts/all";
+  }
+
   rpc Communities(QueryCommunitiesRequest) returns(QueryCommunitiesResponse) {
     option(google.api.http).get = "/autonomy/nft/v1beta1/communities";
   }
 
   rpc Community(QueryCommunityRequest) returns(QueryCommunityResponse) {
     option(google.api.http).get = "/autonomy/nft/v1beta1/communities/{community_id}";
+  }
+
+  rpc CommunityCollections(QueryCommunityCollectionsRequest) returns (QueryCommunityCollectionsResponse){
+    option(google.api.http).get = "/autonomy/nft/v1beta1/communities/{community_id}/collections";
   }
 
   rpc CommunityMembers(QueryCommunityMembersRequest) returns(QueryCommunityMembersResponse){
@@ -146,4 +154,37 @@ message QueryDenomIDsByOwnerRequest {
 
 message QueryDenomIDsByOwnerResponse {
   repeated string ids = 1;
+}
+
+message QueryAllNFTsRequest {
+
+}
+
+message DenomInfo {
+  string denom_id = 1;
+  string name = 2;
+}
+
+message CommunityInfo {
+  string community_id = 1;
+  string name =2;
+}
+
+message ALLNFT {
+  NFT nft = 1 [(gogoproto.nullable) = false];
+  DenomInfo denom_info = 2;
+  CommunityInfo community_info = 3;
+}
+
+message QueryAllNFTsResponse {
+  repeated ALLNFT all =1;
+}
+
+message  QueryCommunityCollectionsRequest {
+  string community_id =1;
+}
+
+message  QueryCommunityCollectionsResponse {
+  Community community = 1;
+  repeated Denom denoms = 2;
 }

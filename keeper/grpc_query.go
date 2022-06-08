@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -176,5 +177,70 @@ func (k Keeper) Collection(c context.Context, request *types.QueryCollectionRequ
 	}
 	return &types.QueryCollectionResponse{
 		Collection: &collections,
+	}, nil
+}
+
+func (k Keeper) CommunityCollections(c context.Context, request *types.QueryCommunityCollectionsRequest) (*types.QueryCommunityCollectionsResponse, error) {
+	var denoms []*types.Denom
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if len(request.CommunityId) == 0 {
+		return nil, sdkerrors.Wrapf(types.ErrCommunityNotFound, "invalid community id: %s", request.CommunityId)
+	}
+	collections := k.GetCollections(ctx)
+
+	community, found := k.GetCommunityByID(ctx, request.CommunityId)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrCommunityNotFound, "invalid community id: %s", request.CommunityId)
+	}
+
+	for _, collection := range collections {
+		if strings.EqualFold(request.CommunityId, collection.Denom.CommunityId) {
+			denoms = append(denoms, &collection.Denom)
+		}
+	}
+
+	return &types.QueryCommunityCollectionsResponse{
+		Community: &community,
+		Denoms:    denoms,
+	}, nil
+}
+
+func (k Keeper) AllNFTs(c context.Context, request *types.QueryAllNFTsRequest) (*types.QueryAllNFTsResponse, error) {
+	var listNFTs []*types.ALLNFT
+	var allNFT types.ALLNFT
+	
+	var denomInfo types.DenomInfo
+	var communityInfo types.CommunityInfo
+	
+	
+	ctx := sdk.UnwrapSDKContext(c)
+	denoms := k.GetDenoms(ctx)
+
+	for _, denom := range denoms { //TODO: work on time complexity
+		collection, _ := k.GetCollection(ctx, denom.Id)
+
+		community ,  _ := k.GetCommunityByID(ctx, denom.CommunityId)
+		for _, nft := range collection.NFTs {
+			
+			denomInfo.Name = collection.Denom.Name
+			denomInfo.DenomId = collection.Denom.Id
+			
+			communityInfo.CommunityId = community.Id
+			communityInfo.Name = community.Name
+			
+			fmt.Println("nft =========================", denomInfo, communityInfo)
+			
+			allNFT.DenomInfo = &denomInfo
+			allNFT.CommunityInfo = &communityInfo
+			allNFT.Nft = nft
+			
+			listNFTs = append(listNFTs, &allNFT)
+		}
+
+	}
+	
+	return &types.QueryAllNFTsResponse{
+		All: listNFTs,
 	}, nil
 }

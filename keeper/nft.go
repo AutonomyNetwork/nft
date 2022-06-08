@@ -36,6 +36,22 @@ func (k Keeper) GetNFTs(ctx sdk.Context, denom string) (nfts []exported.NFT) {
 	return nfts
 }
 
+// Get All NFTs
+func(k Keeper) GetAllNFTs(ctx sdk.Context)(nfts []types.NFT){
+	store := ctx.KVStore(k.storeKey)
+	
+	iterator := sdk.KVStorePrefixIterator(store, types.PrefixNFT)
+	defer iterator.Close()
+	
+	
+	for ; iterator.Valid(); iterator.Next() {
+		var baseNFT types.NFT
+		k.cdc.MustUnmarshal(iterator.Value(), &baseNFT)
+		nfts = append(nfts, baseNFT)
+	}
+	return nfts
+}
+
 // Authorize check if the sender is the issuer of nft, if it returns nft, if not, return an error
 func (k Keeper) Authorize(ctx sdk.Context,
 	denomID, tokenID string,
@@ -69,3 +85,4 @@ func (k Keeper) deleteNFT(ctx sdk.Context, denomID string, nft exported.NFT) {
 	store := ctx.KVStore(k.storeKey)
 	store.Delete(types.KeyNFT(denomID, nft.GetID()))
 }
+
