@@ -28,16 +28,20 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, data types.GenesisState) {
 	for _, o := range data.Orders {
 		k.SetNFTMarketPlace(ctx, o)
 	}
+	
+	for _, community := range data.Communities {
+		k.SetCommunity(ctx, community)
+	}
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper.
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
-	return types.NewGenesisState(k.GetCollections(ctx), k.GetMarketPlace(ctx))
+	return types.NewGenesisState(k.GetCollections(ctx), k.GetMarketPlace(ctx), k.GetCommunities(ctx))
 }
 
 // DefaultGenesisState returns a default genesis state
 func DefaultGenesisState() *types.GenesisState {
-	return types.NewGenesisState([]types.Collection{}, []types.MarketPlace{})
+	return types.NewGenesisState([]types.Collection{}, []types.MarketPlace{}, []types.Community{})
 }
 
 // ValidateGenesis performs basic validation of nfts genesis data returning an

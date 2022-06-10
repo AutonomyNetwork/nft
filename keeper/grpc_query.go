@@ -207,7 +207,7 @@ func (k Keeper) CommunityCollections(c context.Context, request *types.QueryComm
 }
 
 func (k Keeper) AllNFTs(c context.Context, request *types.QueryAllNFTsRequest) (*types.QueryAllNFTsResponse, error) {
-	var listNFTs []*types.ALLNFT
+	var listNFTs []types.ALLNFT
 	var allNFT types.ALLNFT
 	
 	var denomInfo types.DenomInfo
@@ -229,13 +229,12 @@ func (k Keeper) AllNFTs(c context.Context, request *types.QueryAllNFTsRequest) (
 			communityInfo.CommunityId = community.Id
 			communityInfo.Name = community.Name
 			
-			fmt.Println("nft =========================", denomInfo, communityInfo)
 			
-			allNFT.DenomInfo = &denomInfo
-			allNFT.CommunityInfo = &communityInfo
+			allNFT.DenomInfo = denomInfo
+			allNFT.CommunityInfo = communityInfo
 			allNFT.Nft = nft
 			
-			listNFTs = append(listNFTs, &allNFT)
+			listNFTs = append(listNFTs, allNFT)
 		}
 
 	}
