@@ -172,12 +172,12 @@ message CommunityInfo {
 
 message ALLNFT {
   NFT nft = 1 [(gogoproto.nullable) = false];
-  DenomInfo denom_info = 2;
-  CommunityInfo community_info = 3;
+  DenomInfo denom_info = 2 [(gogoproto.nullable) = false];
+  CommunityInfo community_info = 3 [(gogoproto.nullable) = false];
 }
 
 message QueryAllNFTsResponse {
-  repeated ALLNFT all =1;
+  repeated ALLNFT all =1 [(gogoproto.nullable) = false];
 }
 
 message  QueryCommunityCollectionsRequest {

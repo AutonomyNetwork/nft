@@ -4,6 +4,7 @@ package nft.v1beta1;
 import "gogoproto/gogo.proto";
 import "nft/v1beta1/nft.proto";
 import "nft/v1beta1/market_place.proto";
+import "nft/v1beta1/community.proto";
 
 option go_package = "github.com/AutonomyNetwork/nft/types";
 
@@ -11,5 +12,6 @@ option go_package = "github.com/AutonomyNetwork/nft/types";
 message GenesisState {
   repeated Collection collections = 1 [(gogoproto.nullable) = false];
   repeated MarketPlace orders = 2 [(gogoproto.nullable) = false];
+  repeated Community communities = 3  [(gogoproto.nullable) = false];
 }
 
