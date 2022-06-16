@@ -36,6 +36,7 @@ func NewTxCmd() *cobra.Command {
 		GetCmdMintBulkNFT(),
 		GetCmdUpdateNFT(),
 		GetCmdTransferNFT(),
+		GetCmdTransferBulkNFT(),
 		GetCmdSellNFT(),
 		GetCmdSellBulkNFT(),
 		GetCmdBuyNFT(),
@@ -301,6 +302,57 @@ $ %s tx nft transfer [denomID] [nftID] [recipient] --from=<key-name> --chain-id=
 				return err
 			}
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+	cmd.Flags().AddFlagSet(FsTransferNFT)
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// GetCmdTransferBulkNFT is the CLI command for sending a TransferBulkNFT transaction
+func GetCmdTransferBulkNFT() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "transfer-bulk [denomID] [nftID:recipient,nftID:recipient]",
+		Short: "transfer-bulk nfts directly to users",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Transfer a NFT to a recipient.
+Example:Command
+$ %s tx nft transfer [denomID] [nftID:recipient] --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+				version.AppName,
+			),
+		),
+		Args: cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			clientCtx, err = client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			var msgs []sdk.Msg
+			data := strings.Split(args[1], ",")
+			for _, val := range data {
+				nft := strings.Split(val, ":")
+				msg := types.NewMsgTransferNFT(
+					nft[0],
+					args[0],
+					clientCtx.GetFromAddress().String(),
+					nft[1],
+				)
+
+				if err := msg.ValidateBasic(); err != nil {
+					return err
+				}
+
+				msgs = append(msgs, msg)
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msgs...)
 		},
 	}
 	cmd.Flags().AddFlagSet(FsTransferNFT)
