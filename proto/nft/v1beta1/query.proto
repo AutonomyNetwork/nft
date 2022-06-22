@@ -32,7 +32,7 @@ service Query {
   }
 
   rpc MarketPlaceNFT(QueryMarketPlaceNFTRequest) returns (QueryMarketPlaceNFTResponse) {
-    option (google.api.http).get = "/autonomy/nft/v1beta1/market_place/denoms/{denom_id}/nfts/{id}";
+    option (google.api.http).get = "/autonomy/nft/v1beta1/market_place/{denom_id}/{id}";
   }
 
   rpc MarketPlace(QueryMarketPlaceRequest) returns (QueryMarketPlaceResponse) {
@@ -94,7 +94,7 @@ message QueryMarketPlaceNFTRequest {
 
 message QueryMarketPlaceNFTResponse {
   MarketPlace market_place = 1;
-  NFT nft = 1 [(gogoproto.moretags) = "yaml:\"NFT\"", (gogoproto.customname) = "NFT"];
+  NFT nft = 2 [(gogoproto.moretags) = "yaml:\"NFT\"", (gogoproto.customname) = "NFT"];
 }
 
 message QueryMarketPlaceRequest {}

@@ -1255,7 +1255,7 @@ var (
 
 	pattern_Query_NFT_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"autonomy", "nft", "v1beta1", "denoms", "denom_id", "nfts", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MarketPlaceNFT_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"autonomy", "nft", "v1beta1", "market_place", "denoms", "denom_id", "nfts", "id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_MarketPlaceNFT_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"autonomy", "nft", "v1beta1", "market_place", "denom_id", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Query_MarketPlace_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"autonomy", "nft", "v1beta1", "market_place"}, "", runtime.AssumeColonVerbOpt(true)))
 
