@@ -94,6 +94,7 @@ message QueryMarketPlaceNFTRequest {
 
 message QueryMarketPlaceNFTResponse {
   MarketPlace market_place = 1;
+  NFT nft = 1 [(gogoproto.moretags) = "yaml:\"NFT\"", (gogoproto.customname) = "NFT"];
 }
 
 message QueryMarketPlaceRequest {}
