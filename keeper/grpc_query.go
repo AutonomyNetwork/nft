@@ -4,8 +4,10 @@ import (
 	"context"
 	"strings"
 
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/cosmos/cosmos-sdk/types/query"
 
 	"github.com/AutonomyNetwork/nft/types"
 )
@@ -108,18 +110,37 @@ func (k Keeper) MarketPlaceNFT(c context.Context, request *types.QueryMarketPlac
 
 	return &types.QueryMarketPlaceNFTResponse{
 		MarketPlace: &MarketPlace,
-		NFT: &NFT,
+		NFT:         &NFT,
 	}, nil
 
 }
 
 func (k Keeper) MarketPlace(c context.Context, request *types.QueryMarketPlaceRequest) (*types.QueryMarketPlaceResponse, error) {
-
+	var nfts []types.MarketPlace
 	ctx := sdk.UnwrapSDKContext(c)
 
-	marketPlace := k.GetMarketPlace(ctx)
+	store := ctx.KVStore(k.storeKey)
+
+	marketPlaceStore := prefix.NewStore(store, types.PrefixMarketPlace)
+
+	pageRes, err := query.FilteredPaginate(marketPlaceStore, request.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
+		var nft types.MarketPlace
+		k.cdc.MustUnmarshal(value, &nft)
+
+		if accumulate {
+			nfts = append(nfts, nft)
+		}
+
+		return true, nil
+	})
+
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrUnknownNFT, "invalid market place query %s", err.Error())
+	}
+
 	return &types.QueryMarketPlaceResponse{
-		MarketPlace: marketPlace,
+		MarketPlace: nfts,
+		Pagination:  pageRes,
 	}, nil
 }
 
@@ -219,36 +240,34 @@ func (k Keeper) CommunityCollections(c context.Context, request *types.QueryComm
 func (k Keeper) AllNFTs(c context.Context, request *types.QueryAllNFTsRequest) (*types.QueryAllNFTsResponse, error) {
 	var listNFTs []types.ALLNFT
 	var allNFT types.ALLNFT
-	
+
 	var denomInfo types.DenomInfo
 	var communityInfo types.CommunityInfo
-	
-	
+
 	ctx := sdk.UnwrapSDKContext(c)
 	denoms := k.GetDenoms(ctx)
 
 	for _, denom := range denoms { //TODO: work on time complexity
 		collection, _ := k.GetCollection(ctx, denom.Id)
 
-		community ,  _ := k.GetCommunityByID(ctx, denom.CommunityId)
+		community, _ := k.GetCommunityByID(ctx, denom.CommunityId)
 		for _, nft := range collection.NFTs {
-			
+
 			denomInfo.Name = collection.Denom.Name
 			denomInfo.DenomId = collection.Denom.Id
-			
+
 			communityInfo.CommunityId = community.Id
 			communityInfo.Name = community.Name
-			
-			
+
 			allNFT.DenomInfo = denomInfo
 			allNFT.CommunityInfo = communityInfo
 			allNFT.Nft = nft
-			
+
 			listNFTs = append(listNFTs, allNFT)
 		}
 
 	}
-	
+
 	return &types.QueryAllNFTsResponse{
 		All: listNFTs,
 	}, nil
