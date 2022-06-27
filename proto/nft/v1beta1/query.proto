@@ -6,6 +6,7 @@ import "nft/v1beta1/nft.proto";
 import "nft/v1beta1/market_place.proto";
 import "google/api/annotations.proto";
 import "nft/v1beta1/community.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
 
 option go_package = "github.com/AutonomyNetwork/nft/types";
 
@@ -37,6 +38,7 @@ service Query {
 
   rpc MarketPlace(QueryMarketPlaceRequest) returns (QueryMarketPlaceResponse) {
     option (google.api.http).get = "/autonomy/nft/v1beta1/market_place";
+
   }
 
   rpc OwnerNFTs(QueryOwnerNFTsRequest) returns (QueryOwnerNFTsResponse) {
@@ -97,10 +99,13 @@ message QueryMarketPlaceNFTResponse {
   NFT nft = 2 [(gogoproto.moretags) = "yaml:\"NFT\"", (gogoproto.customname) = "NFT"];
 }
 
-message QueryMarketPlaceRequest {}
+message QueryMarketPlaceRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
 
 message QueryMarketPlaceResponse {
   repeated MarketPlace market_place = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryOwnerNFTsRequest {
