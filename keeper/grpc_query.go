@@ -179,8 +179,32 @@ func (k Keeper) Community(c context.Context, request *types.QueryCommunityReques
 
 func (k Keeper) Communities(c context.Context, request *types.QueryCommunitiesRequest) (*types.QueryCommunitiesResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
+	var communities []types.Community
 
-	return &types.QueryCommunitiesResponse{Communities: k.GetCommunities(ctx)}, nil
+	store := ctx.KVStore(k.storeKey)
+
+	communityStore := prefix.NewStore(store, types.PrefixCommunity)
+
+	pageRes, err := query.FilteredPaginate(communityStore, request.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
+		var comminity types.Community
+		k.cdc.MustUnmarshal(value, &comminity)
+
+		if accumulate {
+			communities = append(communities, comminity)
+		}
+
+		return true, nil
+	})
+
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrUnknownNFT, "invalid communitu query %s", err.Error())
+	}
+
+	return &types.QueryCommunitiesResponse{
+		Communities: communities,
+		Pagination:  pageRes,
+	}, nil
+
 }
 
 func (k Keeper) CommunityMembers(c context.Context, request *types.QueryCommunityMembersRequest) (*types.QueryCommunityMembersResponse, error) {
@@ -238,6 +262,7 @@ func (k Keeper) CommunityCollections(c context.Context, request *types.QueryComm
 }
 
 func (k Keeper) AllNFTs(c context.Context, request *types.QueryAllNFTsRequest) (*types.QueryAllNFTsResponse, error) {
+
 	var listNFTs []types.ALLNFT
 	var allNFT types.ALLNFT
 

@@ -3,14 +3,14 @@ package cli
 import (
 	"fmt"
 	"strings"
-	
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	
+
 	"github.com/AutonomyNetwork/nft/types"
 )
 
@@ -26,7 +26,7 @@ func NewTxCmd() *cobra.Command {
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
-	
+
 	txCmd.AddCommand(
 		GetCmdCreateDenom(),
 		GetCmdMintNFT(),
@@ -37,7 +37,7 @@ func NewTxCmd() *cobra.Command {
 		GetCmdCreateCommunity(),
 		GetCmdJoinCommunity(),
 	)
-	
+
 	return txCmd
 }
 
@@ -45,7 +45,7 @@ func NewTxCmd() *cobra.Command {
 // GetCmdMintNFT is the CLI command for a MintNFT transaction
 func GetCmdCreateDenom() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create [denom]",
+		Use:   "create [denom] [community-id] [, seperated dependent_collections] ",
 		Short: "create collection with denom name",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Create a new denom.
@@ -65,7 +65,7 @@ $ %s tx nft create [denom] [community-id] [, seperated dependent_collections] --
 			if len(args[2]) > 0 {
 				collections = strings.Split(args[2], ",")
 			}
-			
+
 			msg := types.NewMsgCreateDenom(
 				args[0],
 				viper.GetString(FlagSymbol),
@@ -83,7 +83,7 @@ $ %s tx nft create [denom] [community-id] [, seperated dependent_collections] --
 	}
 	cmd.Flags().AddFlagSet(FsCreateDenom)
 	flags.AddTxFlagsToCmd(cmd)
-	
+
 	return cmd
 }
 
@@ -110,19 +110,19 @@ $ %s tx nft mint [denomID] --media_uri=<media_uri> --preview_uri=<preview_uri> -
 			if err != nil {
 				return err
 			}
-			
+
 			name := viper.GetString(FlagTokenName)
 			description := viper.GetString(FlagDescription)
 			media_uri := viper.GetString(FlagMediaURI)
 			previewURI := viper.GetString(FlagPreviewURI)
-			
+
 			metaData := types.Metadata{
 				Name:        name,
 				Description: description,
 				MediaURI:    media_uri,
 				PreviewURI:  previewURI,
 			}
-			
+
 			msg := types.NewMsgMintNFT(
 				args[0],
 				viper.GetString(FlagTokenData),
@@ -140,7 +140,7 @@ $ %s tx nft mint [denomID] --media_uri=<media_uri> --preview_uri=<preview_uri> -
 	cmd.Flags().AddFlagSet(FsMintNFT)
 	cmd.Flags().AddFlagSet(FsCreateDenom)
 	flags.AddTxFlagsToCmd(cmd)
-	
+
 	return cmd
 }
 
@@ -166,7 +166,7 @@ $ %s tx nft update [denomID] [tokenID] --name=<name> --description=<description>
 			if err != nil {
 				return err
 			}
-			
+
 			msg := types.NewMsgUpdateNFT(
 				args[1],
 				args[0],
@@ -183,7 +183,7 @@ $ %s tx nft update [denomID] [tokenID] --name=<name> --description=<description>
 	}
 	cmd.Flags().AddFlagSet(FsEditNFT)
 	flags.AddTxFlagsToCmd(cmd)
-	
+
 	return cmd
 }
 
@@ -205,19 +205,19 @@ $ %s tx nft transfer [denomID] [nftID] [recipient] --from=<key-name> --chain-id=
 			if err != nil {
 				return err
 			}
-			
+
 			clientCtx, err = client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
-			
+
 			msg := types.NewMsgTransferNFT(
 				args[1],
 				args[0],
 				clientCtx.GetFromAddress().String(),
 				args[2],
 			)
-			
+
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -226,7 +226,7 @@ $ %s tx nft transfer [denomID] [nftID] [recipient] --from=<key-name> --chain-id=
 	}
 	cmd.Flags().AddFlagSet(FsTransferNFT)
 	flags.AddTxFlagsToCmd(cmd)
-	
+
 	return cmd
 }
 
@@ -247,12 +247,12 @@ $ %s tx nft sell [denomID] [NFTID] [price] --from=<key-name> --chain-id=<chain-i
 			if err != nil {
 				return err
 			}
-			
+
 			cliCtx, err = client.ReadPersistentCommandFlags(cliCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
-			
+
 			msg := types.NewMsgSellNFT(
 				args[1],
 				args[0],
@@ -265,7 +265,7 @@ $ %s tx nft sell [denomID] [NFTID] [price] --from=<key-name> --chain-id=<chain-i
 			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
 		},
 	}
-	
+
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
@@ -287,26 +287,26 @@ $ %s tx nft buy [denomID] [NFTID] --from=<key-name> --chain-id=<chain-id> --fees
 			if err != nil {
 				return err
 			}
-			
+
 			clientCtx, err = client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
-			
+
 			msg := types.NewMsgBuyNFT(
 				args[1],
 				args[0],
 				clientCtx.GetFromAddress().String(),
 			)
-			
+
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
-			
+
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
-	
+
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
@@ -315,12 +315,12 @@ $ %s tx nft buy [denomID] [NFTID] --from=<key-name> --chain-id=<chain-id> --fees
 // GetCmdMintNFT is the CLI command for a MintNFT transaction
 func GetCmdCreateCommunity() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-community [name] [id]  ",
+		Use:   "create-community [name] ",
 		Short: "Create new community",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Create a new community.
 Example:
-$ %s tx nft create-community [name]  [id]  --description=<description> --preview_uri=<preview_uri> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
+$ %s tx nft create-community [name] --description=<description> --preview_uri=<preview_uri> --from=<key-name> --chain-id=<chain-id> --fees=<fee>`,
 				version.AppName,
 			),
 		),
@@ -331,7 +331,7 @@ $ %s tx nft create-community [name]  [id]  --description=<description> --preview
 			if err != nil {
 				return err
 			}
-			
+
 			msg := types.NewMsgCreateCommunity(
 				args[0],
 				viper.GetString(FlagDescription),
@@ -346,7 +346,7 @@ $ %s tx nft create-community [name]  [id]  --description=<description> --preview
 	}
 	cmd.Flags().AddFlagSet(FsCreateDenom)
 	flags.AddTxFlagsToCmd(cmd)
-	
+
 	return cmd
 }
 
@@ -370,7 +370,7 @@ $ %s tx nft join-community [community-id]   --from=<key-name> --chain-id=<chain-
 			if err != nil {
 				return err
 			}
-			
+
 			msg := types.NewMsgJoinCommunity(
 				args[0],
 				clientCtx.GetFromAddress().String(),
@@ -381,9 +381,9 @@ $ %s tx nft join-community [community-id]   --from=<key-name> --chain-id=<chain-
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
-	
+
 	cmd.Flags().AddFlagSet(FsCreateDenom)
 	flags.AddTxFlagsToCmd(cmd)
-	
+
 	return cmd
 }
