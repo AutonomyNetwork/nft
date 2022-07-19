@@ -197,7 +197,7 @@ func (k Keeper) Communities(c context.Context, request *types.QueryCommunitiesRe
 	})
 
 	if err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrUnknownNFT, "invalid communitu query %s", err.Error())
+		return nil, sdkerrors.Wrapf(types.ErrCommunityNotFound, "invalid community query %s", err.Error())
 	}
 
 	return &types.QueryCommunitiesResponse{
