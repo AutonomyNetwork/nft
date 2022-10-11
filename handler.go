@@ -3,9 +3,9 @@ package nft
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	
-	"github.com/AutonomyNetwork/nft/keeper"
-	"github.com/AutonomyNetwork/nft/types"
+
+	"github.com/Sandeep-Narahari/nft/keeper"
+	"github.com/Sandeep-Narahari/nft/types"
 )
 
 // NewHandler routes the messages to the handlers
@@ -13,7 +13,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 	msgServer := keeper.NewMsgServerImpl(k)
 	return func(ctx sdk.Context, msg sdk.Msg) (*sdk.Result, error) {
 		ctx = ctx.WithEventManager(sdk.NewEventManager())
-		
+
 		switch msg := msg.(type) {
 		case *types.MsgCreateDenom:
 			res, err := msgServer.CreateDenom(sdk.WrapSDKContext(ctx), msg)

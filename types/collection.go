@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/AutonomyNetwork/nft/exported"
+	"github.com/Sandeep-Narahari/nft/exported"
 )
 
 // NewCollection creates a new NFT Collection

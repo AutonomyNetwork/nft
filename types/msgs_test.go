@@ -3,10 +3,10 @@ package types_test
 import (
 	"fmt"
 	"testing"
-	
+
 	"github.com/stretchr/testify/require"
-	
-	"github.com/AutonomyNetwork/nft/types"
+
+	"github.com/Sandeep-Narahari/nft/types"
 )
 
 // ---------------------------------------- Msgs ---------------------------------------------------
@@ -26,15 +26,15 @@ func TestMsgTransferNFTValidateBasicMethod(t *testing.T) {
 	newMsgTransferNFT := types.NewMsgTransferNFT(denomID, "", id, tokenURI, tokenData, address, address2)
 	err := newMsgTransferNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgTransferNFT = types.NewMsgTransferNFT(denomID, denom, "", tokenURI, tokenData, nil, address2)
 	err = newMsgTransferNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgTransferNFT = types.NewMsgTransferNFT(denomID, denom, "", tokenURI, tokenData, address, nil)
 	err = newMsgTransferNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgTransferNFT = types.NewMsgTransferNFT(denomID, denom, id, tokenURI, tokenData, address, address2)
 	err = newMsgTransferNFT.ValidateBasic()
 	require.NoError(t, err)
@@ -59,7 +59,7 @@ func TestNewMsgEditNFT(t *testing.T) {
 		fmt.Sprintf("     %s     ", denom),
 		fmt.Sprintf("     %s     ", nftName),
 		fmt.Sprintf("     %s     ", tokenURI), tokenData, address)
-	
+
 	require.Equal(t, newMsgEditNFT.Sender.String(), address.String())
 	require.Equal(t, newMsgEditNFT.Id, id)
 	require.Equal(t, newMsgEditNFT.Denom, denom)
@@ -68,18 +68,18 @@ func TestNewMsgEditNFT(t *testing.T) {
 
 func TestMsgEditNFTValidateBasicMethod(t *testing.T) {
 	newMsgEditNFT := types.NewMsgEditNFT(id, denom, nftName, tokenURI, tokenData, nil)
-	
+
 	err := newMsgEditNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgEditNFT = types.NewMsgEditNFT("", denom, nftName, tokenURI, tokenData, address)
 	err = newMsgEditNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgEditNFT = types.NewMsgEditNFT(id, "", nftName, tokenURI, tokenData, address)
 	err = newMsgEditNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgEditNFT = types.NewMsgEditNFT(id, denom, nftName, tokenURI, tokenData, address)
 	err = newMsgEditNFT.ValidateBasic()
 	require.NoError(t, err)
@@ -104,7 +104,7 @@ func TestNewMsgMintNFT(t *testing.T) {
 		fmt.Sprintf("     %s     ", denom),
 		fmt.Sprintf("     %s     ", nftName),
 		fmt.Sprintf("     %s     ", tokenURI), tokenData, address, address2)
-	
+
 	require.Equal(t, newMsgMintNFT.Sender.String(), address.String())
 	require.Equal(t, newMsgMintNFT.Recipient.String(), address2.String())
 	require.Equal(t, newMsgMintNFT.Id, id)
@@ -116,15 +116,15 @@ func TestMsgMsgMintNFTValidateBasicMethod(t *testing.T) {
 	newMsgMintNFT := types.NewMsgMintNFT(id, denom, nftName, tokenURI, tokenData, nil, address2)
 	err := newMsgMintNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgMintNFT = types.NewMsgMintNFT("", denom, nftName, tokenURI, tokenData, address, address2)
 	err = newMsgMintNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgMintNFT = types.NewMsgMintNFT(id, "", nftName, tokenURI, tokenData, address, address2)
 	err = newMsgMintNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgMintNFT = types.NewMsgMintNFT(id, denom, nftName, tokenURI, tokenData, address, address2)
 	err = newMsgMintNFT.ValidateBasic()
 	require.NoError(t, err)
@@ -140,7 +140,7 @@ func TestNewMsgBurnNFT(t *testing.T) {
 	newMsgBurnNFT := types.NewMsgBurnNFT(address,
 		fmt.Sprintf("     %s     ", id),
 		fmt.Sprintf("     %s     ", denom))
-	
+
 	require.Equal(t, newMsgBurnNFT.Sender.String(), address.String())
 	require.Equal(t, newMsgBurnNFT.Id, id)
 	require.Equal(t, newMsgBurnNFT.Denom, denom)
@@ -150,15 +150,15 @@ func TestMsgMsgBurnNFTValidateBasicMethod(t *testing.T) {
 	newMsgBurnNFT := types.NewMsgBurnNFT(nil, id, denom)
 	err := newMsgBurnNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgBurnNFT = types.NewMsgBurnNFT(address, "", denom)
 	err = newMsgBurnNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgBurnNFT = types.NewMsgBurnNFT(address, id, "")
 	err = newMsgBurnNFT.ValidateBasic()
 	require.Error(t, err)
-	
+
 	newMsgBurnNFT = types.NewMsgBurnNFT(address, id, denom)
 	err = newMsgBurnNFT.ValidateBasic()
 	require.NoError(t, err)

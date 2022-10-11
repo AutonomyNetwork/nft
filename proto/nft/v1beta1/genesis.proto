@@ -6,7 +6,7 @@ import "nft/v1beta1/nft.proto";
 import "nft/v1beta1/market_place.proto";
 import "nft/v1beta1/community.proto";
 
-option go_package = "github.com/AutonomyNetwork/nft/types";
+option go_package = "github.com/Sandeep-Narahari/nft/types";
 
 // GenesisState defines the nft module's genesis state.
 message GenesisState {

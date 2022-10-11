@@ -4,7 +4,7 @@ package nft.v1beta1;
 import "google/protobuf/timestamp.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/AutonomyNetwork/nft/types";
+option go_package = "github.com/Sandeep-Narahari/nft/types";
 option (gogoproto.goproto_getters_all) = false;
 
 message Collection {

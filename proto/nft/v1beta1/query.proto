@@ -8,7 +8,7 @@ import "google/api/annotations.proto";
 import "nft/v1beta1/community.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 
-option go_package = "github.com/AutonomyNetwork/nft/types";
+option go_package = "github.com/Sandeep-Narahari/nft/types";
 
 
 service Query {

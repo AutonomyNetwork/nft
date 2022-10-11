@@ -9,7 +9,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 
-	"github.com/AutonomyNetwork/nft/types"
+	"github.com/Sandeep-Narahari/nft/types"
 )
 
 var _ types.QueryServer = Keeper{}

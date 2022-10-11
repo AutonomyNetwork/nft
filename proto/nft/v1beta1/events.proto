@@ -3,7 +3,7 @@ package nft.v1beta1;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/AutonomyNetwork/nft/types";
+option go_package = "github.com/Sandeep-Narahari/nft/types";
 
 message EventCreateDenom {
   string id = 1;

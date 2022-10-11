@@ -3,8 +3,8 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	
-	"github.com/AutonomyNetwork/nft/types"
+
+	"github.com/Sandeep-Narahari/nft/types"
 )
 
 // SetCollection save all NFT and return error if existed
@@ -32,7 +32,7 @@ func (k Keeper) GetCollection(ctx sdk.Context, denomID string) (types.Collection
 	if err != nil {
 		return types.Collection{}, sdkerrors.Wrapf(types.ErrInvalidDenom, "denomID %s not existed ", denomID)
 	}
-	
+
 	nfts := k.GetNFTs(ctx, denomID)
 	return types.NewCollection(denom, nfts), nil
 }
@@ -70,7 +70,7 @@ func (k Keeper) GetTotalSupplyOfOwner(ctx sdk.Context, id string, owner sdk.AccA
 func (k Keeper) increaseSupply(ctx sdk.Context, denomID string) {
 	supply := k.GetTotalSupply(ctx, denomID)
 	supply++
-	
+
 	store := ctx.KVStore(k.storeKey)
 	bz := types.MustMarshalSupply(k.cdc, supply)
 	store.Set(types.KeyCollection(denomID), bz)
@@ -79,13 +79,13 @@ func (k Keeper) increaseSupply(ctx sdk.Context, denomID string) {
 func (k Keeper) decreaseSupply(ctx sdk.Context, denomID string) {
 	supply := k.GetTotalSupply(ctx, denomID)
 	supply--
-	
+
 	store := ctx.KVStore(k.storeKey)
 	if supply == 0 {
 		store.Delete(types.KeyCollection(denomID))
 		return
 	}
-	
+
 	bz := types.MustMarshalSupply(k.cdc, supply)
 	store.Set(types.KeyCollection(denomID), bz)
 }

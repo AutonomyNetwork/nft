@@ -2,10 +2,10 @@ package rest
 
 import (
 	"github.com/gorilla/mux"
-	
+
 	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/testutil/rest"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/rest"
 )
 
 // RegisterHandlers register distribution REST routes.

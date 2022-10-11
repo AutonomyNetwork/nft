@@ -13,7 +13,7 @@ package rest
 //	sdk "github.com/cosmos/cosmos-sdk/types"
 //	"github.com/cosmos/cosmos-sdk/types/rest"
 //
-//	"github.com/AutonomyNetwork/nft/types"
+//	"github.com/Sandeep-Narahari/nft/types"
 // )
 //
 // func registerQueryRoutes(cliCtx client.Context, r *mux.Router, queryRoute string) {
