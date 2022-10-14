@@ -3,9 +3,8 @@ module github.com/AutonomyNetwork/nft
 go 1.17
 
 require (
-	github.com/cosmos/cosmos-sdk v0.45.4
-	github.com/cosmos/ibc-go v1.2.2
-	github.com/cosmos/ibc-go/v3 v3.0.0 // indirect
+	github.com/cosmos/cosmos-sdk v0.46.2
+	github.com/cosmos/ibc-go/v5 v5.0.0 // indirect
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
 	github.com/google/uuid v1.2.0
@@ -17,10 +16,13 @@ require (
 	github.com/spf13/viper v1.10.1
 	github.com/stretchr/testify v1.7.1
 	github.com/tendermint/spm v0.1.8
-	github.com/tendermint/tendermint v0.34.19
+	github.com/tendermint/tendermint v0.34.21
 	github.com/tendermint/tm-db v0.6.7
-	google.golang.org/genproto v0.0.0-20211223182754-3ac035c7e7cb
-	google.golang.org/grpc v1.45.0
+	google.golang.org/genproto v0.0.0-20220815135757-37a418bb8959
+	google.golang.org/grpc v1.50.0
 )
 
-replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.2-alpha.regen.4
+replace (
+	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+	github.com/zondax/hid => github.com/zondax/hid v0.9.0
+)
