@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"sort"
-	
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	
@@ -30,7 +28,7 @@ func (k Keeper) GetMarketPlaceNFT(ctx sdk.Context, denomID, id string) (marketpl
 	return order, nil
 }
 
-func (k Keeper) GetMarketPlace(ctx sdk.Context) (marketPlace types.MarketPlaceNFTS) {
+func (k Keeper) GetMarketPlace(ctx sdk.Context) (marketPlace []types.MarketPlace) {
 	
 	store := ctx.KVStore(k.storeKey)
 	
@@ -43,11 +41,4 @@ func (k Keeper) GetMarketPlace(ctx sdk.Context) (marketPlace types.MarketPlaceNF
 	}
 	
 	return marketPlace
-}
-
-func (k Keeper) GetAscendingMarketPlace(ctx sdk.Context) (marketPlace types.MarketPlaceNFTS) {
-	nfts := k.GetMarketPlace(ctx)
-	sort.Sort(nfts)
-	
-	return nfts
 }
