@@ -4,20 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	
+
 	"github.com/gogo/protobuf/grpc"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
-	
+
 	abci "github.com/tendermint/tendermint/abci/types"
-	
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	
+
 	"github.com/AutonomyNetwork/nft/client/cli"
 	"github.com/AutonomyNetwork/nft/client/rest"
 	"github.com/AutonomyNetwork/nft/keeper"
@@ -54,7 +54,7 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncod
 	if err := cdc.UnmarshalJSON(bz, &data); err != nil {
 		return fmt.Errorf("failed to unmarshal %s genesis state: %w", types.ModuleName, err)
 	}
-	
+
 	return ValidateGenesis(data)
 }
 
@@ -88,7 +88,7 @@ func (AppModuleBasic) RegisterInterfaces(registry codectypes.InterfaceRegistry) 
 // AppModule implements an application module for the NFT module.
 type AppModule struct {
 	AppModuleBasic
-	
+
 	keeper keeper.Keeper
 }
 
@@ -138,9 +138,9 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 // no validator updates.
 func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {
 	var genesisState types.GenesisState
-	
+
 	cdc.MustUnmarshalJSON(data, &genesisState)
-	
+
 	InitGenesis(ctx, am.keeper, genesisState)
 	return []abci.ValidatorUpdate{}
 }

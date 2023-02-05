@@ -1,0 +1,19 @@
+# version: v1
+# plugins:
+#   - plugin: buf.build/protocolbuffers/go:v1.28.1
+#     out: ./types
+#     opt: paths=source_relative
+#   - plugin: buf.build/grpc/go:v1.2.0
+#     out: ./types
+#     opt: paths=source_relative
+
+
+version: v1
+plugins:
+  - plugin: gocosmos
+    out: ..
+    opt: plugins=grpc,Mgoogle/protobuf/any.proto=github.com/cosmos/cosmos-sdk/codec/types
+  - plugin: grpc-gateway
+    out: ..
+    opt: logtostderr=true,allow_colon_final_segments=true
+
