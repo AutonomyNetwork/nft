@@ -64,7 +64,19 @@ service Query {
   rpc CommunityMembers(QueryCommunityMembersRequest) returns(QueryCommunityMembersResponse){
     option(google.api.http).get = "/autonomy/nft/v1beta1/communities/{community_id}/members";
   }
+
+  rpc CommunitiesByOwner(QueryCommunitiesByOwnerRequest) returns (QueryCommunitiesByOwnerResponse) {
+    option(google.api.http).get = "/autonomy/nft/v1beta1/communities/owner/{address}";
+  } 
 }
+
+message QueryCommunitiesByOwnerRequest {
+  string address = 1;
+}
+message QueryCommunitiesByOwnerResponse {
+  Community commities = 1;
+}
+
 
 message QueryDenomRequest {
   string denom_id = 1 [(gogoproto.moretags) = "yaml:\"denom_id\""];

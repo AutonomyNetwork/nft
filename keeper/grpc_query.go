@@ -14,6 +14,10 @@ import (
 
 var _ types.QueryServer = Keeper{}
 
+func (k Keeper) CommunitiesByOwner(context.Context, *types.QueryCommunitiesByOwnerRequest) (*types.QueryCommunitiesByOwnerResponse, error) {
+	return &types.QueryCommunitiesByOwnerResponse{}, nil
+}
+
 func (k Keeper) Denom(c context.Context, request *types.QueryDenomRequest) (*types.QueryDenomResponse, error) {
 	denom := strings.ToLower(strings.TrimSpace(request.DenomId))
 	ctx := sdk.UnwrapSDKContext(c)
@@ -117,13 +121,15 @@ func (k Keeper) MarketPlaceNFT(c context.Context, request *types.QueryMarketPlac
 
 func (k Keeper) MarketPlace(c context.Context, request *types.QueryMarketPlaceRequest) (*types.QueryMarketPlaceResponse, error) {
 	var nfts []types.MarketPlace
+	var err error
+	var pageRes *query.PageResponse
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
 
 	marketPlaceStore := prefix.NewStore(store, types.PrefixMarketPlace)
 
-	pageRes, err := query.FilteredPaginate(marketPlaceStore, request.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
+	pageRes, err = query.FilteredPaginate(marketPlaceStore, request.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
 		var nft types.MarketPlace
 		k.cdc.MustUnmarshal(value, &nft)
 
@@ -212,7 +218,7 @@ func (k Keeper) Collection(c context.Context, request *types.QueryCollectionRequ
 }
 
 func (k Keeper) CommunityCollections(c context.Context, request *types.QueryCommunityCollectionsRequest) (*types.QueryCommunityCollectionsResponse, error) {
-	var denoms []*types.Denom
+	denoms := make([]*types.Denom, 0)
 	ctx := sdk.UnwrapSDKContext(c)
 
 	if len(request.CommunityId) == 0 {
@@ -225,9 +231,9 @@ func (k Keeper) CommunityCollections(c context.Context, request *types.QueryComm
 		return nil, sdkerrors.Wrapf(types.ErrCommunityNotFound, "invalid community id: %s", request.CommunityId)
 	}
 
-	for _, collection := range collections {
-		if strings.EqualFold(request.CommunityId, collection.Denom.CommunityId) {
-			denoms = append(denoms, &collection.Denom)
+	for i := 0; i < len(collections); i++ {
+		if strings.EqualFold(community.Id, collections[i].Denom.CommunityId) {
+			denoms = append(denoms, &collections[i].Denom)
 		}
 	}
 
@@ -247,7 +253,7 @@ func (k Keeper) AllNFTs(c context.Context, request *types.QueryAllNFTsRequest) (
 	ctx := sdk.UnwrapSDKContext(c)
 	denoms := k.GetDenoms(ctx)
 
-	for _, denom := range denoms { //TODO: work on time complexity
+	for _, denom := range denoms { // TODO: work on time complexity
 		collection, _ := k.GetCollection(ctx, denom.Id)
 
 		community, _ := k.GetCommunityByID(ctx, denom.CommunityId)
