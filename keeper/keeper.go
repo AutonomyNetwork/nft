@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -154,7 +155,41 @@ func (k Keeper) SellNFT(ctx sdk.Context, id, denomId string, price string, selle
 		id,
 		denomId,
 		price,
+		types.Crypto,
+		"", "",
 		seller,
+	))
+	return nil
+}
+
+func (k Keeper) SellNFTWithFiat(ctx sdk.Context, id, denomId, currency, fiat_amount string, seller sdk.AccAddress) error {
+
+	if !k.HasDenomID(ctx, denomId) {
+		return sdkerrors.Wrapf(types.ErrInvalidDenom, "denomId %s does not exist", denomId)
+	}
+
+	if !k.HasNFT(ctx, denomId, id) {
+		return sdkerrors.Wrapf(types.ErrInvalidNFT, "nft %s does not exist in collection %s", id, denomId)
+	}
+
+	nft, err := k.Authorize(ctx, denomId, id, seller)
+	if err != nil {
+		return err
+	}
+
+	if !nft.IsTransferable() {
+		return sdkerrors.Wrapf(types.ErrTransfer, "nft %s is not transferable", id)
+	}
+
+	nft.Listed = true
+	k.SetNFT(ctx, denomId, nft)
+
+	k.SetNFTMarketPlace(ctx, types.NewMarketPlace(
+		id,
+		denomId,
+		"",
+		types.Fiat,
+		currency, fiat_amount, seller,
 	))
 	return nil
 }
@@ -229,6 +264,50 @@ func (k Keeper) BuyNFT(ctx sdk.Context, id, denom_id string, buyer sdk.AccAddres
 	orderNFT1 := orderNFT.(types.MarketPlace)
 	orderNFT1.Buyer = buyer.String()
 	orderNFT1.Filled = true
+	k.SetNFTMarketPlace(ctx, orderNFT1)
+	k.swapOwner(ctx, denom_id, id, nft.GetOwner(), buyer)
+	return nil
+}
+
+func (k Keeper) BuyNFTWithFiat(ctx sdk.Context, id, denom_id string, currency, amount, order_ref_id string, buyer sdk.AccAddress) error {
+	if !k.HasDenomID(ctx, denom_id) {
+		return sdkerrors.Wrapf(types.ErrInvalidDenom, "denom %s does not exist", denom_id)
+	}
+
+	if !k.HasNFT(ctx, denom_id, id) {
+		return sdkerrors.Wrapf(types.ErrInvalidNFT, "nft %s does not exist in collection %s", id, denom_id)
+	}
+
+	orderNFT, err := k.GetMarketPlaceNFT(ctx, denom_id, id)
+	if err != nil {
+		return sdkerrors.Wrapf(types.ErrInvalidNFT, "unable to find nft in market place %s", err.Error())
+	}
+
+	if orderNFT.GetFilled() == true {
+		return sdkerrors.Wrapf(types.ErrFilledNFT, "%s is already filled", orderNFT.GetNFTID())
+	}
+
+	if !strings.EqualFold(amount, orderNFT.GetCurrency()) {
+		return sdkerrors.Wrapf(types.ErrFilledNFT, "%s amount %s is invalid ", amount, orderNFT.GetCurrency())
+	}
+
+	nft, err := k.GetNFT(ctx, denom_id, id)
+	if err != nil {
+		return sdkerrors.Wrapf(types.ErrInvalidNFT, "unable to get the nft  %s", err.Error())
+	}
+
+	nft1 := nft.(types.NFT)
+	nft1.Owner = buyer.String()
+	nft1.Listed = false
+	k.SetNFT(ctx, denom_id, nft1)
+
+	orderNFT1 := orderNFT.(types.MarketPlace)
+	orderNFT1.Buyer = buyer.String()
+	orderNFT1.Filled = true
+	orderNFT1.OrderRefId = order_ref_id
+	orderNFT1.Currency = currency
+	orderNFT1.FiatAmount = amount
+
 	k.SetNFTMarketPlace(ctx, orderNFT1)
 	k.swapOwner(ctx, denom_id, id, nft.GetOwner(), buyer)
 	return nil
