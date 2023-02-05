@@ -272,3 +272,19 @@ func (k Keeper) AllNFTs(c context.Context, request *types.QueryAllNFTsRequest) (
 		All: listNFTs,
 	}, nil
 }
+
+func (k Keeper) CommunitiesByOwner(c context.Context, request *types.QueryCommunityByOwnerRequest) *types.QueryCommunitiesResponse {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	communities := k.GetCommunities(ctx)
+	var ownerCommunities []types.Community
+	for _, community := range communities {
+		if community.Creator == request.Address {
+			ownerCommunities = append(ownerCommunities, community)
+		}
+	}
+
+	return &types.QueryCommunitiesResponse{
+		Communities: ownerCommunities,
+	}
+}

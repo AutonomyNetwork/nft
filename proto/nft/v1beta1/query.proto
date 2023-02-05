@@ -146,6 +146,10 @@ message  QueryCommunityMembersResponse {
   CommunityMembers members = 1;
 }
 
+message QueryCommunityByOwnerRequest{
+  string address = 1;
+}
+
 message QueryCollectionRequest {
   string denom_id = 1;
 }
