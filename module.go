@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/gogo/protobuf/grpc"
-	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
@@ -19,7 +18,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 
 	"github.com/AutonomyNetwork/nft/client/cli"
-	"github.com/AutonomyNetwork/nft/client/rest"
 	"github.com/AutonomyNetwork/nft/keeper"
 	"github.com/AutonomyNetwork/nft/types"
 )
@@ -56,11 +54,6 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncod
 	}
 
 	return ValidateGenesis(data)
-}
-
-// RegisterRESTRoutes registers the REST routes for the NFT module.
-func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {
-	rest.RegisterHandlers(clientCtx, rtr, types.RouterKey)
 }
 
 // RegisterGRPCRoutes registers the gRPC Gateway routes for the NFT module.
