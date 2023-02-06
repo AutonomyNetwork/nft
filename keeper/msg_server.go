@@ -228,17 +228,15 @@ func (m msgServer) BuyNFT(goCtx context.Context,
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	if msg.ListedType == types.Crypto {
-		if err := m.Keeper.BuyNFT(ctx, msg.Id, msg.DenomId, buyer); err != nil {
-			return nil, sdkerrors.Wrapf(types.ErrInvalidNFT, err.Error())
-		}
-	} else if msg.ListedType == types.Fiat {
+	if msg.ListedType == types.Fiat {
 		if err := m.Keeper.BuyNFTWithFiat(ctx, msg.Id, msg.DenomId, msg.Currency, msg.FiatAmount, msg.OrderRefId, buyer); err != nil {
 			return nil, err
 		}
-	} else {
-		return nil, sdkerrors.Wrapf(types.ErrFilledNFT, "listed type of  %s does not exist", msg.ListedType)
+	} else { // TODO: update this for fiat
 
+		if err := m.Keeper.BuyNFT(ctx, msg.Id, msg.DenomId, buyer); err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrInvalidNFT, err.Error())
+		}
 	}
 
 	ctx.EventManager().EmitTypedEvent(
