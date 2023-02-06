@@ -42,7 +42,7 @@ service Query {
   }
 
   rpc MarketPlaceByType(QueryMarketPlaceByTypeRequest) returns (QueryMarketPlaceByTypeResponse){
-    option (google.api.http).get = "/autonomy/nft/v1beta1/market_place/{listed_type}/type";
+    option (google.api.http).get = "/autonomy/nft/v1beta1/market/type/{listed_type}";
   }
 
   rpc OwnerNFTs(QueryOwnerNFTsRequest) returns (QueryOwnerNFTsResponse) {
