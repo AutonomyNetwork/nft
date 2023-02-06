@@ -16,4 +16,6 @@ plugins:
   - plugin: grpc-gateway
     out: ..
     opt: logtostderr=true,allow_colon_final_segments=true
+  - plugin: buf.build/grpc-ecosystem/protoc-gen-swagger
+    out: ..
 
