@@ -2,10 +2,10 @@ package nft
 
 import (
 	"unicode/utf8"
-	
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	
+
 	"github.com/AutonomyNetwork/nft/keeper"
 	"github.com/AutonomyNetwork/nft/types"
 )
@@ -15,7 +15,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, data types.GenesisState) {
 	if err := ValidateGenesis(data); err != nil {
 		panic(err.Error())
 	}
-	
+
 	for _, c := range data.Collections {
 		if err := k.SetDenom(ctx, c.Denom); err != nil {
 			panic(err)
@@ -24,11 +24,14 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, data types.GenesisState) {
 			panic(err)
 		}
 	}
-	
+
 	for _, o := range data.Orders {
+		if o.Price != "" {
+			o.ListedType = types.Crypto
+		}
 		k.SetNFTMarketPlace(ctx, o)
 	}
-	
+
 	for _, community := range data.Communities {
 		k.SetCommunity(ctx, community)
 	}
@@ -54,16 +57,16 @@ func ValidateGenesis(data types.GenesisState) error {
 		if !utf8.ValidString(c.Denom.Name) {
 			return sdkerrors.Wrap(types.ErrInvalidDenom, "denom name is invalid")
 		}
-		
+
 		for _, nft := range c.NFTs {
 			if nft.GetOwner().Empty() {
 				return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "missing owner")
 			}
-			
+
 			if err := types.ValidateNFTID(nft.GetID()); err != nil {
 				return err
 			}
-			
+
 			if err := types.ValidateMediaURI(nft.GetMediaURI()); err != nil {
 				return err
 			}

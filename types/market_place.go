@@ -2,19 +2,22 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	
+
 	"github.com/AutonomyNetwork/nft/exported"
 )
 
 var _ exported.MarketPlace = MarketPlace{}
 
-func NewMarketPlace(id, denomID, price string, seller sdk.AccAddress) MarketPlace {
+func NewMarketPlace(id, denomID, price string, listed_type ListedType, currency, fiat_amount string, seller sdk.AccAddress) MarketPlace {
 	return MarketPlace{
-		NftId:   id,
-		DenomID: denomID,
-		Price:   price,
-		Seller:  seller.String(),
-		Filled:  false,
+		NftId:      id,
+		DenomID:    denomID,
+		Price:      price,
+		Seller:     seller.String(),
+		Filled:     false,
+		ListedType: listed_type,
+		Currency:   currency,
+		FiatAmount: fiat_amount,
 	}
 }
 
@@ -42,4 +45,12 @@ func (m MarketPlace) GetBuyer() sdk.AccAddress {
 
 func (m MarketPlace) GetFilled() bool {
 	return m.Filled
+}
+
+func (m MarketPlace) GetCurrency() string {
+	return m.Currency
+}
+
+func (m MarketPlace) GetFiatAmount() string {
+	return m.FiatAmount
 }

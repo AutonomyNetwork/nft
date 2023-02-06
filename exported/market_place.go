@@ -9,4 +9,6 @@ type MarketPlace interface {
 	GetSeller() sdk.AccAddress
 	GetBuyer() sdk.AccAddress
 	GetFilled() bool
+	GetCurrency() string
+	GetFiatAmount() string
 }

@@ -189,14 +189,22 @@ func (m msgServer) TransferNFT(goCtx context.Context,
 func (m msgServer) SellNFT(goCtx context.Context,
 	msg *types.MsgSellNFT) (*types.MsgSellNFTResponse, error) {
 
+	ctx := sdk.UnwrapSDKContext(goCtx)
 	seller, err := sdk.AccAddressFromBech32(msg.Seller)
 	if err != nil {
 		return nil, err
 	}
 
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	if err := m.Keeper.SellNFT(ctx, msg.Id, msg.DenomId, msg.Price, seller); err != nil {
-		return nil, err
+	if msg.ListedType == types.Crypto {
+		if err := m.Keeper.SellNFT(ctx, msg.Id, msg.DenomId, msg.Price, seller); err != nil {
+			return nil, err
+		}
+	} else if msg.ListedType == types.Fiat {
+		if err := m.Keeper.SellNFTWithFiat(ctx, msg.Id, msg.DenomId, msg.Currency, msg.FiatAmount, sdk.AccAddress(msg.Seller)); err != nil {
+			return nil, err
+		}
+	} else {
+		return nil, sdkerrors.Wrapf(types.ErrFilledNFT, "listed type of  %s does not exist", msg.ListedType)
 	}
 
 	ctx.EventManager().EmitTypedEvent(
@@ -219,8 +227,18 @@ func (m msgServer) BuyNFT(goCtx context.Context,
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	if err := m.Keeper.BuyNFT(ctx, msg.Id, msg.DenomId, buyer); err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidNFT, err.Error())
+
+	if msg.ListedType == types.Crypto {
+		if err := m.Keeper.BuyNFT(ctx, msg.Id, msg.DenomId, buyer); err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrInvalidNFT, err.Error())
+		}
+	} else if msg.ListedType == types.Fiat {
+		if err := m.Keeper.BuyNFTWithFiat(ctx, msg.Id, msg.DenomId, msg.Currency, msg.FiatAmount, msg.OrderRefId, buyer); err != nil {
+			return nil, err
+		}
+	} else {
+		return nil, sdkerrors.Wrapf(types.ErrFilledNFT, "listed type of  %s does not exist", msg.ListedType)
+
 	}
 
 	ctx.EventManager().EmitTypedEvent(

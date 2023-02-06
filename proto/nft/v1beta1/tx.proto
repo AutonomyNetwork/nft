@@ -3,6 +3,7 @@ package nft.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "nft/v1beta1/nft.proto";
+import "nft/v1beta1/market_place.proto";
 
 option go_package = "github.com/AutonomyNetwork/nft/types";
 option (gogoproto.goproto_getters_all) = false;
@@ -74,6 +75,9 @@ message MsgSellNFT {
   string denom_id = 2 [(gogoproto.moretags) = "yaml:\"denom_id\""];
   string price = 3;
   string seller = 4;
+  ListedType listed_type = 5;
+  string currency = 6;
+  string fiat_amount = 7;
 }
 
 message MsgSellNFTResponse{}
@@ -82,6 +86,10 @@ message MsgBuyNFT {
   string id = 1;
   string denom_id = 2 [(gogoproto.moretags) = "yaml:\"denom_id\""];
   string buyer = 3;
+  ListedType listed_type = 4;
+  string currency = 5;
+  string fiat_amount = 6;
+  string order_ref_id = 7;
 }
 
 message MsgBuyNFTResponse{}
