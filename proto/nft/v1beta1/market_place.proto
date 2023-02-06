@@ -16,4 +16,16 @@ message MarketPlace {
   string seller = 4;
   string buyer = 5;
   bool filled = 6;
+  ListedType listed_type = 7;
+  string currency = 8;
+  string fiat_amount = 9; 
+  string order_ref_id = 10;
+}
+
+enum ListedType {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  LISTED_TYPE_UNSPECIFIED = 0 [(gogoproto.enumvalue_customname) = "Unspecified"];
+  LISTED_TYPE_FIAT = 1 [(gogoproto.enumvalue_customname) = "Fiat"];
+  LISTED_TYPE_CRYPTO = 2 [(gogoproto.enumvalue_customname) = "Crypto"];
 }

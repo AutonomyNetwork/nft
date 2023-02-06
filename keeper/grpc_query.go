@@ -278,3 +278,66 @@ func (k Keeper) AllNFTs(c context.Context, request *types.QueryAllNFTsRequest) (
 		All: listNFTs,
 	}, nil
 }
+
+func (k Keeper) MarketPlaceByType(c context.Context, request *types.QueryMarketPlaceByTypeRequest) (*types.QueryMarketPlaceByTypeResponse, error) {
+	if request == nil {
+		return nil, sdkerrors.Wrapf(types.ErrFilledNFT, "invalid request for query marketplace: %s", request)
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+	var nfts []types.MarketPlace
+
+	store := ctx.KVStore(k.storeKey)
+	mStore := prefix.NewStore(store, types.PrefixMarketPlace)
+
+	if request.ListedType == types.Fiat || request.ListedType == types.Crypto {
+		nfts, pageRes, err := query.GenericFilteredPaginate(k.cdc, mStore, request.Pagination, func(key []byte, nft *types.MarketPlace) (*types.MarketPlace, error) {
+			if (request.ListedType.String() != "") && !strings.EqualFold(nft.ListedType.String(), request.ListedType.String()) {
+				return nil, nil
+			}
+			if nft.Filled {
+				return nil, nil
+			}
+
+			return nft, nil
+		}, func() *types.MarketPlace {
+			return &types.MarketPlace{}
+		})
+
+		if err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrCommunityNotFound, "invalid marketplace nfts id: %s", err.Error())
+		}
+
+		mNfts := []types.MarketPlace{}
+
+		for _, nft := range nfts {
+			mNfts = append(mNfts, *nft)
+		}
+
+		return &types.QueryMarketPlaceByTypeResponse{
+			MarketPlace: mNfts,
+			Pagination:  pageRes,
+		}, nil
+	} else {
+		pageRes, err := query.FilteredPaginate(mStore, request.Pagination, func(key, value []byte, accumulate bool) (bool, error) {
+
+			var nft types.MarketPlace
+			k.cdc.MustUnmarshal(value, &nft)
+
+			if accumulate {
+				if !nft.Filled {
+					nfts = append(nfts, nft)
+				}
+			}
+			return true, nil
+		})
+		if err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrUnknownNFT, "invalid market place query %s", err.Error())
+		}
+
+		return &types.QueryMarketPlaceByTypeResponse{
+			MarketPlace: nfts,
+			Pagination:  pageRes,
+		}, nil
+	}
+}
