@@ -68,15 +68,29 @@ service Query {
   rpc CommunitiesByOwner(QueryCommunitiesByOwnerRequest) returns (QueryCommunitiesByOwnerResponse) {
     option(google.api.http).get = "/autonomy/nft/v1beta1/communities/owner/{address}";
   } 
+  rpc DenomsByOwner(QueryDenomsByOwnerRequest) returns (QueryDenomsByOwnerResponse) {
+    option(google.api.http).get = "/autonomy/nft/v1beta1/denoms/owner/{address}";
+  }
 }
 
 message QueryCommunitiesByOwnerRequest {
   string address = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 message QueryCommunitiesByOwnerResponse {
-  Community commities = 1;
+ repeated Community communities = 1 [(gogoproto.nullable) = false];
+ cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
+message QueryDenomsByOwnerRequest {
+  string address = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryDenomsByOwnerResponse {
+  repeated Denom denom = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
 
 message QueryDenomRequest {
   string denom_id = 1 [(gogoproto.moretags) = "yaml:\"denom_id\""];
