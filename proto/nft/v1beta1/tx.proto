@@ -17,6 +17,7 @@ service Msg {
   rpc BuyNFT(MsgBuyNFT) returns (MsgBuyNFTResponse);
   rpc CreateCommunity(MsgCreateCommunity) returns (MsgCreateCommunityResponse);
   rpc JoinCommunity(MsgJoinCommunity) returns(MsgJoinCommunityResponse);
+  // rpc UpdateCommunity(MsgUpdateCommunity) returns (MsgUpdateCommunityResponse);
 }
 
 message MsgCreateDenom {
@@ -112,4 +113,12 @@ message MsgJoinCommunity {
 
 message MsgJoinCommunityResponse {
 
+}
+
+message MsgUpdateCommunity {
+
+}
+
+message MsgUpdateCommunityResponse {
+  
 }

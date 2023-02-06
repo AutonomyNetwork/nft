@@ -14,8 +14,80 @@ import (
 
 var _ types.QueryServer = Keeper{}
 
-func (k Keeper) CommunitiesByOwner(context.Context, *types.QueryCommunitiesByOwnerRequest) (*types.QueryCommunitiesByOwnerResponse, error) {
-	return &types.QueryCommunitiesByOwnerResponse{}, nil
+func (k Keeper) CommunitiesByOwner(c context.Context, request *types.QueryCommunitiesByOwnerRequest) (*types.QueryCommunitiesByOwnerResponse, error) {
+
+	if len(request.Address) == 0 {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidCollection, "invalid user request address %s", request.Address)
+	}
+
+	var ownerCommunities []types.Community
+	var err error
+	var pageRes *query.PageResponse
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := ctx.KVStore(k.storeKey)
+
+	communityStore := prefix.NewStore(store, types.PrefixCommunity)
+
+	pageRes, err = query.FilteredPaginate(communityStore, request.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
+		var community types.Community
+		k.cdc.MustUnmarshal(value, &community)
+
+		if community.Creator != request.Address {
+			return false, nil
+		}
+		if accumulate && community.Creator == request.Address {
+			ownerCommunities = append(ownerCommunities, community)
+		}
+
+		return true, nil
+	})
+
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrUnknownNFT, "invalid community query %s", err.Error())
+	}
+	return &types.QueryCommunitiesByOwnerResponse{
+		Communities: ownerCommunities,
+		Pagination:  pageRes,
+	}, nil
+}
+
+func (k Keeper) DenomsByOwner(c context.Context, request *types.QueryDenomsByOwnerRequest) (*types.QueryDenomsByOwnerResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if len(request.Address) == 0 {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidCollection, "invalid user request address %s", request.Address)
+	}
+
+	var err error
+	var pageRes *query.PageResponse
+
+	store := ctx.KVStore(k.storeKey)
+
+	denomStore := prefix.NewStore(store, types.PrefixDenom)
+
+	var ownerDenoms []types.Denom
+	pageRes, err = query.FilteredPaginate(denomStore, request.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
+		var denom types.Denom
+		k.cdc.MustUnmarshal(value, &denom)
+		if denom.Creator != request.Address {
+			return false, nil
+		}
+		if accumulate && denom.Creator == request.Address {
+			ownerDenoms = append(ownerDenoms, denom)
+		}
+
+		return true, nil
+	})
+
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrUnknownNFT, "invalid denom query %s", err.Error())
+	}
+
+	return &types.QueryDenomsByOwnerResponse{
+		Denom:      ownerDenoms,
+		Pagination: pageRes,
+	}, nil
 }
 
 func (k Keeper) Denom(c context.Context, request *types.QueryDenomRequest) (*types.QueryDenomResponse, error) {
