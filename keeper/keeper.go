@@ -287,7 +287,7 @@ func (k Keeper) BuyNFTWithFiat(ctx sdk.Context, id, denom_id string, currency, a
 		return sdkerrors.Wrapf(types.ErrFilledNFT, "%s is already filled", orderNFT.GetNFTID())
 	}
 
-	if !strings.EqualFold(amount, orderNFT.GetCurrency()) {
+	if !strings.EqualFold(amount, orderNFT.GetFiatAmount()) {
 		return sdkerrors.Wrapf(types.ErrFilledNFT, "%s amount %s is invalid ", amount, orderNFT.GetCurrency())
 	}
 
