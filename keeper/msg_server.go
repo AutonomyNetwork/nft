@@ -200,7 +200,7 @@ func (m msgServer) SellNFT(goCtx context.Context,
 			return nil, err
 		}
 	} else if msg.ListedType == types.Fiat {
-		if err := m.Keeper.SellNFTWithFiat(ctx, msg.Id, msg.DenomId, msg.Currency, msg.FiatAmount, sdk.AccAddress(msg.Seller)); err != nil {
+		if err := m.Keeper.SellNFTWithFiat(ctx, msg.Id, msg.DenomId, msg.Currency, msg.FiatAmount, seller); err != nil {
 			return nil, err
 		}
 	} else {
