@@ -20,4 +20,6 @@ var (
 	ErrUnknownMarketPlace = sdkerrors.Register(ModuleName, 14, "unknown MarketPlace collection")
 	ErrFilledNFT          = sdkerrors.Register(ModuleName, 15, "nft is filled")
 	ErrCommunityNotFound  = sdkerrors.Register(ModuleName, 16, "community  ")
+	ErrInvalidDescription = sdkerrors.Register(ModuleName, 17, "invalid description")
+	ErrDenomNotFound      = sdkerrors.Register(ModuleName, 18, "denom not found")
 )

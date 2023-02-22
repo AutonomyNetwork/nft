@@ -17,6 +17,8 @@ message Community {
     (gogoproto.moretags) = "yaml:\"preview_uri\"",
     (gogoproto.customname) = "PreviewURI"
   ];
+  string data = 6;
+  repeated string tags = 7;
 }
 
 message  CommunityMembers {
