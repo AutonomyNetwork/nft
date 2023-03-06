@@ -112,13 +112,13 @@ func (k Keeper) Denoms(c context.Context, request *types.QueryDenomsRequest) (*t
 	}, nil
 }
 
-func (k Keeper) DenomIDsByOwner(c context.Context, request *types.QueryDenomIDsByOwnerRequest) (*types.QueryDenomIDsByOwnerResponse, error) {
+func (k Keeper) DenomIDsByCreator(c context.Context, request *types.QueryDenomIDsByCreatorRequest) (*types.QueryDenomIDsByCreatorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
 	if len(request.Address) == 0 {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidCollection, "invalid user request address %s", request.Address)
 	}
-	denoms, err := k.GetDenomsByOwner(ctx, request.Address)
+	denoms, err := k.GetDenomsByCreator(ctx, request.Address)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidCollection, "invalid collection %s", request.Address)
 	}
@@ -128,7 +128,7 @@ func (k Keeper) DenomIDsByOwner(c context.Context, request *types.QueryDenomIDsB
 		ids = append(ids, denom.Id)
 	}
 
-	return &types.QueryDenomIDsByOwnerResponse{
+	return &types.QueryDenomIDsByCreatorResponse{
 		Ids: ids,
 	}, nil
 }
@@ -412,4 +412,23 @@ func (k Keeper) MarketPlaceByType(c context.Context, request *types.QueryMarketP
 			Pagination:  pageRes,
 		}, nil
 	}
+}
+
+func (k Keeper) DenomIDsByOwner(c context.Context, request *types.QueryDenomIDsByOwnerRequest) (*types.QueryDenomIDsByOwnerResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	owner, err := sdk.AccAddressFromBech32(request.Address)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "Invalid owner address %s", owner.String())
+	}
+
+	ownerNFTCollections := k.GetOwnerNFTs(ctx, owner)
+
+	var ids []string
+	for _, denom := range ownerNFTCollections {
+		ids = append(ids, denom.Denom.Id)
+	}
+
+	return &types.QueryDenomIDsByOwnerResponse{
+		Ids: ids,
+	}, nil
 }

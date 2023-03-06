@@ -20,8 +20,8 @@ service Query {
     option (google.api.http).get = "/autonomy/nft/v1beta1/denoms";
   }
 
-  rpc DenomIDsByOwner(QueryDenomIDsByOwnerRequest) returns (QueryDenomIDsByOwnerResponse){
-    option (google.api.http).get = "/autonomy/nft/v1beta1/denomsbyowner/{address}";
+  rpc DenomIDsByCreator(QueryDenomIDsByCreatorRequest) returns (QueryDenomIDsByCreatorResponse){
+    option (google.api.http).get = "/autonomy/nft/v1beta1/denomsbycreator/{address}";
   }
 
   rpc Collection(QueryCollectionRequest) returns(QueryCollectionResponse) {
@@ -75,7 +75,11 @@ service Query {
   rpc DenomsByOwner(QueryDenomsByOwnerRequest) returns (QueryDenomsByOwnerResponse) {
     option(google.api.http).get = "/autonomy/nft/v1beta1/denoms/owner/{address}";
   }
-}
+
+  rpc DenomIDsByOwner(QueryDenomIDsByOwnerRequest) returns (QueryDenomIDsByOwnerResponse) {
+    option (google.api.http).get = "/autonomy/nft/v1beta1/denom_ids_by_owner/{address}";
+  }
+ }
 
 message QueryMarketPlaceByTypeRequest {
   ListedType listed_type = 1;
@@ -193,6 +197,14 @@ message QueryCollectionRequest {
 
 message  QueryCollectionResponse {
   Collection collection = 1;
+}
+
+message QueryDenomIDsByCreatorRequest {
+  string address =1;
+}
+
+message QueryDenomIDsByCreatorResponse {
+  repeated string ids = 1;
 }
 
 message QueryDenomIDsByOwnerRequest {
