@@ -35,6 +35,11 @@ message MsgCreateDenom {
   string creator = 6;
   repeated string depedent_collection = 7;
   string community_id = 8;
+  string category = 9;
+  bool on_demand_minting = 10;
+  int64 total_nfts = 11;
+  int64 available_nfts = 12;
+  string data = 13;
 }
 
 message MsgCreateDenomResponse {}
