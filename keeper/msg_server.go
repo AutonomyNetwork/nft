@@ -59,10 +59,11 @@ func (m msgServer) CreateDenom(goCtx context.Context,
 		}
 	}
 
-	if msg.OnDemandMinting == true && msg.TotalNfts == 0 {
+	if msg.PrimarySale == true && msg.TotalNfts == 0 {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidTotalNFTs, "total nfts should not be %s", msg.TotalNfts)
 	}
 
+	msg.AvailableNfts = msg.TotalNfts
 	if err := m.Keeper.CreateDenom(ctx,
 		id,
 		name,
@@ -73,7 +74,7 @@ func (m msgServer) CreateDenom(goCtx context.Context,
 		msg.CommunityId,
 		msg.DepedentCollection,
 		msg.Category,
-		msg.OnDemandMinting,
+		msg.PrimarySale,
 		msg.TotalNfts,
 		msg.AvailableNfts,
 		msg.Data,
@@ -100,40 +101,51 @@ func (m msgServer) MintNFT(goCtx context.Context,
 		return nil, err
 	}
 
-	owner := creator
+	var owner sdk.AccAddress
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	denom, err := m.GetDenom(ctx, msg.DenomId)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidCollection, "%s collection", msg.DenomId)
 	}
 
-	if !strings.EqualFold(denom.Creator, msg.Creator) {
-		return nil, sdkerrors.Wrapf(types.ErrUnauthorized, "%s don't have access to mint nft in %s collection", msg.Creator, denom.Id)
+	if denom.PrimarySale == false && strings.EqualFold(denom.Creator, msg.Creator) {
+		owner = sdk.AccAddress(denom.Creator)
+		// return nil, sdkerrors.Wrapf(types.ErrUnauthorized, "%s don't have access to mint nft in %s collection", msg.Creator, denom.Id)
+		if err := m.Keeper.MintNFT(ctx,
+			msg.DenomId,
+			msg.Id,
+			msg.Royalties,
+			msg.Transferable,
+			owner,
+			creator,
+			msg.Metadata,
+			msg.Data,
+		); err != nil {
+			return nil, err
+		}
 	}
 
-	var data string
-	if denom.OnDemandMinting == true {
-		availableNFTs := denom.TotalNfts - 1
-		denom.AvailableNfts = availableNFTs
-		data = denom.Data
-	} else {
-		data = msg.Data
+	if denom.PrimarySale == true {
+		if denom.AvailableNfts == 0 {
+			return nil, sdkerrors.Wrapf(types.ErrUnauthorized, "not enough nfts in %s collection to mint", denom.Id)
+		}
+		owner = sdk.AccAddress(msg.Creator)
+		if err := m.Keeper.MintNFT(ctx,
+			msg.DenomId,
+			msg.Id,
+			msg.Royalties,
+			msg.Transferable,
+			owner,
+			creator,
+			msg.Metadata,
+			msg.Data,
+		); err != nil {
+			return nil, err
+		}
 	}
 
+	denom.AvailableNfts = denom.AvailableNfts - 1
 	m.Keeper.SetDenom(ctx, denom)
-
-	if err := m.Keeper.MintNFT(ctx,
-		msg.DenomId,
-		msg.Id,
-		msg.Royalties,
-		msg.Transferable,
-		owner,
-		creator,
-		msg.Metadata,
-		data,
-	); err != nil {
-		return nil, err
-	}
 
 	ctx.EventManager().EmitTypedEvent(
 		&types.EventMintNFT{
@@ -160,8 +172,8 @@ func (m msgServer) UpdateNFT(goCtx context.Context,
 		return nil, sdkerrors.Wrapf(types.ErrInvalidCollection, "%s collection", msg.DenomID)
 	}
 
-	if denom.OnDemandMinting == true {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidNFT, "cannot update nft which is ondemand minting %s", msg.Id)
+	if denom.PrimarySale == true {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidNFT, "cannot update nft which is in primary sale %s", msg.Id)
 	}
 	if err := m.Keeper.UpdateNFT(ctx, msg.DenomID, msg.Id,
 		msg.Name,
