@@ -54,3 +54,13 @@ message  EventJoinCommunity {
   string id = 1;
   string creator = 2;
 }
+
+message EventUpdateCommunity {
+  string id = 1;
+  string owner = 2;
+}
+
+message EventUpdateDenom {
+  string id = 1;
+  string owner = 2;
+}

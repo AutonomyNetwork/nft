@@ -259,6 +259,8 @@ func (m msgServer) CreateCommunity(goCtx context.Context, msg *types.MsgCreateCo
 		Creator:     msg.Creator,
 		Description: msg.Description,
 		PreviewURI:  msg.PreviewUri,
+		Tags:        msg.Tags,
+		Data:        msg.Data,
 	}
 	if err := m.Keeper.SetCommunity(ctx, community); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrCommunityNotFound, err.Error())
@@ -305,4 +307,54 @@ func (m msgServer) JoinCommunity(goCtx context.Context, msg *types.MsgJoinCommun
 		})
 
 	return &types.MsgJoinCommunityResponse{}, nil
+}
+
+func (m msgServer) UpdateCommunity(goCtx context.Context, msg *types.MsgUpdateCommunity) (*types.MsgUpdateCommunityResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner, err := sdk.AccAddressFromBech32(msg.Address)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid address: %s", msg.Address)
+	}
+
+	if err := m.Keeper.UpdateCommunity(ctx, msg.Description,
+		msg.Data,
+		msg.Id,
+		msg.Tags,
+		owner,
+	); err != nil {
+		return nil, err
+	}
+
+	ctx.EventManager().EmitTypedEvent(
+		&types.EventUpdateNFT{
+			Id:    msg.Id,
+			Owner: owner.String(),
+		},
+	)
+
+	return &types.MsgUpdateCommunityResponse{
+		Id: msg.Id,
+	}, nil
+}
+
+func (m msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom) (*types.MsgUpdateDenomResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner, err := sdk.AccAddressFromBech32(msg.Address)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid address: %s", msg.Address)
+	}
+
+	if err := m.Keeper.UpdateDenom(ctx, msg.Description, msg.Symbol, msg.Id, owner); err != nil {
+		return nil, err
+	}
+
+	ctx.EventManager().EmitTypedEvent(
+		&types.EventUpdateDenom{
+			Id:    msg.Id,
+			Owner: owner.String(),
+		},
+	)
+	return &types.MsgUpdateDenomResponse{}, nil
 }

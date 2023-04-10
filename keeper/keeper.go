@@ -312,3 +312,51 @@ func (k Keeper) BuyNFTWithFiat(ctx sdk.Context, id, denom_id string, currency, a
 	k.swapOwner(ctx, denom_id, id, nft.GetOwner(), buyer)
 	return nil
 }
+
+func (k Keeper) UpdateCommunity(ctx sdk.Context, description, data, id string, tags []string, owner sdk.AccAddress) error {
+	community, ok := k.GetCommunityByID(ctx, id)
+	if !ok {
+		return sdkerrors.Wrapf(types.ErrCommunityNotFound, "communit not exis: %s", id)
+	}
+
+	if !strings.EqualFold(community.Creator, owner.String()) {
+		return sdkerrors.Wrapf(types.ErrUnauthorized, "unauthorized to update the community: %s", owner.String())
+	}
+
+	if community.Data != "[do-not-modify]" {
+		community.Data = data
+	}
+
+	if community.Description != "[do-not-modify]" {
+		community.Description = description
+	}
+
+	if len(community.Tags) != 0 {
+		community.Tags = append(community.Tags, tags...)
+	}
+
+	k.SetCommunity(ctx, community)
+	return nil
+}
+
+func (k Keeper) UpdateDenom(ctx sdk.Context, description, symbol, id string, owner sdk.AccAddress) error {
+	denom, err := k.GetDenom(ctx, id)
+	if err != nil {
+		return sdkerrors.Wrapf(types.ErrDenomNotFound, "denom not found with id %s", id)
+	}
+
+	if !strings.EqualFold(denom.Creator, owner.String()) {
+		return sdkerrors.Wrapf(types.ErrUnauthorized, "unauthorized to update the denom: %s", owner.String())
+	}
+
+	if denom.Description != "[do-not-modify]" {
+		denom.Description = description
+	}
+
+	if denom.Symbol != "[do-not-modify]" {
+		denom.Symbol = symbol
+	}
+
+	k.SetDenom(ctx, denom)
+	return nil
+}

@@ -7,9 +7,9 @@ var (
 	EventTypeEditNFT    = "edit_nft"
 	EventTypeMintNFT    = "mint_nft"
 	EventTypeBurnNFT    = "burn_nft"
-	
+
 	AttributeValueCategory = ModuleName
-	
+
 	AttributeKeySender    = "sender"
 	AttributeKeyRecipient = "recipient"
 	AttributeKeyOwner     = "owner"
