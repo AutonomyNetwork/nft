@@ -22,4 +22,6 @@ var (
 	ErrCommunityNotFound  = sdkerrors.Register(ModuleName, 126, "community  ")
 	ErrInvalidDescription = sdkerrors.Register(ModuleName, 127, "invalid description")
 	ErrDenomNotFound      = sdkerrors.Register(ModuleName, 128, "denom not found")
+	ErrInvalidTotalNFTs   = sdkerrors.Register(ModuleName, 129, "zero total nfts")
+
 )

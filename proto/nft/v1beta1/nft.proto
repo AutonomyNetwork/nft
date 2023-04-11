@@ -32,6 +32,11 @@ message Denom {
 
   repeated  string dependent_denoms = 7;
   string community_id = 8;
+  string category = 9;
+  bool primary_sale = 10;
+  int64 total_nfts = 11;
+  int64 available_nfts = 12;
+  string data = 13;
 }
 
 message Metadata {

@@ -2,12 +2,12 @@ package types
 
 import (
 	"strings"
-	
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // NewDenom return a new denom
-func NewDenom(id, name, symbol, description, preview_uri, creator, community_id string, denoms []string) Denom {
+func NewDenom(id, name, symbol, description, preview_uri, creator, community_id string, denoms []string, category string, primarySale bool, totoalNfts, availableNfts int64, data string) Denom {
 	return Denom{
 		Id:              id,
 		Name:            name,
@@ -17,6 +17,11 @@ func NewDenom(id, name, symbol, description, preview_uri, creator, community_id 
 		PreviewURI:      preview_uri,
 		DependentDenoms: denoms,
 		CommunityId:     community_id,
+		Category:        category,
+		PrimarySale:     primarySale,
+		TotalNfts:       totoalNfts,
+		AvailableNfts:   availableNfts,
+		Data:            data,
 	}
 }
 
@@ -36,7 +41,7 @@ func ValidateDenomSymbol(denomSymbol string) error {
 	if len(denomSymbol) < MinSymbolLen || len(denomSymbol) > MaxSymbolLen {
 		return sdkerrors.Wrapf(ErrInvalidDenomSymbol, "invalid denom symbol %s, only accepts value [%d, %d]", MinSymbolLen, MaxSymbolLen)
 	}
-	
+
 	if !IsBeginWithAlpha(denomSymbol) || !IsAlpha(denomSymbol) {
 		return sdkerrors.Wrapf(ErrInvalidDenomSymbol, "invalid denom symbol %s, only accepts alphabetic characters", denomSymbol)
 	}
