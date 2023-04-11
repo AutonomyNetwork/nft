@@ -17,6 +17,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, data types.GenesisState) {
 	}
 
 	for _, c := range data.Collections {
+		if c.Denom.PrimarySale == false {
+			c.Denom.AvailableNfts = 0
+			c.Denom.TotalNfts = 0
+		}
 		if err := k.SetDenom(ctx, c.Denom); err != nil {
 			panic(err)
 		}
