@@ -45,7 +45,9 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgUpdateDenom:
 			res, err := msgServer.UpdateDenom(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-			case *types.MsgDelete
+		case *types.MsgDeleteMarketPlaceNFT:
+			res, err := msgServer.DeleteMarketPlaceNFT(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		default:
 			return nil, sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized nft message type: %T", msg)
 		}
