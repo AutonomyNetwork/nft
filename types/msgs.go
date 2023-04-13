@@ -20,16 +20,17 @@ const (
 )
 
 const (
-	TypeCreateDenom     = "create_denom"
-	TypeMintNFT         = "mint_nft"
-	TypeUpdateNFT       = "update_nft"
-	TypeTransferNFT     = "transfer_nft"
-	TypeSellNFT         = "sell_nft"
-	TypeBuyNFT          = "buy_nft"
-	TypeCreateCommunity = "create_community"
-	TypeJoinCommunity   = "join_community"
-	TypeUpdtaeCommunity = "update_community"
-	TypeUpdateDenom     = "update_denom"
+	TypeCreateDenom          = "create_denom"
+	TypeMintNFT              = "mint_nft"
+	TypeUpdateNFT            = "update_nft"
+	TypeTransferNFT          = "transfer_nft"
+	TypeSellNFT              = "sell_nft"
+	TypeBuyNFT               = "buy_nft"
+	TypeCreateCommunity      = "create_community"
+	TypeJoinCommunity        = "join_community"
+	TypeUpdtaeCommunity      = "update_community"
+	TypeUpdateDenom          = "update_denom"
+	TypeDeleteMarketPlaceNFT = "delete_market_place_nft"
 )
 
 var (
@@ -50,6 +51,7 @@ var (
 	_ sdk.Msg = &MsgJoinCommunity{}
 	_ sdk.Msg = &MsgUpdateCommunity{}
 	_ sdk.Msg = &MsgUpdateDenom{}
+	_ sdk.Msg = &MsgDeleteMarketPlaceNFT{}
 )
 
 func NewMsgCreateDenom(name, symbol, description, preview_uri, creator, community_id string, dependecy_collection []string) *MsgCreateDenom {
@@ -429,6 +431,43 @@ func (msg MsgUpdateDenom) GetSignBytes() []byte {
 }
 
 func (msg MsgUpdateDenom) GetSigners() []sdk.AccAddress {
+	from, _ := sdk.AccAddressFromBech32(msg.Address)
+	return []sdk.AccAddress{from}
+}
+
+func NewDeleteMarketPlaceNFT(denomID, nftId, address string) *MsgDeleteMarketPlaceNFT {
+	return &MsgDeleteMarketPlaceNFT{
+		DenomId: denomID,
+		NftId:   nftId,
+		Address: address,
+	}
+}
+
+func (msg MsgDeleteMarketPlaceNFT) Type() string {
+	return TypeDeleteMarketPlaceNFT
+}
+
+func (msg MsgDeleteMarketPlaceNFT) Route() string { return RouterKey }
+
+func (msg MsgDeleteMarketPlaceNFT) ValidateBasic() error {
+	if msg.DenomId == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "denomId should not be nill")
+	}
+	if msg.NftId == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "nft id should not be nill")
+	}
+	if _, err := sdk.AccAddressFromBech32(msg.Address); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid owner address")
+	}
+	return nil
+}
+
+func (msg MsgDeleteMarketPlaceNFT) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(&msg)
+	return sdk.MustSortJSON(bz)
+}
+
+func (msg MsgDeleteMarketPlaceNFT) GetSigners() []sdk.AccAddress {
 	from, _ := sdk.AccAddressFromBech32(msg.Address)
 	return []sdk.AccAddress{from}
 }

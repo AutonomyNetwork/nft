@@ -398,3 +398,25 @@ func (m msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 	)
 	return &types.MsgUpdateDenomResponse{}, nil
 }
+
+func (m msgServer) DeleteMarketPlaceNFT(goCtx context.Context, msg *types.MsgDeleteMarketPlaceNFT) (*types.MsgDeleteMarketPlaceNFTResponse, error) {
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	nft, err := m.Keeper.GetNFT(ctx, msg.DenomId, msg.NftId)
+	if err != nil {
+		return nil, err
+	}
+	order, err := m.Keeper.GetMarketPlaceNFT(ctx, msg.DenomId, msg.NftId)
+	if err != nil {
+		return nil, err
+	}
+
+	if nft.GetOwner().String() != msg.Address || msg.Address != order.GetSeller().String() {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "%s is unathorized to perform this operation", msg.Address)
+	}
+
+	m.Keeper.DeleteMarketPlaceNFT(ctx, msg.DenomId, msg.NftId)
+
+	return &types.MsgDeleteMarketPlaceNFTResponse{}, nil
+}

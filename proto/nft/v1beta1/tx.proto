@@ -19,6 +19,7 @@ service Msg {
   rpc JoinCommunity(MsgJoinCommunity) returns(MsgJoinCommunityResponse);
   rpc UpdateCommunity(MsgUpdateCommunity) returns (MsgUpdateCommunityResponse);
   rpc UpdateDenom(MsgUpdateDenom) returns (MsgUpdateDenomResponse);
+  rpc DeleteMarketPlaceNFT(MsgDeleteMarketPlaceNFT) returns (MsgDeleteMarketPlaceNFTResponse);
 }
 
 message MsgCreateDenom {
@@ -144,4 +145,14 @@ message MsgUpdateDenom {
 
 message MsgUpdateDenomResponse {
   string id = 1;
+}
+
+message MsgDeleteMarketPlaceNFT{
+  string nftId = 1;
+  string denomId = 2;
+  string address = 3;
+}
+
+message MsgDeleteMarketPlaceNFTResponse{
+
 }
