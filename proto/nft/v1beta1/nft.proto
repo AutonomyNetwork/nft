@@ -37,6 +37,7 @@ message Denom {
   int64 total_nfts = 11;
   int64 available_nfts = 12;
   string data = 13;
+  PaymentInfo payment_info = 14 [(gogoproto.nullable) = false]; 
 }
 
 message Metadata {
@@ -77,4 +78,10 @@ message Owner {
     (gogoproto.customname) = "IDCollections",
     (gogoproto.nullable) = false
   ];
+}
+
+message PaymentInfo{
+  string access_type = 1;
+  int64 amount = 2;
+  string currency = 3;
 }

@@ -59,11 +59,18 @@ func (m msgServer) CreateDenom(goCtx context.Context,
 		}
 	}
 
-	if msg.PrimarySale == true && msg.TotalNfts == 0 {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidTotalNFTs, "total nfts should not be %s", msg.TotalNfts)
+	paymentInfo := types.PaymentInfo{}
+	if msg.PrimarySale == true {
+		if msg.TotalNfts == 0 {
+			return nil, sdkerrors.Wrapf(types.ErrInvalidTotalNFTs, "total nfts should not be %s", msg.TotalNfts)
+		} else {
+			msg.AvailableNfts = msg.TotalNfts
+		}
+		paymentInfo.AccessType = msg.AccessType
+		paymentInfo.Amount = msg.Amount
+		paymentInfo.Currency = msg.Currency
 	}
 
-	msg.AvailableNfts = msg.TotalNfts
 	if err := m.Keeper.CreateDenom(ctx,
 		id,
 		name,
@@ -78,6 +85,7 @@ func (m msgServer) CreateDenom(goCtx context.Context,
 		msg.TotalNfts,
 		msg.AvailableNfts,
 		msg.Data,
+		paymentInfo,
 	); err != nil {
 		return nil, err
 	}

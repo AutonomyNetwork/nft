@@ -41,6 +41,9 @@ message MsgCreateDenom {
   int64 total_nfts = 11;
   int64 available_nfts = 12;
   string data = 13;
+  string access_type = 14;
+  int64 amount = 15;
+  string currency = 16;
 }
 
 message MsgCreateDenomResponse {}
