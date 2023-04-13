@@ -142,9 +142,9 @@ func (m msgServer) MintNFT(goCtx context.Context,
 		); err != nil {
 			return nil, err
 		}
+		denom.AvailableNfts = denom.AvailableNfts - 1
 	}
 
-	denom.AvailableNfts = denom.AvailableNfts - 1
 	m.Keeper.SetDenom(ctx, denom)
 
 	ctx.EventManager().EmitTypedEvent(
