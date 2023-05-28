@@ -59,11 +59,18 @@ func (m msgServer) CreateDenom(goCtx context.Context,
 		}
 	}
 
-	if msg.PrimarySale == true && msg.TotalNfts == 0 {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidTotalNFTs, "total nfts should not be %s", msg.TotalNfts)
+	paymentInfo := types.PaymentInfo{}
+	if msg.PrimarySale == true {
+		if msg.TotalNfts == 0 {
+			return nil, sdkerrors.Wrapf(types.ErrInvalidTotalNFTs, "total nfts should not be %s", msg.TotalNfts)
+		} else {
+			msg.AvailableNfts = msg.TotalNfts
+		}
+		paymentInfo.AccessType = msg.AccessType
+		paymentInfo.Amount = msg.Amount
+		paymentInfo.Currency = msg.Currency
 	}
 
-	msg.AvailableNfts = msg.TotalNfts
 	if err := m.Keeper.CreateDenom(ctx,
 		id,
 		name,
@@ -78,6 +85,7 @@ func (m msgServer) CreateDenom(goCtx context.Context,
 		msg.TotalNfts,
 		msg.AvailableNfts,
 		msg.Data,
+		paymentInfo,
 	); err != nil {
 		return nil, err
 	}
@@ -109,7 +117,7 @@ func (m msgServer) MintNFT(goCtx context.Context,
 	}
 
 	if denom.PrimarySale == false && strings.EqualFold(denom.Creator, msg.Creator) {
-		owner = sdk.AccAddress(denom.Creator)
+		owner, _ = sdk.AccAddressFromBech32(denom.Creator)
 		// return nil, sdkerrors.Wrapf(types.ErrUnauthorized, "%s don't have access to mint nft in %s collection", msg.Creator, denom.Id)
 		if err := m.Keeper.MintNFT(ctx,
 			msg.DenomId,
@@ -129,7 +137,7 @@ func (m msgServer) MintNFT(goCtx context.Context,
 		if denom.AvailableNfts == 0 {
 			return nil, sdkerrors.Wrapf(types.ErrUnauthorized, "not enough nfts in %s collection to mint", denom.Id)
 		}
-		owner = sdk.AccAddress(msg.Creator)
+		owner, _ = sdk.AccAddressFromBech32(msg.Creator)
 		if err := m.Keeper.MintNFT(ctx,
 			msg.DenomId,
 			msg.Id,
@@ -142,9 +150,9 @@ func (m msgServer) MintNFT(goCtx context.Context,
 		); err != nil {
 			return nil, err
 		}
+		denom.AvailableNfts = denom.AvailableNfts - 1
 	}
 
-	denom.AvailableNfts = denom.AvailableNfts - 1
 	m.Keeper.SetDenom(ctx, denom)
 
 	ctx.EventManager().EmitTypedEvent(
@@ -397,4 +405,26 @@ func (m msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 		},
 	)
 	return &types.MsgUpdateDenomResponse{}, nil
+}
+
+func (m msgServer) DeleteMarketPlaceNFT(goCtx context.Context, msg *types.MsgDeleteMarketPlaceNFT) (*types.MsgDeleteMarketPlaceNFTResponse, error) {
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	nft, err := m.Keeper.GetNFT(ctx, msg.DenomId, msg.NftId)
+	if err != nil {
+		return nil, err
+	}
+	order, err := m.Keeper.GetMarketPlaceNFT(ctx, msg.DenomId, msg.NftId)
+	if err != nil {
+		return nil, err
+	}
+
+	if nft.GetOwner().String() != msg.Address || msg.Address != order.GetSeller().String() {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "%s is unathorized to perform this operation", msg.Address)
+	}
+
+	m.Keeper.DeleteMarketPlaceNFT(ctx, msg.DenomId, msg.NftId)
+
+	return &types.MsgDeleteMarketPlaceNFTResponse{}, nil
 }

@@ -41,3 +41,8 @@ func (k Keeper) GetMarketPlace(ctx sdk.Context) (marketPlace []types.MarketPlace
 	}
 	return marketPlace
 }
+
+func (k Keeper) DeleteMarketPlaceNFT(ctx sdk.Context, denomID, tokenID string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.KeyMarketPlaceNFT(denomID, tokenID))
+}

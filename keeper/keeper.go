@@ -37,8 +37,8 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 func (k Keeper) CreateDenom(ctx sdk.Context, id, name, symbol, description, previewURI string,
-	creator string, community_id string, depedent_collections []string, category string, onDemandMinting bool, totoalNFTs, availableNFTs int64, data string) error {
-	return k.SetDenom(ctx, types.NewDenom(id, name, symbol, description, previewURI, creator, community_id, depedent_collections, category, onDemandMinting, totoalNFTs, availableNFTs, data))
+	creator string, community_id string, depedent_collections []string, category string, onDemandMinting bool, totoalNFTs, availableNFTs int64, data string, paymentInfo types.PaymentInfo) error {
+	return k.SetDenom(ctx, types.NewDenom(id, name, symbol, description, previewURI, creator, community_id, depedent_collections, category, onDemandMinting, totoalNFTs, availableNFTs, data, paymentInfo))
 }
 
 // MintNFT mints an NFT and manages that NFTs existence within Collections and Owners

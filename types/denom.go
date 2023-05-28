@@ -7,7 +7,7 @@ import (
 )
 
 // NewDenom return a new denom
-func NewDenom(id, name, symbol, description, preview_uri, creator, community_id string, denoms []string, category string, primarySale bool, totoalNfts, availableNfts int64, data string) Denom {
+func NewDenom(id, name, symbol, description, preview_uri, creator, community_id string, denoms []string, category string, primarySale bool, totoalNfts, availableNfts int64, data string, paymentInfo PaymentInfo) Denom {
 	return Denom{
 		Id:              id,
 		Name:            name,
@@ -22,6 +22,7 @@ func NewDenom(id, name, symbol, description, preview_uri, creator, community_id 
 		TotalNfts:       totoalNfts,
 		AvailableNfts:   availableNfts,
 		Data:            data,
+		PaymentInfo:     paymentInfo,
 	}
 }
 

@@ -79,6 +79,11 @@ service Query {
   rpc DenomIDsByOwner(QueryDenomIDsByOwnerRequest) returns (QueryDenomIDsByOwnerResponse) {
     option (google.api.http).get = "/autonomy/nft/v1beta1/denom_ids_by_owner/{address}";
   }
+
+  rpc AllListedNFTs(QueryAllListedNFTsRequest) returns (QueryAllListedNFTsResponse) {
+    option (google.api.http).get = "/autonomy/nft/v1beta1/listed";
+  }
+
  }
 
 message QueryMarketPlaceByTypeRequest {
@@ -246,4 +251,9 @@ message  QueryCommunityCollectionsRequest {
 message  QueryCommunityCollectionsResponse {
   Community community = 1;
   repeated Denom denoms = 2;
+}
+
+message QueryAllListedNFTsRequest {}
+message QueryAllListedNFTsResponse{
+  repeated NFT nfts = 1 [(gogoproto.nullable) = false];
 }
