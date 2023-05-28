@@ -432,3 +432,7 @@ func (k Keeper) DenomIDsByOwner(c context.Context, request *types.QueryDenomIDsB
 		Ids: ids,
 	}, nil
 }
+
+func (k Keeper) AllListedNFTs(c context.Context, request *types.QueryAllListedNFTsRequest) (*types.QueryAllListedNFTsResponse, error) {
+	return &types.QueryAllListedNFTsResponse{}, nil
+}

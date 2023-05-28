@@ -117,7 +117,7 @@ func (m msgServer) MintNFT(goCtx context.Context,
 	}
 
 	if denom.PrimarySale == false && strings.EqualFold(denom.Creator, msg.Creator) {
-		owner = sdk.AccAddress(denom.Creator)
+		owner, _ = sdk.AccAddressFromBech32(denom.Creator)
 		// return nil, sdkerrors.Wrapf(types.ErrUnauthorized, "%s don't have access to mint nft in %s collection", msg.Creator, denom.Id)
 		if err := m.Keeper.MintNFT(ctx,
 			msg.DenomId,
@@ -137,7 +137,7 @@ func (m msgServer) MintNFT(goCtx context.Context,
 		if denom.AvailableNfts == 0 {
 			return nil, sdkerrors.Wrapf(types.ErrUnauthorized, "not enough nfts in %s collection to mint", denom.Id)
 		}
-		owner = sdk.AccAddress(msg.Creator)
+		owner, _ = sdk.AccAddressFromBech32(msg.Creator)
 		if err := m.Keeper.MintNFT(ctx,
 			msg.DenomId,
 			msg.Id,

@@ -159,3 +159,11 @@ message MsgDeleteMarketPlaceNFT{
 message MsgDeleteMarketPlaceNFTResponse{
 
 }
+
+message MsgDeleteCommunityRequest{
+  string communityId = 1;
+  string address = 2;
+}
+
+message MsgDeleteCommunityResponse{
+}
