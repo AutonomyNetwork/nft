@@ -18,8 +18,9 @@ message MarketPlace {
   bool filled = 6;
   ListedType listed_type = 7;
   string currency = 8;
-  string fiat_amount = 9; 
+  string fiat_amount = 9;
   string order_ref_id = 10;
+  bool listed = 11;
 }
 
 enum ListedType {
